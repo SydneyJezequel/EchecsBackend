@@ -5,6 +5,7 @@ import com.Applications.EchecsBackend.service.echecs.DemarrerUnePartieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -45,10 +46,16 @@ public class DemarrerPartieController {
      * Méthode qui ré-initialise l'échiquier et créé une nouvelle partie.
      * @return
      */
-    @GetMapping("/nouvelle_partie")
+    @GetMapping("/nouvelle_partie/{camp}")
     @PreAuthorize("hasRole('USER')")
-    public List<Case> ReinitialiserEchiquier() {
-        List<Case> echiquier = demarerPartie.ReinitialiserEchequier();
+    public List<Case> ReinitialiserEchiquier(@PathVariable("camp") String camp) {
+        List<Case> echiquier = demarerPartie.ReinitialiserEchequier(camp);
+        // ***************TEST NOIR ***************
+        for(int i=0; i<echiquier.size(); i++)
+        {
+            System.out.println(echiquier.get(i).getColonne()+echiquier.get(i).getLigne());
+        }
+        // ***************TEST NOIR ***************
         return echiquier;
     }
 
@@ -58,10 +65,10 @@ public class DemarrerPartieController {
      * Méthode qui renvoie l'échiquier.
      * @return
      */
-    @GetMapping("/echiquier")
+    @GetMapping("/echiquier/{camp}")
     @PreAuthorize("hasRole('USER')")
-    public List<Case> getEchiquier(){
-        List<Case> echiquier = demarerPartie.ReinitialiserEchequier();
+    public List<Case> getEchiquier(@PathVariable("camp") String camp){
+        List<Case> echiquier = demarerPartie.ReinitialiserEchequier(camp);
         return echiquier;
     }
 
