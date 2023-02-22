@@ -63,5 +63,18 @@ public class JouerController {
 
 
 
+    /**
+     * Méthode qui déclare l'abandon de la partie.
+     */
+    /*
+    public void abandon() throws Exception
+    {
+        // IMPLEMENTER DES REGLES QUI APPELLENT LE SERVICE QUI REINITIALISE L'ECHIQUIER.
+        // UN MESSAGE D'ABANDON DEVRA ETRE RENVOYE AU USER.
+    }
+    */
+
+
+
 
 }
