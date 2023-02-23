@@ -251,6 +251,19 @@ public class JouerService {
     public boolean deplacementRoi() throws Exception
     {
         // Règles de contrôles.
+        /*
+        If (caseDestination.no_case == no_case + 1
+        || caseDestination.no_case == no_case - 1
+        || caseDestination.no_case == no_case + 8
+        ||  caseDestination.no_case ==no_case - 8)
+        {
+	        boolean echecAuRoi = echecAuRoi();
+	        if(!echecAuRoi)
+	        {
+		        return true;
+	        }
+        }
+         */
         return true;
     }
 
@@ -264,7 +277,80 @@ public class JouerService {
      */
     public boolean deplacementReine() throws Exception
     {
-        // Règles de contrôles.
+      // Règles de contrôles.
+      /*
+      If (
+      // Contrôle diagonale (droite/gauche/haut/bas) :
+      caseDestination.no_case == caseDepart.no_case + 9
+      || caseDestination.no_case == caseDepart.no_case + 18 && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 27 && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 36 && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 45 && caseDepart.no_case.+ 36.piece == null && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 54 && caseDepart.no_case.+ 45.piece == null  && caseDepart.no_case.+ 36.piece == null && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 63 && caseDepart.no_case.+ 54.piece == null && caseDepart.no_case.+ 45.piece == null  && caseDepart.no_case.+ 36.piece == null && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 72 && caseDepart.no_case.+ 63.piece == null && caseDepart.no_case.+ 54.piece == null && caseDepart.no_case.+ 45.piece == null  && caseDepart.no_case.+ 36.piece == null && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 7
+      || caseDestination.no_case == caseDepart.no_case + 14 && caseDepart.no_case.+ 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 21 && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 28 && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 35 && caseDepart.no_case.+ 28.piece == null && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 42 && caseDepart.no_case.+ 35.piece == null && caseDepart.no_case.+ 28.piece == null && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 49 && caseDepart.no_case.+ 42.piece == null && caseDepart.no_case.+ 35.piece == null && caseDepart.no_case.+ 28.piece == null && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 56 && caseDepart.no_case.+ 49.piece == null && caseDepart.no_case.+ 42.piece == null && caseDepart.no_case.+ 35.piece == null && caseDepart.no_case.+ 28.piece == null && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
+
+      || caseDestination.no_case == caseDepart.no_case - 9
+      || caseDestination.no_case == caseDepart.no_case - 18 && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 27 && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 36 && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 45 && caseDepart.no_case.-36.piece == null && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 54 && caseDepart.no_case.-45.piece == null && caseDepart.no_case.-36.piece == null && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 63 && caseDepart.no_case.-54.piece == null && caseDepart.no_case.-45.piece == null&& caseDepart.no_case.-36.piece == null && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 72 && caseDepart.no_case.-63.piece == null && caseDepart.no_case.-54.piece == null && caseDepart.no_case.-45.piece == null && caseDepart.no_case.-36.piece == null && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 7
+      || caseDestination.no_case == caseDepart.no_case - 14 && caseDepart.no_case.- 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 21 && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 28 && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 35 && caseDepart.no_case.- 28.piece == null && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 42 && caseDepart.no_case.- 35.piece == null && caseDepart.no_case.- 28.piece == null && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 49 && caseDepart.no_case.- 42.piece == null && caseDepart.no_case.- 35.piece == null && caseDepart.no_case.- 28.piece == null && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 56 && caseDepart.no_case.- 49.piece == null && caseDepart.no_case.- 42.piece == null && caseDepart.no_case.- 35.piece == null && caseDepart.no_case.- 28.piece == null && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
+
+      // Contrôle ligne droite verticale :
+      || caseDestination.no_case == caseDepart.no_case + 1
+      || caseDestination.no_case == caseDepart.no_case + 2 && caseDepart.no_case.+1.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 3 && caseDepart.no_case.+2.piece == null && caseDepart.no_case.+1.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 4 && caseDepart.no_case.+3.piece == null && caseDepart.no_case.+2piece == null && caseDepart.no_case.+1.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 5 && caseDepart.no_case.+4.piece == null && caseDepart.no_case.+3.piece == null && caseDepart.no_case.+2piece == null && caseDepart.no_case.+1.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 6 && caseDepart.no_case.+5.piece == null && caseDepart.no_case.+4.piece == null && caseDepart.no_case.+3.piece == null && caseDepart.no_case.+2piece == null && caseDepart.no_case.+1.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 7 && caseDepart.no_case.+6.piece == null && caseDepart.no_case.+5.piece == null && caseDepart.no_case.+4.piece == null && caseDepart.no_case.+3.piece == null && caseDepart.no_case.+2piece == null && caseDepart.no_case.+1.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 1
+      || caseDestination.no_case == caseDepart.no_case - 2 && caseDepart.no_case.-1.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 3 && caseDepart.no_case.-2.piece == null && caseDepart.no_case.-1.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 4 && caseDepart.no_case.-3.piece == null && caseDepart.no_case.-2piece == null && caseDepart.no_case.-1.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 5 && caseDepart.no_case.-4.piece == null && caseDepart.no_case.-3.piece == null && caseDepart.no_case.-2.piece == null && caseDepart.no_case.-1.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 6 && caseDepart.no_case.-5.piece == null && caseDepart.no_case.-4.piece == null && caseDepart.no_case.-3.piece == null && caseDepart.no_case.-2piece == null && caseDepart.no_case.-1.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 7 && caseDepart.no_case.-6.piece == null && caseDepart.no_case.-5.piece == null && caseDepart.no_case.-4.piece == null && caseDepart.no_case.-3.piece == null && caseDepart.no_case.-2.piece == null && caseDepart.no_case.-1.piece == null
+
+      // Contrôle ligne droite horizontale :
+      || caseDestination.no_case == caseDepart.no_case + 8
+      || caseDestination.no_case == caseDepart.no_case + 16 && caseDepart.no_case.+8.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 24 && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 32 && caseDepart.no_case.+24.piece == null && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 40 && caseDepart.no_case.+32.piece == null && caseDepart.no_case.+24.piece == null && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 48 && caseDepart.no_case.+40.piece == null && caseDepart.no_case.+32.piece == null && caseDepart.no_case.+24.piece == null && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 56 && caseDepart.no_case.+48.piece == null && caseDepart.no_case.+40.piece == null && caseDepart.no_case.+32.piece == null && caseDepart.no_case.+24.piece == null && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 8
+      || caseDestination.no_case == caseDepart.no_case - 16 && caseDepart.no_case.-8.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 24 && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 32 && caseDepart.no_case.-24.piece == null && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 40 && caseDepart.no_case.-32.piece == null && caseDepart.no_case.-24.piece == null && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 48 && caseDepart.no_case.-40.piece == null && caseDepart.no_case.-32.piece == null && caseDepart.no_case.-24.piece == null && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 56 && caseDepart.no_case.-48.piece == null && caseDepart.no_case.-40.piece == null && caseDepart.no_case.-32.piece == null && caseDepart.no_case.-24.piece == null && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
+      )
+      {
+	    return true;
+      }
+      */
         return true;
     }
 
@@ -279,6 +365,44 @@ public class JouerService {
     public boolean deplacementTour() throws Exception
     {
         // Règles de contrôles.
+        /*
+      If (
+      // Contrôle ligne droite verticale :
+      || caseDestination.no_case == caseDepart.no_case + 1
+      || caseDestination.no_case == caseDepart.no_case + 2 && caseDepart.no_case.+1.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 3 && caseDepart.no_case.+2.piece == null && caseDepart.no_case.+1.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 4 && caseDepart.no_case.+3.piece == null && caseDepart.no_case.+2piece == null && caseDepart.no_case.+1.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 5 && caseDepart.no_case.+4.piece == null && caseDepart.no_case.+3.piece == null && caseDepart.no_case.+2piece == null && caseDepart.no_case.+1.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 6 && caseDepart.no_case.+5.piece == null && caseDepart.no_case.+4.piece == null && caseDepart.no_case.+3.piece == null && caseDepart.no_case.+2piece == null && caseDepart.no_case.+1.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 7 && caseDepart.no_case.+6.piece == null && caseDepart.no_case.+5.piece == null && caseDepart.no_case.+4.piece == null && caseDepart.no_case.+3.piece == null && caseDepart.no_case.+2piece == null && caseDepart.no_case.+1.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 1
+      || caseDestination.no_case == caseDepart.no_case - 2 && caseDepart.no_case.-1.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 3 && caseDepart.no_case.-2.piece == null && caseDepart.no_case.-1.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 4 && caseDepart.no_case.-3.piece == null && caseDepart.no_case.-2piece == null && caseDepart.no_case.-1.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 5 && caseDepart.no_case.-4.piece == null && caseDepart.no_case.-3.piece == null && caseDepart.no_case.-2.piece == null && caseDepart.no_case.-1.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 6 && caseDepart.no_case.-5.piece == null && caseDepart.no_case.-4.piece == null && caseDepart.no_case.-3.piece == null && caseDepart.no_case.-2piece == null && caseDepart.no_case.-1.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 7 && caseDepart.no_case.-6.piece == null && caseDepart.no_case.-5.piece == null && caseDepart.no_case.-4.piece == null && caseDepart.no_case.-3.piece == null && caseDepart.no_case.-2.piece == null && caseDepart.no_case.-1.piece == null
+
+      // Contrôle ligne droite horizontale :
+      || caseDestination.no_case == caseDepart.no_case + 8
+      || caseDestination.no_case == caseDepart.no_case + 16 && caseDepart.no_case.+8.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 24 && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 32 && caseDepart.no_case.+24.piece == null && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 40 && caseDepart.no_case.+32.piece == null && caseDepart.no_case.+24.piece == null && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 48 && caseDepart.no_case.+40.piece == null && caseDepart.no_case.+32.piece == null && caseDepart.no_case.+24.piece == null && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 56 && caseDepart.no_case.+48.piece == null && caseDepart.no_case.+40.piece == null && caseDepart.no_case.+32.piece == null && caseDepart.no_case.+24.piece == null && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 8
+      || caseDestination.no_case == caseDepart.no_case - 16 && caseDepart.no_case.-8.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 24 && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 32 && caseDepart.no_case.-24.piece == null && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 40 && caseDepart.no_case.-32.piece == null && caseDepart.no_case.-24.piece == null && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 48 && caseDepart.no_case.-40.piece == null && caseDepart.no_case.-32.piece == null && caseDepart.no_case.-24.piece == null && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 56 && caseDepart.no_case.-48.piece == null && caseDepart.no_case.-40.piece == null && caseDepart.no_case.-32.piece == null && caseDepart.no_case.-24.piece == null && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
+      )
+      {
+	    return true;
+      }
+      */
         return true;
     }
 
@@ -292,7 +416,48 @@ public class JouerService {
      */
     public boolean deplacementFou() throws Exception
     {
-        // Règles de contrôles.
+        // Règles de contrôles :
+    /*
+    If (
+      // Contrôle diagonale (droite/gauche/haut/bas) :
+      caseDestination.no_case == caseDepart.no_case + 9
+      || caseDestination.no_case == caseDepart.no_case + 18 && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 27 && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 36 && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 45 && caseDepart.no_case.+ 36.piece == null && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 54 && caseDepart.no_case.+ 45.piece == null  && caseDepart.no_case.+ 36.piece == null && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 63 && caseDepart.no_case.+ 54.piece == null && caseDepart.no_case.+ 45.piece == null  && caseDepart.no_case.+ 36.piece == null && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 72 && caseDepart.no_case.+ 63.piece == null && caseDepart.no_case.+ 54.piece == null && caseDepart.no_case.+ 45.piece == null  && caseDepart.no_case.+ 36.piece == null && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 7
+      || caseDestination.no_case == caseDepart.no_case + 14 && caseDepart.no_case.+ 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 21 && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 28 && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 35 && caseDepart.no_case.+ 28.piece == null && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 42 && caseDepart.no_case.+ 35.piece == null && caseDepart.no_case.+ 28.piece == null && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 49 && caseDepart.no_case.+ 42.piece == null && caseDepart.no_case.+ 35.piece == null && caseDepart.no_case.+ 28.piece == null && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case + 56 && caseDepart.no_case.+ 49.piece == null && caseDepart.no_case.+ 42.piece == null && caseDepart.no_case.+ 35.piece == null && caseDepart.no_case.+ 28.piece == null && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
+
+      || caseDestination.no_case == caseDepart.no_case - 9
+      || caseDestination.no_case == caseDepart.no_case - 18 && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 27 && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 36 && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 45 && caseDepart.no_case.-36.piece == null && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 54 && caseDepart.no_case.-45.piece == null && caseDepart.no_case.-36.piece == null && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 63 && caseDepart.no_case.-54.piece == null && caseDepart.no_case.-45.piece == null&& caseDepart.no_case.-36.piece == null && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 72 && caseDepart.no_case.-63.piece == null && caseDepart.no_case.-54.piece == null && caseDepart.no_case.-45.piece == null && caseDepart.no_case.-36.piece == null && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 7
+      || caseDestination.no_case == caseDepart.no_case - 14 && caseDepart.no_case.- 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 21 && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 28 && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 35 && caseDepart.no_case.- 28.piece == null && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 42 && caseDepart.no_case.- 35.piece == null && caseDepart.no_case.- 28.piece == null && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 49 && caseDepart.no_case.- 42.piece == null && caseDepart.no_case.- 35.piece == null && caseDepart.no_case.- 28.piece == null && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
+      || caseDestination.no_case == caseDepart.no_case - 56 && caseDepart.no_case.- 49.piece == null && caseDepart.no_case.- 42.piece == null && caseDepart.no_case.- 35.piece == null && caseDepart.no_case.- 28.piece == null && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
+      )
+      {
+	    return true;
+      }
+      */
         return true;
     }
 
@@ -307,6 +472,22 @@ public class JouerService {
     public boolean deplacementCavalier() throws Exception
     {
         // Règles de contrôles.
+    /*
+    If (
+      // Contrôle des déplacements possibles :
+      || caseDestination.no_case == caseDepart.no_case + 6
+      || caseDestination.no_case == caseDepart.no_case + 10
+      || caseDestination.no_case == caseDepart.no_case + 15
+      || caseDestination.no_case == caseDepart.no_case + 17
+      || caseDestination.no_case == caseDepart.no_case - 6
+      || caseDestination.no_case == caseDepart.no_case - 10
+      || caseDestination.no_case == caseDepart.no_case - 15
+      || caseDestination.no_case == caseDepart.no_case - 17
+    )
+    {
+	    return true;
+    }
+    */
         return true;
     }
 
@@ -321,6 +502,16 @@ public class JouerService {
     public boolean deplacementPion() throws Exception
     {
         // Règles de contrôles.
+        /*
+        If ( caseDestination.no_case == caseDepart.no_case + 1 && caseDestination.piece == null
+        || caseDestination.no_case == caseDepart.no_case + 2 && caseDepart.no_case = case_origine && caseDestination.piece == null
+        || caseDestination.no_case == caseDepart.no_case + 9 && caseDestination.piece != null && caseDestination.piece.couleur != caseDepart.piece.couleur
+        || caseDestination.no_case == caseDepart.no_case -7 && caseDestination.piece != null && caseDestination.piece.couleur != caseDepart.piece.couleur
+        )
+        {
+	        return true;
+        }
+         */
         return true;
     }
 
@@ -333,7 +524,23 @@ public class JouerService {
      */
     public boolean echecAuRoi() throws Exception
     {
-        // Règles de contrôles.
+        // REGLES DE L'ALGORITHME :
+        /*
+               // 1- Récupération la position de toutes les pièces du camp adverse.
+	              Stocker dans un array toutes les cases de l’échiquier ou piece.couleur != roi.couleur
+
+              // 2- Simuler pour chacune de ces pièces si elle peut se rendre sur la case du roi.
+
+	            1- Boucler sur ce tableau :
+		            A chaque tour de boucle le List<Case> casesDeplacement sera composé de :
+			        —> La case de la pièce comme case de départ.
+			        —> La case du roi comme case de destination.
+	            2- Selon le type de pièce :
+			        —> appeler la méthode deplacementRoi, deplacementReine, deplacementTour, deplacementFou, deplacementCavalier, deplacementPion.
+	            3- Si une de ces méthodes renvoie true :
+			        —> On break la boucle.
+			        —> On renvoie la pop-up : « Echec au roi ».
+         */
         return true;
     }
 
@@ -346,7 +553,25 @@ public class JouerService {
      */
     public boolean echecEtMat() throws Exception
     {
-        // Règles de contrôles.
+        // REGLES DE L'ALGORITHME :
+        /*
+               // 1- Récupération la position de toutes les pièces du camp adverse.
+	              Stocker dans un array toutes les cases de l’échiquier ou piece.couleur != roi.couleur
+
+              // 2- Simuler pour chacune de ces pièces si elle peut se rendre sur la case du roi.
+
+	            1- Boucler sur ce tableau :
+		            A chaque tour de boucle le List<Case> casesDeplacement sera composé de :
+			        —> La case de la pièce comme case de départ.
+			        —> La case du roi comme case de destination.
+	            2- Selon le type de pièce :
+			        —> appeler la méthode deplacementRoi, deplacementReine, deplacementTour, deplacementFou, deplacementCavalier, deplacementPion.
+	            3- Si une de ces méthodes renvoie true :
+			        —> On break la boucle.
+			        —> On appelle la méthode de déplacement du roi : deplacementRoi().
+			           Si la méthode de déplacement du roi renvoie false (Roi en échec + Roi ne peut se déplacer) :
+			                —> On renvoie la pop-up : « Partie terminée : Echec et mat ».
+         */
         return true;
     }
 
@@ -360,7 +585,17 @@ public class JouerService {
      */
     public boolean echecEtPat() throws Exception
     {
-        // Règles de contrôles.
+        // REGLES DE L'ALGORITHME :
+        /*
+		1- Charger dans un ArrayList les cases du roi dont c’est le tour depuis la BDD.
+		2- Boucler l’ArrayList.
+		3- A chaque tour de boucle, exécuter la condition suivante. Si est est vérifiée : Renvoyer « true ».
+			if( ArrayList.get(0).no_case == ArrayList.get(2).no_case )
+			{
+				true;
+			}
+		4- Si true est renvoyé : Renvoyer une pop-up qui indique « Partie Terminée : Echec et Pat ».
+         */
         return true;
     }
 
@@ -387,8 +622,17 @@ public class JouerService {
      */
     public boolean transformationPion() throws Exception
     {
-        // Règles de contrôles pour le Grand Roque.
-        // Règles de contrôles pour le petit Roque.
+        // Règles de contrôle pour transformer un pion
+        /*
+        1- Méthode 1 : Vérifier que le pion est arrivé au bout de l’échiquier.
+				—> Si oui : Ouvrir une pop-up.
+				—> Si non : Ne rien faire.
+        2- Méthode 2 : Récupérer la pièce choisi par le joueur et transformer le pion :
+				—> Passer en paramètre la pièce choisie par le joueur :
+						reine, tour, fou, cavalier, pion.
+				—> Utiliser un Switch Case : Selon la pièce choisi, la valeur valeur suivante sera assignée :
+						reine, tour, fou, cavalier, pion.
+        */
         return true;
     }
 
