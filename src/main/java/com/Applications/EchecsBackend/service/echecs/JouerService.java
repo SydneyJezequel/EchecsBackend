@@ -147,7 +147,7 @@ public class JouerService {
                 break;
             default: // Pion
                 // Déplacement de la pièce :
-                deplacementPion(caseDepart, caseDestination, echiquier);
+                deplacementPion(caseDepart, caseDestination, piece, echiquier);
                 // Contrôles :
                 echecAuRoi();
                 echecEtMat();
@@ -281,7 +281,7 @@ public class JouerService {
                 break;
             case "pion":
                 // Déplacement de la pièce :
-                if(deplacementPion(caseDepart, caseDestination, echiquier)) {
+                if(deplacementPion(caseDepart, caseDestination, piece, echiquier)) {
                     // Contrôles à exécuter sur le Pion :
                     // echecAuRoi();
                     // echecEtMat();
@@ -383,25 +383,17 @@ public class JouerService {
           || noCaseDestination == noCaseDepart-9
         )
         {
-            return true;
+            if (verificationCampPieceCaseDestination(caseDepart, caseDestination))
+            {
+                return true;
+            }else
+            {
+                return false;
+            }
         } else
         {
             return false;
         }
-        // VERSION FINALE :
-        /*
-        if (caseDestination.no_case == no_case + 1
-        || caseDestination.no_case == no_case - 1
-        || caseDestination.no_case == no_case + 8
-        ||  caseDestination.no_case ==no_case - 8)
-        {
-	        boolean echecAuRoi = echecAuRoi();
-	        if(!echecAuRoi)
-	        {
-		        return true;
-	        }
-        }
-         */
     }
 
 
@@ -415,78 +407,280 @@ public class JouerService {
     public boolean deplacementReine(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
       // Récupération des numéros des cases :
+        int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
+        int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
+        String plus = "plus";
+        String moins = "moins";
+
+      // Case horizontales et verticales :
+        Case caseDepartPlus1 = calculCaseIntermediaire(caseDepart, 1L, echiquier, plus);
+        Case caseDepartPlus2 = calculCaseIntermediaire(caseDepart, 2L, echiquier, plus);
+        Case caseDepartPlus3 = calculCaseIntermediaire(caseDepart, 3L, echiquier, plus);
+        Case caseDepartPlus4 = calculCaseIntermediaire(caseDepart, 4L, echiquier, plus);
+        Case caseDepartPlus5 = calculCaseIntermediaire(caseDepart, 5L, echiquier, plus);
+        Case caseDepartPlus6 = calculCaseIntermediaire(caseDepart, 6L, echiquier, plus);
+        Case caseDepartPlus8 = calculCaseIntermediaire(caseDepart, 7L, echiquier, plus);
+
+        Case caseDepartMoins1 = calculCaseIntermediaire(caseDepart, 2L, echiquier, moins);
+        Case caseDepartMoins2 = calculCaseIntermediaire(caseDepart, 3L, echiquier, moins);
+        Case caseDepartMoins3 = calculCaseIntermediaire(caseDepart, 4L, echiquier, moins);
+        Case caseDepartMoins4 = calculCaseIntermediaire(caseDepart, 5L, echiquier, moins);
+        Case caseDepartMoins5 = calculCaseIntermediaire(caseDepart, 6L, echiquier, moins);
+        Case caseDepartMoins6 = calculCaseIntermediaire(caseDepart, 7L, echiquier, moins);
+        Case caseDepartMoins8 = calculCaseIntermediaire(caseDepart, 8L, echiquier, moins);
+
+        Case caseDepartPlus16 = calculCaseIntermediaire(caseDepart, 15L, echiquier, plus);
+        Case caseDepartPlus24 = calculCaseIntermediaire(caseDepart, 23L, echiquier, plus);
+        Case caseDepartPlus32 = calculCaseIntermediaire(caseDepart, 31L, echiquier, plus);
+        Case caseDepartPlus40 = calculCaseIntermediaire(caseDepart, 39L, echiquier, plus);
+        Case caseDepartPlus48 = calculCaseIntermediaire(caseDepart, 47L, echiquier, plus);
+        Case caseDepartPlus56 = calculCaseIntermediaire(caseDepart, 55L, echiquier, plus);
+
+        Case caseDepartMoins8Hor = calculCaseIntermediaire(caseDepart, 9L, echiquier, moins);
+        Case caseDepartMoins16 = calculCaseIntermediaire(caseDepart, 17L, echiquier, moins);
+        Case caseDepartMoins24 = calculCaseIntermediaire(caseDepart, 25L, echiquier, moins);
+        Case caseDepartMoins32 = calculCaseIntermediaire(caseDepart, 33L, echiquier, moins);
+        Case caseDepartMoins40 = calculCaseIntermediaire(caseDepart, 41L, echiquier, moins);
+        Case caseDepartMoins48 = calculCaseIntermediaire(caseDepart, 49L, echiquier, moins);
+        Case caseDepartMoins56 = calculCaseIntermediaire(caseDepart, 57L, echiquier, moins);
+
+        // Case diagonales :
+        Case caseDepartPlus9 = echiquier.get((int) (caseDepart.getNo_case()+9));
+        Case caseDepartPlus18 = echiquier.get((int) (caseDepart.getNo_case()+18));
+        Case caseDepartPlus27 = echiquier.get((int) (caseDepart.getNo_case()+27));
+        Case caseDepartPlus36 = echiquier.get((int) (caseDepart.getNo_case()+36));
+        Case caseDepartPlus45 = echiquier.get((int) (caseDepart.getNo_case()+45));
+        Case caseDepartPlus54 = echiquier.get((int) (caseDepart.getNo_case()+54));
+        Case caseDepartPlus63 = echiquier.get((int) (caseDepart.getNo_case()+63));
+        Case caseDepartMoins9 = echiquier.get((int) (caseDepart.getNo_case()-9));
+        Case caseDepartMoins18 = echiquier.get((int) (caseDepart.getNo_case()-18));
+        Case caseDepartMoins27 = echiquier.get((int) (caseDepart.getNo_case()-27));
+        Case caseDepartMoins36 = echiquier.get((int) (caseDepart.getNo_case()-36));
+        Case caseDepartMoins45 = echiquier.get((int) (caseDepart.getNo_case()-45));
+        Case caseDepartMoins54 = echiquier.get((int) (caseDepart.getNo_case()-54));
+        Case caseDepartMoins63 = echiquier.get((int) (caseDepart.getNo_case()-63));
+        Case caseDepartPlus7 = echiquier.get((int) (caseDepart.getNo_case()+7));
+        Case caseDepartPlus14 = echiquier.get((int) (caseDepart.getNo_case()+14));
+        Case caseDepartPlus21 = echiquier.get((int) (caseDepart.getNo_case()+21));
+        Case caseDepartPlus28 = echiquier.get((int) (caseDepart.getNo_case()+28));
+        Case caseDepartPlus35 = echiquier.get((int) (caseDepart.getNo_case()+35));
+        Case caseDepartPlus42 = echiquier.get((int) (caseDepart.getNo_case()+42));
+        Case caseDepartPlus49 = echiquier.get((int) (caseDepart.getNo_case()+49));
+        Case caseDepartMoins7 = echiquier.get((int) (caseDepart.getNo_case()-7));
+        Case caseDepartMoins14 = echiquier.get((int) (caseDepart.getNo_case()-14));
+        Case caseDepartMoins21 = echiquier.get((int) (caseDepart.getNo_case()-21));
+        Case caseDepartMoins28 = echiquier.get((int) (caseDepart.getNo_case()-28));
+        Case caseDepartMoins35 = echiquier.get((int) (caseDepart.getNo_case()-35));
+        Case caseDepartMoins42 = echiquier.get((int) (caseDepart.getNo_case()-42));
+        Case caseDepartMoins49 = echiquier.get((int) (caseDepart.getNo_case()-49));
+      // Déplacements possibles :
+        // Déplacement ligne droite verticale :
+      if (caseDestination.getNo_case() == caseDepart.getNo_case()+ 1
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 2 && caseDepartPlus1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 3 && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 4 && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 5 && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 6 && caseDepartPlus5.getPiece() == null && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 7 && caseDepartPlus6.getPiece() == null && caseDepartPlus5.getPiece() == null && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 1
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 2 && caseDepartMoins1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 3 && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 4 && caseDepartMoins3.getPiece() == null && caseDepartMoins2.getPiece()== null && caseDepartMoins1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 5 && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece()== null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 6 && caseDepartMoins5.getPiece() == null && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece() == null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 7 && caseDepartMoins6.getPiece() == null && caseDepartMoins5.getPiece() == null && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece()== null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
+         // Contrôle ligne droite horizontale :
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 8
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 16 && caseDepartPlus8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 24 && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 32 && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 40 && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 48 && caseDepartPlus40.getPiece() == null && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepartPlus48.getPiece()== null && caseDepartPlus40.getPiece() == null && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case()- 8
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 16 && caseDepartMoins8Hor.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 24 && caseDepartMoins16.getPiece()== null && caseDepartMoins8Hor.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 32 && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8Hor.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 40 && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8Hor.getPiece()== null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 48 && caseDepartMoins40.getPiece() == null && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8Hor.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepartMoins48.getPiece() == null && caseDepartMoins40.getPiece() == null && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8Hor.getPiece() == null
+
+         // Déplacement en diagonales :
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 9
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 18 && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 27 && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 36 && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 45 && caseDepartPlus36.getPiece()== null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 54 && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 63 && caseDepartPlus54.getPiece() == null && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 72 && caseDepartPlus63.getPiece() == null && caseDepartPlus54.getPiece() == null && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 7
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 14 && caseDepartPlus7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 21 && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 28 && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 35 && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 42 && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 49 && caseDepartPlus42.getPiece() == null && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepartPlus49.getPiece() == null && caseDepartPlus42.getPiece() == null && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 9
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 18 && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 27 && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 36 && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 45 && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 54 && caseDepartMoins45.getPiece() == null && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 63 && caseDepartMoins54.getPiece() == null && caseDepartMoins45.getPiece() == null&& caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 72 && caseDepartMoins63.getPiece() == null && caseDepartMoins54.getPiece() == null && caseDepartMoins45.getPiece() == null && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 7
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 14 && caseDepartMoins7.getPiece()== null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 21 && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 28 && caseDepartMoins21.getPiece()== null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 35 && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 42 && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 49 && caseDepartMoins42.getPiece() == null && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepartMoins49.getPiece() == null && caseDepartMoins42.getPiece() == null && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+      )
+      {
+          if (verificationCampPieceCaseDestination(caseDepart, caseDestination))
+          {
+            return true;
+          }else
+          {
+            return false;
+          }
+      } else
+      {
+          return false;
+      }
+    }
+      // Version à reprendre :
+      /*
+       // Récupération des numéros des cases :
       int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
       int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
+
+      // Case horizontales et verticales :
+        Case caseDepartPlus1 = echiquier.get((int) (caseDepart.getNo_case()+1));
+        Case caseDepartPlus2 = echiquier.get((int) (caseDepart.getNo_case()+2));
+        Case caseDepartPlus3 = echiquier.get((int) (caseDepart.getNo_case()+3));
+        Case caseDepartPlus4 = echiquier.get((int) (caseDepart.getNo_case()+4));
+        Case caseDepartPlus5 = echiquier.get((int) (caseDepart.getNo_case()+5));
+        Case caseDepartPlus6 = echiquier.get((int) (caseDepart.getNo_case()+6));
+        Case caseDepartMoins1 = echiquier.get((int) (caseDepart.getNo_case()-1));
+        Case caseDepartMoins2 = echiquier.get((int) (caseDepart.getNo_case()-2));
+        Case caseDepartMoins3 = echiquier.get((int) (caseDepart.getNo_case()-3));
+        Case caseDepartMoins4 = echiquier.get((int) (caseDepart.getNo_case()-4));
+        Case caseDepartMoins5 = echiquier.get((int) (caseDepart.getNo_case()-5));
+        Case caseDepartMoins6 = echiquier.get((int) (caseDepart.getNo_case()-6));
+        Case caseDepartPlus8 = echiquier.get((int) (caseDepart.getNo_case()+8));
+        Case caseDepartPlus16 = echiquier.get((int) (caseDepart.getNo_case()+16));
+        Case caseDepartPlus24 = echiquier.get((int) (caseDepart.getNo_case()+24));
+        Case caseDepartPlus32 = echiquier.get((int) (caseDepart.getNo_case()+32));
+        Case caseDepartPlus40 = echiquier.get((int) (caseDepart.getNo_case()+40));
+        Case caseDepartPlus48 = echiquier.get((int) (caseDepart.getNo_case()+48));
+        Case caseDepartMoins8 = echiquier.get((int) (caseDepart.getNo_case()-8));
+        Case caseDepartMoins16 = echiquier.get((int) (caseDepart.getNo_case()-16));
+        Case caseDepartMoins24 = echiquier.get((int) (caseDepart.getNo_case()-24));
+        Case caseDepartMoins32 = echiquier.get((int) (caseDepart.getNo_case()-32));
+        Case caseDepartMoins40 = echiquier.get((int) (caseDepart.getNo_case()-40));
+        Case caseDepartMoins48 = echiquier.get((int) (caseDepart.getNo_case()-48));
+        // Case diagonales :
+        Case caseDepartPlus9 = echiquier.get((int) (caseDepart.getNo_case()+9));
+        Case caseDepartPlus18 = echiquier.get((int) (caseDepart.getNo_case()+18));
+        Case caseDepartPlus27 = echiquier.get((int) (caseDepart.getNo_case()+27));
+        Case caseDepartPlus36 = echiquier.get((int) (caseDepart.getNo_case()+36));
+        Case caseDepartPlus45 = echiquier.get((int) (caseDepart.getNo_case()+45));
+        Case caseDepartPlus54 = echiquier.get((int) (caseDepart.getNo_case()+54));
+        Case caseDepartPlus63 = echiquier.get((int) (caseDepart.getNo_case()+63));
+        Case caseDepartMoins9 = echiquier.get((int) (caseDepart.getNo_case()-9));
+        Case caseDepartMoins18 = echiquier.get((int) (caseDepart.getNo_case()-18));
+        Case caseDepartMoins27 = echiquier.get((int) (caseDepart.getNo_case()-27));
+        Case caseDepartMoins36 = echiquier.get((int) (caseDepart.getNo_case()-36));
+        Case caseDepartMoins45 = echiquier.get((int) (caseDepart.getNo_case()-45));
+        Case caseDepartMoins54 = echiquier.get((int) (caseDepart.getNo_case()-54));
+        Case caseDepartMoins63 = echiquier.get((int) (caseDepart.getNo_case()-63));
+        Case caseDepartPlus7 = echiquier.get((int) (caseDepart.getNo_case()+7));
+        Case caseDepartPlus14 = echiquier.get((int) (caseDepart.getNo_case()+14));
+        Case caseDepartPlus21 = echiquier.get((int) (caseDepart.getNo_case()+21));
+        Case caseDepartPlus28 = echiquier.get((int) (caseDepart.getNo_case()+28));
+        Case caseDepartPlus35 = echiquier.get((int) (caseDepart.getNo_case()+35));
+        Case caseDepartPlus42 = echiquier.get((int) (caseDepart.getNo_case()+42));
+        Case caseDepartPlus49 = echiquier.get((int) (caseDepart.getNo_case()+49));
+        Case caseDepartMoins7 = echiquier.get((int) (caseDepart.getNo_case()-7));
+        Case caseDepartMoins14 = echiquier.get((int) (caseDepart.getNo_case()-14));
+        Case caseDepartMoins21 = echiquier.get((int) (caseDepart.getNo_case()-21));
+        Case caseDepartMoins28 = echiquier.get((int) (caseDepart.getNo_case()-28));
+        Case caseDepartMoins35 = echiquier.get((int) (caseDepart.getNo_case()-35));
+        Case caseDepartMoins42 = echiquier.get((int) (caseDepart.getNo_case()-42));
+        Case caseDepartMoins49 = echiquier.get((int) (caseDepart.getNo_case()-49));
       // Déplacements possibles :
-      /*
-      if (
-      // Contrôle diagonale (droite/gauche/haut/bas) :
-      caseDestination.getNo_case() == caseDepart.getNo_case() + 9L
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 18L && caseDepart.getNo_case() + 9L
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 27 && caseDepart.getNo_case().+ 18.piece == null && caseDepart.getNo_case().+ 9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 36 && caseDepart.getNo_case().+ 27.piece == null && caseDepart.getNo_case().+ 18.piece == null && caseDepart.getNo_case().+ 9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 45 && caseDepart.getNo_case().+ 36.piece == null && caseDepart.getNo_case().+ 27.piece == null && caseDepart.getNo_case().+ 18.piece == null && caseDepart.getNo_case().+ 9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 54 && caseDepart.getNo_case().+ 45.piece == null && caseDepart.getNo_case().+ 36.piece == null && caseDepart.getNo_case().+ 27.piece == null && caseDepart.getNo_case().+ 18.piece == null && caseDepart.getNo_case()+ 9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 63 && caseDepart.getNo_case().+ 54.piece == null && caseDepart.getNo_case().+ 45.piece == null  && caseDepart.getNo_case().+ 36.piece == null && caseDepart.getNo_case().+ 27.piece == null && caseDepart.getNo_case().+ 18.piece == null && caseDepart.getNo_case().+ 9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 72 && caseDepart.getNo_case().+ 63.piece == null && caseDepart.getNo_case().+ 54.piece == null && caseDepart.getNo_case().+ 45.piece == null  && caseDepart.getNo_case().+ 36.piece == null && caseDepart.getNo_case().+ 27.piece == null && caseDepart.getNo_case().+ 18.piece == null && caseDepart.getNo_case().+ 9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 7
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 14 && caseDepart.getNo_case().+ 7.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 21 && caseDepart.getNo_case().+ 14.piece == null && caseDepart.getNo_case().+ 7.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 28 && caseDepart.getNo_case().+ 21.piece == null && caseDepart.getNo_case().+ 14.piece == null && caseDepart.getNo_case().+ 7.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 35 && caseDepart.getNo_case().+ 28.piece == null && caseDepart.getNo_case().+ 21.piece == null && caseDepart.getNo_case().+ 14.piece == null && caseDepart.getNo_case().+ 7.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 42 && caseDepart.getNo_case().+ 35.piece == null && caseDepart.getNo_case().+ 28.piece == null && caseDepart.getNo_case().+ 21.piece == null && caseDepart.getNo_case().+ 14.piece == null && caseDepart.getNo_case().+ 7.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 49 && caseDepart.getNo_case().+ 42.piece == null && caseDepart.getNo_case().+ 35.piece == null && caseDepart.getNo_case().+ 28.piece == null && caseDepart.getNo_case().+ 21.piece == null && caseDepart.getNo_case().+ 14.piece == null && caseDepart.getNo_case().+ 7.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepart.getNo_case().+ 49.piece == null && caseDepart.getNo_case().+ 42.piece == null && caseDepart.getNo_case().+ 35.piece == null && caseDepart.getNo_case().+ 28.piece == null && caseDepart.getNo_case().+ 21.piece == null && caseDepart.getNo_case().+ 14.piece == null && caseDepart.getNo_case().+ 7.piece == null
+        if (
+         // Contrôle ligne droite verticale :
+         caseDestination.getNo_case() == caseDepart.getNo_case()+ 1
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 2 && caseDepartPlus1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 3 && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 4 && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 5 && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 6 && caseDepartPlus5.getPiece() == null && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 7 && caseDepartPlus6.getPiece() == null && caseDepartPlus5.getPiece() == null && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 1
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 2 && caseDepartMoins1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 3 && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 4 && caseDepartMoins3.getPiece() == null && caseDepartMoins2.getPiece()== null && caseDepartMoins1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 5 && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece()== null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 6 && caseDepartMoins5.getPiece() == null && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece() == null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 7 && caseDepartMoins6.getPiece() == null && caseDepartMoins5.getPiece() == null && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece()== null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
 
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 9
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 18 && caseDepart.getNo_case().-9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 27 && caseDepart.getNo_case().-18.piece == null && caseDepart.getNo_case().-9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 36 && caseDepart.getNo_case().-27.piece == null && caseDepart.getNo_case().-18.piece == null && caseDepart.getNo_case().-9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 45 && caseDepart.getNo_case().-36.piece == null && caseDepart.getNo_case().-27.piece == null && caseDepart.getNo_case().-18.piece == null && caseDepart.getNo_case().-9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 54 && caseDepart.getNo_case().-45.piece == null && caseDepart.getNo_case().-36.piece == null && caseDepart.getNo_case().-27.piece == null && caseDepart.getNo_case().-18.piece == null && caseDepart.getNo_case().-9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 63 && caseDepart.getNo_case().-54.piece == null && caseDepart.getNo_case().-45.piece == null&& caseDepart.getNo_case().-36.piece == null && caseDepart.getNo_case().-27.piece == null && caseDepart.getNo_case().-18.piece == null && caseDepart.getNo_case().-9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 72 && caseDepart.getNo_case().-63.piece == null && caseDepart.getNo_case().-54.piece == null && caseDepart.getNo_case().-45.piece == null && caseDepart.getNo_case().-36.piece == null && caseDepart.getNo_case().-27.piece == null && caseDepart.getNo_case().-18.piece == null && caseDepart.getNo_case().-9.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 7
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 14 && caseDepart.getNo_case().- 7.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 21 && caseDepart.getNo_case().- 14.piece == null && caseDepart.getNo_case().- 7.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 28 && caseDepart.getNo_case().- 21.piece == null && caseDepart.getNo_case().- 14.piece == null && caseDepart.getNo_case().- 7.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 35 && caseDepart.getNo_case().- 28.piece == null && caseDepart.getNo_case().- 21.piece == null && caseDepart.getNo_case().- 14.piece == null && caseDepart.getNo_case().- 7.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 42 && caseDepart.getNo_case().- 35.piece == null && caseDepart.getNo_case().- 28.piece == null && caseDepart.getNo_case().- 21.piece == null && caseDepart.getNo_case().- 14.piece == null && caseDepart.getNo_case().- 7.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 49 && caseDepart.getNo_case().- 42.piece == null && caseDepart.getNo_case().- 35.piece == null && caseDepart.getNo_case().- 28.piece == null && caseDepart.getNo_case().- 21.piece == null && caseDepart.getNo_case().- 14.piece == null && caseDepart.getNo_case().- 7.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepart.getNo_case().- 49.piece == null && caseDepart.getNo_case().- 42.piece == null && caseDepart.getNo_case().- 35.piece == null && caseDepart.getNo_case().- 28.piece == null && caseDepart.getNo_case().- 21.piece == null && caseDepart.getNo_case().- 14.piece == null && caseDepart.getNo_case().- 7.piece == null
+         // Contrôle ligne droite horizontale :
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 8
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 16 && caseDepartPlus8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 24 && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 32 && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 40 && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 48 && caseDepartPlus40.getPiece() == null && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepartPlus48.getPiece()== null && caseDepartPlus40.getPiece() == null && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case()- 8
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 16 && caseDepartMoins8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 24 && caseDepartMoins16.getPiece()== null && caseDepartMoins8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 32 && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 40 && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8.getPiece()== null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 48 && caseDepartMoins40.getPiece() == null && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepartMoins48.getPiece() == null && caseDepartMoins40.getPiece() == null && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8.getPiece() == null
 
-      // Contrôle ligne droite verticale :
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 1
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 2 && caseDepart.getNo_case().+1.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 3 && caseDepart.getNo_case().+2.piece == null && caseDepart.getNo_case().+1.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 4 && caseDepart.getNo_case().+3.piece == null && caseDepart.getNo_case().+2piece == null && caseDepart.getNo_case().no_case.+1.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 5 && caseDepart.getNo_case().+4.piece == null && caseDepart.getNo_case().+3.piece == null && caseDepart.getNo_case().+2piece == null &&
-    .+1.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 6 && caseDepart.getNo_case().+5.piece == null && caseDepart.getNo_case().+4.piece == null && caseDepart.getNo_case().+3.piece == null && caseDepart.getNo_case().+2piece == null && caseDepart.getNo_case().+1.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 7 && caseDepart.getNo_case().+6.piece == null && caseDepart.getNo_case().+5.piece == null && caseDepart.getNo_case().+4.piece == null && caseDepart.getNo_case().+3.piece == null && caseDepart.getNo_case().+2piece == null && caseDepart.getNo_case().+1.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 1
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 2 && caseDepart.getNo_case().-1.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 3 && caseDepart.getNo_case().-2.piece == null && caseDepart.getNo_case().-1.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 4 && caseDepart.getNo_case().-3.piece == null && caseDepart.getNo_case().-2piece == null && caseDepart.getNo_case().-1.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 5 && caseDepart.getNo_case().-4.piece == null && caseDepart.getNo_case().-3.piece == null && caseDepart.getNo_case().-2.piece == null && caseDepart.getNo_case().-1.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 6 && caseDepart.getNo_case().-5.piece == null && caseDepart.getNo_case().-4.piece == null && caseDepart.getNo_case().-3.piece == null && caseDepart.getNo_case().-2piece == null && caseDepart.getNo_case().-1.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 7 && caseDepart.getNo_case().-6.piece == null && caseDepart.getNo_case().-5.piece == null && caseDepart.getNo_case().-4.piece == null && caseDepart.getNo_case().-3.piece == null && caseDepart.getNo_case().-2.piece == null && caseDepart.getNo_case().-1.piece == null
+         // Déplacement en diagonales :
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 9
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 18 && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 27 && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 36 && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 45 && caseDepartPlus36.getPiece()== null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 54 && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 63 && caseDepartPlus54.getPiece() == null && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 72 && caseDepartPlus63.getPiece() == null && caseDepartPlus54.getPiece() == null && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 7
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 14 && caseDepartPlus7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 21 && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 28 && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 35 && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 42 && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 49 && caseDepartPlus42.getPiece() == null && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepartPlus49.getPiece() == null && caseDepartPlus42.getPiece() == null && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
 
-      // Contrôle ligne droite horizontale :
-      || caseDestination.getNo_case()== caseDepart.getNo_case() + 8
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 16 && caseDepart.getNo_case().+8.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 24 && caseDepart.getNo_case().+16.piece == null && caseDepart.getNo_case().+8.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 32 && caseDepart.getNo_case().+24.piece == null && caseDepart.getNo_case().+16.piece == null && caseDepart.getNo_case().+8.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 40 && caseDepart.getNo_case().+32.piece == null && caseDepart.getNo_case().+24.piece == null && caseDepart.getNo_case().+16.piece == null && caseDepart.getNo_case().+8.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 48 && caseDepart.getNo_case().+40.piece == null && caseDepart.getNo_case().+32.piece == null && caseDepart.getNo_case().+24.piece == null && caseDepart.getNo_case().+16.piece == null && caseDepart.getNo_case().+8.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepart.getNo_case().+48.piece == null && caseDepart.getNo_case().+40.piece == null && caseDepart.getNo_case().+32.piece == null && caseDepart.getNo_case().+24.piece == null && caseDepart.getNo_case().+16.piece == null && caseDepart.getNo_case().+8.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 8
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 16 && caseDepart.getNo_case().-8.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 24 && caseDepart.getNo_case().-16.piece == null && caseDepart.getNo_case().-8.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 32 && caseDepart.getNo_case().-24.piece == null && caseDepart.getNo_case().-16.piece == null && caseDepart.getNo_case().-8.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 40 && caseDepart.getNo_case().-32.piece == null && caseDepart.getNo_case().-24.piece == null && caseDepart.getNo_case().-16.piece == null && caseDepart.getNo_case().-8.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 48 && caseDepart.getNo_case().-40.piece == null && caseDepart.getNo_case().-32.piece == null && caseDepart.getNo_case().-24.piece == null && caseDepart.getNo_case().-16.piece == null && caseDepart.getNo_case().-8.piece == null
-      || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepart.getNo_case().-48.piece == null && caseDepart.getNo_case().-40.piece == null && caseDepart.getNo_case().-32.piece == null && caseDepart.getNo_case().-24.piece == null && caseDepart.getNo_case().-16.piece == null && caseDepart.getNo_case().-8.piece == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 9
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 18 && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 27 && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 36 && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 45 && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 54 && caseDepartMoins45.getPiece() == null && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 63 && caseDepartMoins54.getPiece() == null && caseDepartMoins45.getPiece() == null&& caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 72 && caseDepartMoins63.getPiece() == null && caseDepartMoins54.getPiece() == null && caseDepartMoins45.getPiece() == null && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 7
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 14 && caseDepartMoins7.getPiece()== null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 21 && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 28 && caseDepartMoins21.getPiece()== null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 35 && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 42 && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 49 && caseDepartMoins42.getPiece() == null && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+         || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepartMoins49.getPiece() == null && caseDepartMoins42.getPiece() == null && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
       )
       {
 	    return true;
@@ -494,8 +688,7 @@ public class JouerService {
         return false;
       }
       */
-        return true;
-    }
+
 
 
 
@@ -510,47 +703,83 @@ public class JouerService {
         // Récupération des numéros des cases :
         int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
         int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
-        // Déplacements possibles :
-        /*
-      If (
+        String plus = "plus";
+        String moins = "moins";
+        Case caseDepartPlus1 = calculCaseIntermediaire(caseDepart, 1L, echiquier, plus);
+        Case caseDepartPlus2 = calculCaseIntermediaire(caseDepart, 2L, echiquier, plus);
+        Case caseDepartPlus3 = calculCaseIntermediaire(caseDepart, 3L, echiquier, plus);
+        Case caseDepartPlus4 = calculCaseIntermediaire(caseDepart, 4L, echiquier, plus);
+        Case caseDepartPlus5 = calculCaseIntermediaire(caseDepart, 5L, echiquier, plus);
+        Case caseDepartPlus6 = calculCaseIntermediaire(caseDepart, 6L, echiquier, plus);
+
+        Case caseDepartMoins1 = calculCaseIntermediaire(caseDepart, 2L, echiquier, moins);
+        Case caseDepartMoins2 = calculCaseIntermediaire(caseDepart, 3L, echiquier, moins);
+        Case caseDepartMoins3 = calculCaseIntermediaire(caseDepart, 4L, echiquier, moins);
+        Case caseDepartMoins4 = calculCaseIntermediaire(caseDepart, 5L, echiquier, moins);
+        Case caseDepartMoins5 = calculCaseIntermediaire(caseDepart, 6L, echiquier, moins);
+        Case caseDepartMoins6 = calculCaseIntermediaire(caseDepart, 7L, echiquier, moins);
+
+        Case caseDepartPlus8 = calculCaseIntermediaire(caseDepart, 9L, echiquier, plus);
+        Case caseDepartPlus16 = calculCaseIntermediaire(caseDepart, 15L, echiquier, plus);
+        Case caseDepartPlus24 = calculCaseIntermediaire(caseDepart, 23L, echiquier, plus);
+        Case caseDepartPlus32 = calculCaseIntermediaire(caseDepart, 31L, echiquier, plus);
+        Case caseDepartPlus40 = calculCaseIntermediaire(caseDepart, 39L, echiquier, plus);
+        Case caseDepartPlus48 = calculCaseIntermediaire(caseDepart, 47L, echiquier, plus);
+
+        Case caseDepartMoins8 = calculCaseIntermediaire(caseDepart, 9L, echiquier, moins);
+        Case caseDepartMoins16 = calculCaseIntermediaire(caseDepart, 17L, echiquier, moins);
+        Case caseDepartMoins24 = calculCaseIntermediaire(caseDepart, 25L, echiquier, moins);
+        Case caseDepartMoins32 = calculCaseIntermediaire(caseDepart, 33L, echiquier, moins);
+        Case caseDepartMoins40 = calculCaseIntermediaire(caseDepart, 41L, echiquier, moins);
+        Case caseDepartMoins48 = calculCaseIntermediaire(caseDepart, 49L, echiquier, moins);
+
+      // Déplacements possibles :
       // Contrôle ligne droite verticale :
-      || caseDestination.no_case == caseDepart.no_case + 1
-      || caseDestination.no_case == caseDepart.no_case + 2 && caseDepart.no_case.+1.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 3 && caseDepart.no_case.+2.piece == null && caseDepart.no_case.+1.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 4 && caseDepart.no_case.+3.piece == null && caseDepart.no_case.+2piece == null && caseDepart.no_case.+1.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 5 && caseDepart.no_case.+4.piece == null && caseDepart.no_case.+3.piece == null && caseDepart.no_case.+2piece == null && caseDepart.no_case.+1.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 6 && caseDepart.no_case.+5.piece == null && caseDepart.no_case.+4.piece == null && caseDepart.no_case.+3.piece == null && caseDepart.no_case.+2piece == null && caseDepart.no_case.+1.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 7 && caseDepart.no_case.+6.piece == null && caseDepart.no_case.+5.piece == null && caseDepart.no_case.+4.piece == null && caseDepart.no_case.+3.piece == null && caseDepart.no_case.+2piece == null && caseDepart.no_case.+1.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 1
-      || caseDestination.no_case == caseDepart.no_case - 2 && caseDepart.no_case.-1.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 3 && caseDepart.no_case.-2.piece == null && caseDepart.no_case.-1.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 4 && caseDepart.no_case.-3.piece == null && caseDepart.no_case.-2piece == null && caseDepart.no_case.-1.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 5 && caseDepart.no_case.-4.piece == null && caseDepart.no_case.-3.piece == null && caseDepart.no_case.-2.piece == null && caseDepart.no_case.-1.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 6 && caseDepart.no_case.-5.piece == null && caseDepart.no_case.-4.piece == null && caseDepart.no_case.-3.piece == null && caseDepart.no_case.-2piece == null && caseDepart.no_case.-1.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 7 && caseDepart.no_case.-6.piece == null && caseDepart.no_case.-5.piece == null && caseDepart.no_case.-4.piece == null && caseDepart.no_case.-3.piece == null && caseDepart.no_case.-2.piece == null && caseDepart.no_case.-1.piece == null
+      if (caseDestination.getNo_case() == caseDepart.getNo_case()+ 1
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 2 && caseDepartPlus1.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 3 && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 4 && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 5 && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 6 && caseDepartPlus5.getPiece() == null && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 7 && caseDepartPlus6.getPiece() == null && caseDepartPlus5.getPiece() == null && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 1
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 2 && caseDepartMoins1.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 3 && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 4 && caseDepartMoins3.getPiece() == null && caseDepartMoins2.getPiece()== null && caseDepartMoins1.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 5 && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece()== null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 6 && caseDepartMoins5.getPiece() == null && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece() == null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 7 && caseDepartMoins6.getPiece() == null && caseDepartMoins5.getPiece() == null && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece()== null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
 
       // Contrôle ligne droite horizontale :
-      || caseDestination.no_case == caseDepart.no_case + 8
-      || caseDestination.no_case == caseDepart.no_case + 16 && caseDepart.no_case.+8.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 24 && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 32 && caseDepart.no_case.+24.piece == null && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 40 && caseDepart.no_case.+32.piece == null && caseDepart.no_case.+24.piece == null && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 48 && caseDepart.no_case.+40.piece == null && caseDepart.no_case.+32.piece == null && caseDepart.no_case.+24.piece == null && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 56 && caseDepart.no_case.+48.piece == null && caseDepart.no_case.+40.piece == null && caseDepart.no_case.+32.piece == null && caseDepart.no_case.+24.piece == null && caseDepart.no_case.+16.piece == null && caseDepart.no_case.+8.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 8
-      || caseDestination.no_case == caseDepart.no_case - 16 && caseDepart.no_case.-8.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 24 && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 32 && caseDepart.no_case.-24.piece == null && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 40 && caseDepart.no_case.-32.piece == null && caseDepart.no_case.-24.piece == null && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 48 && caseDepart.no_case.-40.piece == null && caseDepart.no_case.-32.piece == null && caseDepart.no_case.-24.piece == null && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 56 && caseDepart.no_case.-48.piece == null && caseDepart.no_case.-40.piece == null && caseDepart.no_case.-32.piece == null && caseDepart.no_case.-24.piece == null && caseDepart.no_case.-16.piece == null && caseDepart.no_case.-8.piece == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 8
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 16 && caseDepartPlus8.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 24 && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 32 && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 40 && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 48 && caseDepartPlus40.getPiece() == null && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepartPlus48.getPiece()== null && caseDepartPlus40.getPiece() == null && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case()- 8
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 16 && caseDepartMoins8.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 24 && caseDepartMoins16.getPiece()== null && caseDepartMoins8.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 32 && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 40 && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8.getPiece()== null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 48 && caseDepartMoins40.getPiece() == null && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8.getPiece() == null
+      || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepartMoins48.getPiece() == null && caseDepartMoins40.getPiece() == null && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8.getPiece() == null
       )
       {
-	    return true;
+          if (verificationCampPieceCaseDestination(caseDepart, caseDestination))
+          {
+              return true;
+          }else
+          {
+              return false;
+          }
+      } else
+      {
+          return false;
       }
-      */
-        return true;
     }
+
 
 
 
@@ -565,7 +794,85 @@ public class JouerService {
         // Récupération des numéros des cases :
         int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
         int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
+        Case caseDepartPlus9 = echiquier.get((int) (caseDepart.getNo_case()+9));
+        Case caseDepartPlus18 = echiquier.get((int) (caseDepart.getNo_case()+18));
+        Case caseDepartPlus27 = echiquier.get((int) (caseDepart.getNo_case()+27));
+        Case caseDepartPlus36 = echiquier.get((int) (caseDepart.getNo_case()+36));
+        Case caseDepartPlus45 = echiquier.get((int) (caseDepart.getNo_case()+45));
+        Case caseDepartPlus54 = echiquier.get((int) (caseDepart.getNo_case()+54));
+        Case caseDepartPlus63 = echiquier.get((int) (caseDepart.getNo_case()+63));
+        Case caseDepartMoins9 = echiquier.get((int) (caseDepart.getNo_case()-9));
+        Case caseDepartMoins18 = echiquier.get((int) (caseDepart.getNo_case()-18));
+        Case caseDepartMoins27 = echiquier.get((int) (caseDepart.getNo_case()-27));
+        Case caseDepartMoins36 = echiquier.get((int) (caseDepart.getNo_case()-36));
+        Case caseDepartMoins45 = echiquier.get((int) (caseDepart.getNo_case()-45));
+        Case caseDepartMoins54 = echiquier.get((int) (caseDepart.getNo_case()-54));
+        Case caseDepartMoins63 = echiquier.get((int) (caseDepart.getNo_case()-63));
+        Case caseDepartPlus7 = echiquier.get((int) (caseDepart.getNo_case()+7));
+        Case caseDepartPlus14 = echiquier.get((int) (caseDepart.getNo_case()+14));
+        Case caseDepartPlus21 = echiquier.get((int) (caseDepart.getNo_case()+21));
+        Case caseDepartPlus28 = echiquier.get((int) (caseDepart.getNo_case()+28));
+        Case caseDepartPlus35 = echiquier.get((int) (caseDepart.getNo_case()+35));
+        Case caseDepartPlus42 = echiquier.get((int) (caseDepart.getNo_case()+42));
+        Case caseDepartPlus49 = echiquier.get((int) (caseDepart.getNo_case()+49));
+        Case caseDepartMoins7 = echiquier.get((int) (caseDepart.getNo_case()-7));
+        Case caseDepartMoins14 = echiquier.get((int) (caseDepart.getNo_case()-14));
+        Case caseDepartMoins21 = echiquier.get((int) (caseDepart.getNo_case()-21));
+        Case caseDepartMoins28 = echiquier.get((int) (caseDepart.getNo_case()-28));
+        Case caseDepartMoins35 = echiquier.get((int) (caseDepart.getNo_case()-35));
+        Case caseDepartMoins42 = echiquier.get((int) (caseDepart.getNo_case()-42));
+        Case caseDepartMoins49 = echiquier.get((int) (caseDepart.getNo_case()-49));
+
         // Déplacements possibles :
+        // Contrôle diagonale (droite/gauche/haut/bas) :
+        if (caseDestination.getNo_case() == caseDepart.getNo_case() + 9
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 18 && caseDepartPlus9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 27 && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 36 && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 45 && caseDepartPlus36.getPiece()== null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 54 && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 63 && caseDepartPlus54.getPiece() == null && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 72 && caseDepartPlus63.getPiece() == null && caseDepartPlus54.getPiece() == null && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 7
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 14 && caseDepartPlus7.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 21 && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 28 && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 35 && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 42 && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 49 && caseDepartPlus42.getPiece() == null && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepartPlus49.getPiece() == null && caseDepartPlus42.getPiece() == null && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
+
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 9
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 18 && caseDepartMoins9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 27 && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 36 && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 45 && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 54 && caseDepartMoins45.getPiece() == null && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 63 && caseDepartMoins54.getPiece() == null && caseDepartMoins45.getPiece() == null&& caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 72 && caseDepartMoins63.getPiece() == null && caseDepartMoins54.getPiece() == null && caseDepartMoins45.getPiece() == null && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 7
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 14 && caseDepartMoins7.getPiece()== null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 21 && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 28 && caseDepartMoins21.getPiece()== null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 35 && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 42 && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 49 && caseDepartMoins42.getPiece() == null && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+        || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepartMoins49.getPiece() == null && caseDepartMoins42.getPiece() == null && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
+        )
+        {
+            if (verificationCampPieceCaseDestination(caseDepart, caseDestination))
+            {
+                return true;
+             }else
+             {
+              return false;
+             }
+        } else
+        {
+            return false;
+        }
+    }
+    // Déplacements possibles :
     /*
     If (
       // Contrôle diagonale (droite/gauche/haut/bas) :
@@ -607,8 +914,7 @@ public class JouerService {
 	    return true;
       }
       */
-        return true;
-    }
+
 
 
 
@@ -636,8 +942,15 @@ public class JouerService {
            || noCaseDestination == noCaseDepart - 17
         )
         {
-            return true;
-        } else {
+            if (verificationCampPieceCaseDestination(caseDepart, caseDestination))
+            {
+                return true;
+            }else
+            {
+                return false;
+            }
+        } else
+        {
             return false;
         }
     }
@@ -650,25 +963,41 @@ public class JouerService {
      * @return
      * @throws Exception
      */
-    public boolean deplacementPion(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
+    public boolean deplacementPion(Case caseDepart, Case caseDestination, Piece piece, List<Case> echiquier) throws Exception
     {
         // VERSION TEMPORAIRE :COMPLETER LES CONDITIONS AVEC LA CASE ORIGINE.
         // Récupération des numéros des cases :
         int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
         int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
+        Case caseIntermediaire;
+        if (piece.getCouleur().getCouleur().equals("blanc"))
+        {
+            caseIntermediaire = echiquier.get(Math.toIntExact(caseDepart.getNo_case()-2L));
+        }else
+        {
+            caseIntermediaire = echiquier.get(Math.toIntExact(caseDepart.getNo_case()));
+        }
+
         // Contrôle des déplacements possibles :
-        if(noCaseDestination == noCaseDepart + 1 && caseDestination.getPiece() == null
-           || noCaseDestination == noCaseDepart - 1 && caseDestination.getPiece() == null
-           || noCaseDestination == noCaseDepart + 2 && caseDestination.getPiece()== null // && noCaseDepart = case_origine && caseDestination.getPiece()== null
-           || noCaseDestination == noCaseDepart - 2 && caseDestination.getPiece()== null // && noCaseDepart = case_origine && caseDestination.getPiece()== null
-           || noCaseDestination == noCaseDepart + 9 && caseDestination.getPiece() != null && caseDestination.getPiece().getCouleur().getCouleur() != caseDepart.getPiece().getCouleur().getCouleur()
-           || noCaseDestination == noCaseDepart - 9 && caseDestination.getPiece() != null && caseDestination.getPiece().getCouleur().getCouleur() != caseDepart.getPiece().getCouleur().getCouleur()
-           || noCaseDestination == noCaseDepart +7 && caseDestination.getPiece() != null && caseDestination.getPiece().getCouleur().getCouleur() != caseDepart.getPiece().getCouleur().getCouleur()
-           || noCaseDestination == noCaseDepart -7 && caseDestination.getPiece() != null && caseDestination.getPiece().getCouleur().getCouleur() != caseDepart.getPiece().getCouleur().getCouleur()
+        if((noCaseDestination == noCaseDepart + 1 && caseDestination.getPiece() == null)
+        || (noCaseDestination == noCaseDepart -1 && caseDestination.getPiece() == null)
+        || (noCaseDestination == noCaseDepart +2 && caseDestination.getPiece()== null && piece.getCouleur().getCouleur().equals("noir") && (caseDepart.getNo_case() == 2L || caseDepart.getNo_case() == 10L || caseDepart.getNo_case() == 18L || caseDepart.getNo_case() == 26L || caseDepart.getNo_case() == 34L || caseDepart.getNo_case() == 42L || caseDepart.getNo_case() == 50L || caseDepart.getNo_case() == 58L) && caseIntermediaire.getPiece() == null)
+        || (noCaseDestination == noCaseDepart -2 && caseDestination.getPiece()== null && piece.getCouleur().getCouleur().equals("blanc") && (caseDepart.getNo_case() == 7L || caseDepart.getNo_case() == 15L || caseDepart.getNo_case() == 23L || caseDepart.getNo_case() == 31L || caseDepart.getNo_case() == 39L || caseDepart.getNo_case() == 47L || caseDepart.getNo_case() == 55L|| caseDepart.getNo_case() == 63L) && caseIntermediaire.getPiece() == null)
+        || (noCaseDestination == noCaseDepart +9 && caseDestination.getPiece() != null)
+        || (noCaseDestination == noCaseDepart -9 && caseDestination.getPiece() != null)
+        || (noCaseDestination == noCaseDepart +7 && caseDestination.getPiece() != null)
+        || (noCaseDestination == noCaseDepart -7 && caseDestination.getPiece() != null)
         )
         {
-            return true;
-        } else {
+            if (verificationCampPieceCaseDestination(caseDepart, caseDestination))
+            {
+                return true;
+            }else
+            {
+                return false;
+            }
+        } else
+        {
             return false;
         }
     }
@@ -676,10 +1005,59 @@ public class JouerService {
 
 
 
+    /**
+     * Cette méthode affecte les cases intermediaire par lesquels va passer une pièce lorsqu'elle se déplace.
+     * @param caseDepart
+     * @param nbCaseSup
+     * @param echiquier
+     * @return
+     * @throws Exception
+     */
+    public Case calculCaseIntermediaire(Case caseDepart, Long nbCaseSup, List<Case> echiquier, String operateur) throws Exception
+    {
+        Case caseIntermediaire;
+        if(operateur.equals("plus"))
+        {
+            if(caseDepart.getNo_case()+nbCaseSup>echiquier.size())
+            {
+                caseIntermediaire = null;
+            }else if(caseDepart.getNo_case()+nbCaseSup==echiquier.size())
+            {
+                caseIntermediaire = echiquier.get(Math.toIntExact(caseDepart.getNo_case()+nbCaseSup-1));
+            }else
+            {
+                int test = Math.toIntExact(caseDepart.getNo_case()+nbCaseSup);
+                caseIntermediaire = echiquier.get(Math.toIntExact(caseDepart.getNo_case()+nbCaseSup));
+            }
+        }else{
+            if(caseDepart.getNo_case()-nbCaseSup<0)
+            {
+                caseIntermediaire = null;
+            }else
+            {
+                caseIntermediaire = echiquier.get(Math.toIntExact(caseDepart.getNo_case()-nbCaseSup));
+            }
+        }
+        return caseIntermediaire;
+    }
 
 
 
 
+    /**
+     * Cette méthode vérifie si la pièce sur la case de destination fait partie du même camp.
+     * @param caseDepart
+     * @param caseDestination
+     * @return
+     * @throws Exception
+     */
+    public boolean verificationCampPieceCaseDestination(Case caseDepart, Case caseDestination) throws Exception {
+        if (caseDestination.getPiece() == null || caseDestination.getPiece() != null && !caseDestination.getPiece().getCouleur().getCouleur().equals(caseDepart.getPiece().getCouleur().getCouleur())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
 
