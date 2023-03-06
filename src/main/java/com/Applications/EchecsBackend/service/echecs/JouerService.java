@@ -406,12 +406,14 @@ public class JouerService {
      */
     public boolean deplacementReine(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
-      // Récupération des numéros des cases :
-        int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
-        int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
-        String plus = "plus";
-        String moins = "moins";
-
+        if(deplacementTour(caseDepart, caseDestination, echiquier) || deplacementFou(caseDepart, caseDestination, echiquier))
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+        /*
       // Case horizontales et verticales :
         Case caseDepartPlus1 = calculCaseIntermediaire(caseDepart, 1L, echiquier, plus);
         Case caseDepartPlus2 = calculCaseIntermediaire(caseDepart, 2L, echiquier, plus);
@@ -445,35 +447,39 @@ public class JouerService {
         Case caseDepartMoins56 = calculCaseIntermediaire(caseDepart, 57L, echiquier, moins);
 
         // Case diagonales :
-        Case caseDepartPlus9 = echiquier.get((int) (caseDepart.getNo_case()+9));
-        Case caseDepartPlus18 = echiquier.get((int) (caseDepart.getNo_case()+18));
-        Case caseDepartPlus27 = echiquier.get((int) (caseDepart.getNo_case()+27));
-        Case caseDepartPlus36 = echiquier.get((int) (caseDepart.getNo_case()+36));
-        Case caseDepartPlus45 = echiquier.get((int) (caseDepart.getNo_case()+45));
-        Case caseDepartPlus54 = echiquier.get((int) (caseDepart.getNo_case()+54));
-        Case caseDepartPlus63 = echiquier.get((int) (caseDepart.getNo_case()+63));
-        Case caseDepartMoins9 = echiquier.get((int) (caseDepart.getNo_case()-9));
-        Case caseDepartMoins18 = echiquier.get((int) (caseDepart.getNo_case()-18));
-        Case caseDepartMoins27 = echiquier.get((int) (caseDepart.getNo_case()-27));
-        Case caseDepartMoins36 = echiquier.get((int) (caseDepart.getNo_case()-36));
-        Case caseDepartMoins45 = echiquier.get((int) (caseDepart.getNo_case()-45));
-        Case caseDepartMoins54 = echiquier.get((int) (caseDepart.getNo_case()-54));
-        Case caseDepartMoins63 = echiquier.get((int) (caseDepart.getNo_case()-63));
-        Case caseDepartPlus7 = echiquier.get((int) (caseDepart.getNo_case()+7));
-        Case caseDepartPlus14 = echiquier.get((int) (caseDepart.getNo_case()+14));
-        Case caseDepartPlus21 = echiquier.get((int) (caseDepart.getNo_case()+21));
-        Case caseDepartPlus28 = echiquier.get((int) (caseDepart.getNo_case()+28));
-        Case caseDepartPlus35 = echiquier.get((int) (caseDepart.getNo_case()+35));
-        Case caseDepartPlus42 = echiquier.get((int) (caseDepart.getNo_case()+42));
-        Case caseDepartPlus49 = echiquier.get((int) (caseDepart.getNo_case()+49));
-        Case caseDepartMoins7 = echiquier.get((int) (caseDepart.getNo_case()-7));
-        Case caseDepartMoins14 = echiquier.get((int) (caseDepart.getNo_case()-14));
-        Case caseDepartMoins21 = echiquier.get((int) (caseDepart.getNo_case()-21));
-        Case caseDepartMoins28 = echiquier.get((int) (caseDepart.getNo_case()-28));
-        Case caseDepartMoins35 = echiquier.get((int) (caseDepart.getNo_case()-35));
-        Case caseDepartMoins42 = echiquier.get((int) (caseDepart.getNo_case()-42));
-        Case caseDepartMoins49 = echiquier.get((int) (caseDepart.getNo_case()-49));
-      // Déplacements possibles :
+        Case caseDepartPlus9 = calculCaseIntermediaire(caseDepart, 8L, echiquier, plus);
+        Case caseDepartPlus18 = calculCaseIntermediaire(caseDepart, 17L, echiquier, plus);
+        Case caseDepartPlus27 = calculCaseIntermediaire(caseDepart, 26L, echiquier, plus);
+        Case caseDepartPlus36 = calculCaseIntermediaire(caseDepart, 35L, echiquier, plus);
+        Case caseDepartPlus45 = calculCaseIntermediaire(caseDepart, 44L, echiquier, plus);
+        Case caseDepartPlus54 = calculCaseIntermediaire(caseDepart, 53L, echiquier, plus);
+        Case caseDepartPlus63 = calculCaseIntermediaire(caseDepart, 62L, echiquier, plus);
+
+        Case caseDepartMoins9 = calculCaseIntermediaire(caseDepart, 10L, echiquier, moins);
+        Case caseDepartMoins18 = calculCaseIntermediaire(caseDepart, 19L, echiquier, moins);
+        Case caseDepartMoins27 = calculCaseIntermediaire(caseDepart, 28L, echiquier, moins);
+        Case caseDepartMoins36 = calculCaseIntermediaire(caseDepart, 37L, echiquier, moins);
+        Case caseDepartMoins45 = calculCaseIntermediaire(caseDepart, 46L, echiquier, moins);
+        Case caseDepartMoins54 = calculCaseIntermediaire(caseDepart, 55L, echiquier, moins);
+        Case caseDepartMoins63 = calculCaseIntermediaire(caseDepart, 64L, echiquier, moins);
+
+        Case caseDepartPlus7 = calculCaseIntermediaire(caseDepart, 6L, echiquier, plus);
+        Case caseDepartPlus14 = calculCaseIntermediaire(caseDepart, 13L, echiquier, plus);
+        Case caseDepartPlus21 = calculCaseIntermediaire(caseDepart, 20L, echiquier, plus);
+        Case caseDepartPlus28 = calculCaseIntermediaire(caseDepart, 27L, echiquier, plus);
+        Case caseDepartPlus35 = calculCaseIntermediaire(caseDepart, 34L, echiquier, plus);
+        Case caseDepartPlus42 = calculCaseIntermediaire(caseDepart, 41L, echiquier, plus);
+        Case caseDepartPlus49 = calculCaseIntermediaire(caseDepart, 48L, echiquier, plus);
+
+        Case caseDepartMoins7 = calculCaseIntermediaire(caseDepart, 8L, echiquier, moins);
+        Case caseDepartMoins14 = calculCaseIntermediaire(caseDepart, 15L, echiquier, moins);
+        Case caseDepartMoins21 = calculCaseIntermediaire(caseDepart, 22L, echiquier, moins);
+        Case caseDepartMoins28 = calculCaseIntermediaire(caseDepart, 29L, echiquier, moins);
+        Case caseDepartMoins35 = calculCaseIntermediaire(caseDepart, 36L, echiquier, moins);
+        Case caseDepartMoins42 = calculCaseIntermediaire(caseDepart, 43L, echiquier, moins);
+        Case caseDepartMoins49 = calculCaseIntermediaire(caseDepart, 50L, echiquier, moins);
+
+        // Déplacements possibles :
         // Déplacement ligne droite verticale :
       if (caseDestination.getNo_case() == caseDepart.getNo_case()+ 1
          || caseDestination.getNo_case() == caseDepart.getNo_case() + 2 && caseDepartPlus1.getPiece() == null
@@ -552,6 +558,7 @@ public class JouerService {
       {
           return false;
       }
+      */
     }
       // Version à reprendre :
       /*
