@@ -84,118 +84,11 @@ public class JouerService {
 
 
     /**
-     * Méthode qui déplace l'objet
-     */
-    public List<Case> echiquierMaj(List<Case> casesDeplacement) throws Exception {
-
-        // 1- Récupération des cases et de la pièce :
-        Case caseDepart = caseRepository.findById(casesDeplacement.get(0).getNo_case()).
-                orElseThrow(() -> new Exception("Case not exist with id: " + casesDeplacement.get(0).getNo_case()));
-        Case caseDestination = caseRepository.findById(casesDeplacement.get(1).getNo_case()).
-                orElseThrow(() -> new Exception("Case not exist with id: " + casesDeplacement.get(1).getNo_case()));
-        Piece piece = pieceRepository.findById(casesDeplacement.get(0).getPiece().getNo_piece()).
-                orElseThrow(() -> new Exception("Piece not exist with id: " + casesDeplacement.get(0).getPiece().getNo_piece()));
-        List<Case> echiquier = caseRepository.findAll();
-        echiquier.sort(Comparator.comparing(Case::getNo_case));
-        // **************************  TEST : A SUPPRIMER **************************
-        // 2- Contrôle des Règles de gestion :
-        List<String> nomPiece = List.of(piece.getType().split(" "));
-        for(int i=0; i<nomPiece.size();i++)
-        {
-            System.out.println(nomPiece.get(i));
-        }
-        String typeDePiece = nomPiece.get(0);
-        switch(typeDePiece) {
-            case "roi":
-                // Déplacement de la pièce :
-                deplacementRoi(caseDepart, caseDestination, echiquier);
-                Roque();
-                echecEtPat();
-                System.out.println("Déplacement roi");
-                break;
-            case "reine":
-                // Déplacement de la pièce :
-                deplacementReine(caseDepart, caseDestination, echiquier);
-                // Contrôles :
-                echecAuRoi();
-                echecEtMat();
-                System.out.println("Déplacement reine");
-                break;
-            case "tour":
-                // Déplacement de la pièce :
-                deplacementTour(caseDepart, caseDestination, echiquier);
-                // Contrôles :
-                echecAuRoi();
-                echecEtMat();
-                System.out.println("Déplacement tour");
-                break;
-            case "fou":
-                // Déplacement de la pièce :
-                deplacementFou(caseDepart, caseDestination, echiquier);
-                // Contrôles :
-                echecAuRoi();
-                echecEtMat();
-                System.out.println("Déplacement fou");
-                break;
-            case "cavalier":
-                // Déplacement de la pièce :
-                deplacementCavalier(caseDepart, caseDestination, echiquier);
-                // Contrôles :
-                echecAuRoi();
-                echecEtMat();
-                System.out.println("Déplacement cavalier");
-                break;
-            default: // Pion
-                // Déplacement de la pièce :
-                deplacementPion(caseDepart, caseDestination, piece, echiquier);
-                // Contrôles :
-                echecAuRoi();
-                echecEtMat();
-                transformationPion();
-                System.out.println("Déplacement pion");
-        }
-
-        // 3- Déplacement de la pièce :
-        caseDestination.setPiece(piece);
-        if(caseDestination.getCouleur().getCouleur().equals("blanc"))
-        {
-            caseDestination.setCouleur(new Couleur(1L,"blanc"));
-        } else {
-            caseDestination.setCouleur(new Couleur(2L,"noir"));
-        }
-        caseDepart.setPiece(null);
-        if(caseDepart.getCouleur().getCouleur().equals("blanc"))
-        {
-            caseDepart.setCouleur(new Couleur(1L,"blanc"));
-        } else {
-            caseDepart.setCouleur(new Couleur(2L,"noir"));
-        }
-
-        // 3- Enregistrement des cases mises à jour :
-        caseRepository.save(caseDepart);
-        caseRepository.save(caseDestination);
-
-        // 4- Récupération de la BDD Mise à jour :
-        List<Case> echiquierMaj = demarrerUnePartieService.getEchequier();
-        return echiquierMaj;
-    }
-
-
-
-
-
-
-
-
-
-    // DEPLACEMENT DES PIECES (FUTURE VERSION) :
-
-    /**
-     * Méthode qui identifie la pièce.
+     * Méthode qui déplace les pièces.
      * Cette méthode va appeler les méthodes qui réalisent les contrôles
-     * pour les déplacements de chaque pièce (deplacementRoi(), deplacementReine, etc.) :
+     * pour les déplacements de chaque pièce (ex : deplacementRoi(), deplacementReine(), etc.) :
      * Si les conditions sont vérifiés, la méthode : "echiquierMaj(List<Case> casesDeplacement)"
-     * est appelée pour déplacer la pièce.
+     * est appelée pour déplacer la pièce et renvoyer l'échiquier mis à jour.
      */
     public List<Case> deplacerPiece(List<Case> casesDeplacement) throws Exception {
 
@@ -214,17 +107,33 @@ public class JouerService {
         // 2- Contrôle des Règles de gestion :
         List<String> nomPiece = List.of(piece.getType().split(" "));
         String typeDePiece = nomPiece.get(0);
-        switch(typeDePiece) {
+        switch (typeDePiece) {
             case "roi":
                 // Déplacement de la pièce :
-                if(deplacementRoi(caseDepart, caseDestination, echiquier))
-                {
+                if (deplacementRoi(caseDepart, caseDestination, echiquier)) {
                     // Contrôles à exécuter sur le Roi :
-                    // Roque();
-                    // echecEtPat();
-                    System.out.println("Déplacement roi");
+                        //echecAuRoi();
+                        // echecEtPat();
                     echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
-                } else {
+                }
+                else if (Roque(caseDepart, caseDestination, echiquier)) {
+                    if (caseDestination.getNo_case() == 56L) {
+                        petitRoqueBlanc(caseDepart, caseDestination, piece, echiquier);
+                    }else if(caseDestination.getNo_case()==49L)
+                    {
+                        petitRoqueNoir(caseDepart, caseDestination, piece, echiquier);
+                    }else if(caseDestination.getNo_case()==24L)
+                    {
+                        grandRoqueBlanc(caseDepart, caseDestination, piece, echiquier);
+
+                    }else if(caseDestination.getNo_case()==17L)
+                    {
+                        grandRoqueNoir(caseDepart, caseDestination, piece, echiquier);
+                    }
+                    echiquierMaj = caseRepository.findAll();
+                }
+                else
+                {
                     echiquierMaj = caseRepository.findAll();
                 }
                 break;
@@ -235,7 +144,6 @@ public class JouerService {
                     // Contrôles à executer sur la Reine :
                     echecAuRoi();
                     echecEtMat();
-                    System.out.println("Déplacement reine");
                     echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
                 } else {
                     echiquierMaj = caseRepository.findAll();
@@ -249,7 +157,6 @@ public class JouerService {
                     echecAuRoi();
                     echecEtMat();
                     echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
-                    System.out.println("Déplacement tour");
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -262,7 +169,6 @@ public class JouerService {
                     // echecAuRoi();
                     // echecEtMat();
                     echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
-                    System.out.println("Déplacement fou");
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -274,7 +180,6 @@ public class JouerService {
                     // echecAuRoi();
                     // echecEtMat();
                     echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
-                    System.out.println("Déplacement cavalier");
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -285,9 +190,14 @@ public class JouerService {
                     // Contrôles à exécuter sur le Pion :
                     // echecAuRoi();
                     // echecEtMat();
-                    // transformationPion();
-                    echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);;
-                    System.out.println("Déplacement pion");
+                    echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    if(pionBoutEchiquier(piece, caseDestination)) {
+                    /*
+                      1- Méthode 1 : Vérifier que le pion est arrivé au bout de l’échiquier.
+				        —> Si oui : Ouvrir une pop-up.
+				        —> Si non : Ne rien faire.
+		            */
+                    }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -413,288 +323,7 @@ public class JouerService {
         {
             return false;
         }
-        /*
-      // Case horizontales et verticales :
-        Case caseDepartPlus1 = calculCaseIntermediaire(caseDepart, 1L, echiquier, plus);
-        Case caseDepartPlus2 = calculCaseIntermediaire(caseDepart, 2L, echiquier, plus);
-        Case caseDepartPlus3 = calculCaseIntermediaire(caseDepart, 3L, echiquier, plus);
-        Case caseDepartPlus4 = calculCaseIntermediaire(caseDepart, 4L, echiquier, plus);
-        Case caseDepartPlus5 = calculCaseIntermediaire(caseDepart, 5L, echiquier, plus);
-        Case caseDepartPlus6 = calculCaseIntermediaire(caseDepart, 6L, echiquier, plus);
-        Case caseDepartPlus8 = calculCaseIntermediaire(caseDepart, 7L, echiquier, plus);
-
-        Case caseDepartMoins1 = calculCaseIntermediaire(caseDepart, 2L, echiquier, moins);
-        Case caseDepartMoins2 = calculCaseIntermediaire(caseDepart, 3L, echiquier, moins);
-        Case caseDepartMoins3 = calculCaseIntermediaire(caseDepart, 4L, echiquier, moins);
-        Case caseDepartMoins4 = calculCaseIntermediaire(caseDepart, 5L, echiquier, moins);
-        Case caseDepartMoins5 = calculCaseIntermediaire(caseDepart, 6L, echiquier, moins);
-        Case caseDepartMoins6 = calculCaseIntermediaire(caseDepart, 7L, echiquier, moins);
-        Case caseDepartMoins8 = calculCaseIntermediaire(caseDepart, 8L, echiquier, moins);
-
-        Case caseDepartPlus16 = calculCaseIntermediaire(caseDepart, 15L, echiquier, plus);
-        Case caseDepartPlus24 = calculCaseIntermediaire(caseDepart, 23L, echiquier, plus);
-        Case caseDepartPlus32 = calculCaseIntermediaire(caseDepart, 31L, echiquier, plus);
-        Case caseDepartPlus40 = calculCaseIntermediaire(caseDepart, 39L, echiquier, plus);
-        Case caseDepartPlus48 = calculCaseIntermediaire(caseDepart, 47L, echiquier, plus);
-        Case caseDepartPlus56 = calculCaseIntermediaire(caseDepart, 55L, echiquier, plus);
-
-        Case caseDepartMoins8Hor = calculCaseIntermediaire(caseDepart, 9L, echiquier, moins);
-        Case caseDepartMoins16 = calculCaseIntermediaire(caseDepart, 17L, echiquier, moins);
-        Case caseDepartMoins24 = calculCaseIntermediaire(caseDepart, 25L, echiquier, moins);
-        Case caseDepartMoins32 = calculCaseIntermediaire(caseDepart, 33L, echiquier, moins);
-        Case caseDepartMoins40 = calculCaseIntermediaire(caseDepart, 41L, echiquier, moins);
-        Case caseDepartMoins48 = calculCaseIntermediaire(caseDepart, 49L, echiquier, moins);
-        Case caseDepartMoins56 = calculCaseIntermediaire(caseDepart, 57L, echiquier, moins);
-
-        // Case diagonales :
-        Case caseDepartPlus9 = calculCaseIntermediaire(caseDepart, 8L, echiquier, plus);
-        Case caseDepartPlus18 = calculCaseIntermediaire(caseDepart, 17L, echiquier, plus);
-        Case caseDepartPlus27 = calculCaseIntermediaire(caseDepart, 26L, echiquier, plus);
-        Case caseDepartPlus36 = calculCaseIntermediaire(caseDepart, 35L, echiquier, plus);
-        Case caseDepartPlus45 = calculCaseIntermediaire(caseDepart, 44L, echiquier, plus);
-        Case caseDepartPlus54 = calculCaseIntermediaire(caseDepart, 53L, echiquier, plus);
-        Case caseDepartPlus63 = calculCaseIntermediaire(caseDepart, 62L, echiquier, plus);
-
-        Case caseDepartMoins9 = calculCaseIntermediaire(caseDepart, 10L, echiquier, moins);
-        Case caseDepartMoins18 = calculCaseIntermediaire(caseDepart, 19L, echiquier, moins);
-        Case caseDepartMoins27 = calculCaseIntermediaire(caseDepart, 28L, echiquier, moins);
-        Case caseDepartMoins36 = calculCaseIntermediaire(caseDepart, 37L, echiquier, moins);
-        Case caseDepartMoins45 = calculCaseIntermediaire(caseDepart, 46L, echiquier, moins);
-        Case caseDepartMoins54 = calculCaseIntermediaire(caseDepart, 55L, echiquier, moins);
-        Case caseDepartMoins63 = calculCaseIntermediaire(caseDepart, 64L, echiquier, moins);
-
-        Case caseDepartPlus7 = calculCaseIntermediaire(caseDepart, 6L, echiquier, plus);
-        Case caseDepartPlus14 = calculCaseIntermediaire(caseDepart, 13L, echiquier, plus);
-        Case caseDepartPlus21 = calculCaseIntermediaire(caseDepart, 20L, echiquier, plus);
-        Case caseDepartPlus28 = calculCaseIntermediaire(caseDepart, 27L, echiquier, plus);
-        Case caseDepartPlus35 = calculCaseIntermediaire(caseDepart, 34L, echiquier, plus);
-        Case caseDepartPlus42 = calculCaseIntermediaire(caseDepart, 41L, echiquier, plus);
-        Case caseDepartPlus49 = calculCaseIntermediaire(caseDepart, 48L, echiquier, plus);
-
-        Case caseDepartMoins7 = calculCaseIntermediaire(caseDepart, 8L, echiquier, moins);
-        Case caseDepartMoins14 = calculCaseIntermediaire(caseDepart, 15L, echiquier, moins);
-        Case caseDepartMoins21 = calculCaseIntermediaire(caseDepart, 22L, echiquier, moins);
-        Case caseDepartMoins28 = calculCaseIntermediaire(caseDepart, 29L, echiquier, moins);
-        Case caseDepartMoins35 = calculCaseIntermediaire(caseDepart, 36L, echiquier, moins);
-        Case caseDepartMoins42 = calculCaseIntermediaire(caseDepart, 43L, echiquier, moins);
-        Case caseDepartMoins49 = calculCaseIntermediaire(caseDepart, 50L, echiquier, moins);
-
-        // Déplacements possibles :
-        // Déplacement ligne droite verticale :
-      if (caseDestination.getNo_case() == caseDepart.getNo_case()+ 1
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 2 && caseDepartPlus1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 3 && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 4 && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 5 && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 6 && caseDepartPlus5.getPiece() == null && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 7 && caseDepartPlus6.getPiece() == null && caseDepartPlus5.getPiece() == null && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 1
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 2 && caseDepartMoins1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 3 && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 4 && caseDepartMoins3.getPiece() == null && caseDepartMoins2.getPiece()== null && caseDepartMoins1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 5 && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece()== null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 6 && caseDepartMoins5.getPiece() == null && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece() == null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 7 && caseDepartMoins6.getPiece() == null && caseDepartMoins5.getPiece() == null && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece()== null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
-         // Contrôle ligne droite horizontale :
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 8
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 16 && caseDepartPlus8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 24 && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 32 && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 40 && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 48 && caseDepartPlus40.getPiece() == null && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepartPlus48.getPiece()== null && caseDepartPlus40.getPiece() == null && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case()- 8
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 16 && caseDepartMoins8Hor.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 24 && caseDepartMoins16.getPiece()== null && caseDepartMoins8Hor.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 32 && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8Hor.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 40 && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8Hor.getPiece()== null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 48 && caseDepartMoins40.getPiece() == null && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8Hor.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepartMoins48.getPiece() == null && caseDepartMoins40.getPiece() == null && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8Hor.getPiece() == null
-
-         // Déplacement en diagonales :
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 9
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 18 && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 27 && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 36 && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 45 && caseDepartPlus36.getPiece()== null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 54 && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 63 && caseDepartPlus54.getPiece() == null && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 72 && caseDepartPlus63.getPiece() == null && caseDepartPlus54.getPiece() == null && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 7
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 14 && caseDepartPlus7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 21 && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 28 && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 35 && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 42 && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 49 && caseDepartPlus42.getPiece() == null && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepartPlus49.getPiece() == null && caseDepartPlus42.getPiece() == null && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
-
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 9
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 18 && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 27 && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 36 && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 45 && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 54 && caseDepartMoins45.getPiece() == null && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 63 && caseDepartMoins54.getPiece() == null && caseDepartMoins45.getPiece() == null&& caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 72 && caseDepartMoins63.getPiece() == null && caseDepartMoins54.getPiece() == null && caseDepartMoins45.getPiece() == null && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 7
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 14 && caseDepartMoins7.getPiece()== null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 21 && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 28 && caseDepartMoins21.getPiece()== null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 35 && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 42 && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 49 && caseDepartMoins42.getPiece() == null && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepartMoins49.getPiece() == null && caseDepartMoins42.getPiece() == null && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
-      )
-      {
-          if (verificationCampPieceCaseDestination(caseDepart, caseDestination))
-          {
-            return true;
-          }else
-          {
-            return false;
-          }
-      } else
-      {
-          return false;
-      }
-      */
     }
-      // Version à reprendre :
-      /*
-       // Récupération des numéros des cases :
-      int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
-      int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
-
-      // Case horizontales et verticales :
-        Case caseDepartPlus1 = echiquier.get((int) (caseDepart.getNo_case()+1));
-        Case caseDepartPlus2 = echiquier.get((int) (caseDepart.getNo_case()+2));
-        Case caseDepartPlus3 = echiquier.get((int) (caseDepart.getNo_case()+3));
-        Case caseDepartPlus4 = echiquier.get((int) (caseDepart.getNo_case()+4));
-        Case caseDepartPlus5 = echiquier.get((int) (caseDepart.getNo_case()+5));
-        Case caseDepartPlus6 = echiquier.get((int) (caseDepart.getNo_case()+6));
-        Case caseDepartMoins1 = echiquier.get((int) (caseDepart.getNo_case()-1));
-        Case caseDepartMoins2 = echiquier.get((int) (caseDepart.getNo_case()-2));
-        Case caseDepartMoins3 = echiquier.get((int) (caseDepart.getNo_case()-3));
-        Case caseDepartMoins4 = echiquier.get((int) (caseDepart.getNo_case()-4));
-        Case caseDepartMoins5 = echiquier.get((int) (caseDepart.getNo_case()-5));
-        Case caseDepartMoins6 = echiquier.get((int) (caseDepart.getNo_case()-6));
-        Case caseDepartPlus8 = echiquier.get((int) (caseDepart.getNo_case()+8));
-        Case caseDepartPlus16 = echiquier.get((int) (caseDepart.getNo_case()+16));
-        Case caseDepartPlus24 = echiquier.get((int) (caseDepart.getNo_case()+24));
-        Case caseDepartPlus32 = echiquier.get((int) (caseDepart.getNo_case()+32));
-        Case caseDepartPlus40 = echiquier.get((int) (caseDepart.getNo_case()+40));
-        Case caseDepartPlus48 = echiquier.get((int) (caseDepart.getNo_case()+48));
-        Case caseDepartMoins8 = echiquier.get((int) (caseDepart.getNo_case()-8));
-        Case caseDepartMoins16 = echiquier.get((int) (caseDepart.getNo_case()-16));
-        Case caseDepartMoins24 = echiquier.get((int) (caseDepart.getNo_case()-24));
-        Case caseDepartMoins32 = echiquier.get((int) (caseDepart.getNo_case()-32));
-        Case caseDepartMoins40 = echiquier.get((int) (caseDepart.getNo_case()-40));
-        Case caseDepartMoins48 = echiquier.get((int) (caseDepart.getNo_case()-48));
-        // Case diagonales :
-        Case caseDepartPlus9 = echiquier.get((int) (caseDepart.getNo_case()+9));
-        Case caseDepartPlus18 = echiquier.get((int) (caseDepart.getNo_case()+18));
-        Case caseDepartPlus27 = echiquier.get((int) (caseDepart.getNo_case()+27));
-        Case caseDepartPlus36 = echiquier.get((int) (caseDepart.getNo_case()+36));
-        Case caseDepartPlus45 = echiquier.get((int) (caseDepart.getNo_case()+45));
-        Case caseDepartPlus54 = echiquier.get((int) (caseDepart.getNo_case()+54));
-        Case caseDepartPlus63 = echiquier.get((int) (caseDepart.getNo_case()+63));
-        Case caseDepartMoins9 = echiquier.get((int) (caseDepart.getNo_case()-9));
-        Case caseDepartMoins18 = echiquier.get((int) (caseDepart.getNo_case()-18));
-        Case caseDepartMoins27 = echiquier.get((int) (caseDepart.getNo_case()-27));
-        Case caseDepartMoins36 = echiquier.get((int) (caseDepart.getNo_case()-36));
-        Case caseDepartMoins45 = echiquier.get((int) (caseDepart.getNo_case()-45));
-        Case caseDepartMoins54 = echiquier.get((int) (caseDepart.getNo_case()-54));
-        Case caseDepartMoins63 = echiquier.get((int) (caseDepart.getNo_case()-63));
-        Case caseDepartPlus7 = echiquier.get((int) (caseDepart.getNo_case()+7));
-        Case caseDepartPlus14 = echiquier.get((int) (caseDepart.getNo_case()+14));
-        Case caseDepartPlus21 = echiquier.get((int) (caseDepart.getNo_case()+21));
-        Case caseDepartPlus28 = echiquier.get((int) (caseDepart.getNo_case()+28));
-        Case caseDepartPlus35 = echiquier.get((int) (caseDepart.getNo_case()+35));
-        Case caseDepartPlus42 = echiquier.get((int) (caseDepart.getNo_case()+42));
-        Case caseDepartPlus49 = echiquier.get((int) (caseDepart.getNo_case()+49));
-        Case caseDepartMoins7 = echiquier.get((int) (caseDepart.getNo_case()-7));
-        Case caseDepartMoins14 = echiquier.get((int) (caseDepart.getNo_case()-14));
-        Case caseDepartMoins21 = echiquier.get((int) (caseDepart.getNo_case()-21));
-        Case caseDepartMoins28 = echiquier.get((int) (caseDepart.getNo_case()-28));
-        Case caseDepartMoins35 = echiquier.get((int) (caseDepart.getNo_case()-35));
-        Case caseDepartMoins42 = echiquier.get((int) (caseDepart.getNo_case()-42));
-        Case caseDepartMoins49 = echiquier.get((int) (caseDepart.getNo_case()-49));
-      // Déplacements possibles :
-        if (
-         // Contrôle ligne droite verticale :
-         caseDestination.getNo_case() == caseDepart.getNo_case()+ 1
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 2 && caseDepartPlus1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 3 && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 4 && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 5 && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 6 && caseDepartPlus5.getPiece() == null && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 7 && caseDepartPlus6.getPiece() == null && caseDepartPlus5.getPiece() == null && caseDepartPlus4.getPiece() == null && caseDepartPlus3.getPiece() == null && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 1
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 2 && caseDepartMoins1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 3 && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 4 && caseDepartMoins3.getPiece() == null && caseDepartMoins2.getPiece()== null && caseDepartMoins1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 5 && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece()== null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 6 && caseDepartMoins5.getPiece() == null && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece() == null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 7 && caseDepartMoins6.getPiece() == null && caseDepartMoins5.getPiece() == null && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece()== null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
-
-         // Contrôle ligne droite horizontale :
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 8
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 16 && caseDepartPlus8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 24 && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 32 && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 40 && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 48 && caseDepartPlus40.getPiece() == null && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepartPlus48.getPiece()== null && caseDepartPlus40.getPiece() == null && caseDepartPlus32.getPiece() == null && caseDepartPlus24.getPiece() == null && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case()- 8
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 16 && caseDepartMoins8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 24 && caseDepartMoins16.getPiece()== null && caseDepartMoins8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 32 && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 40 && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8.getPiece()== null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 48 && caseDepartMoins40.getPiece() == null && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepartMoins48.getPiece() == null && caseDepartMoins40.getPiece() == null && caseDepartMoins32.getPiece() == null && caseDepartMoins24.getPiece() == null && caseDepartMoins16.getPiece() == null && caseDepartMoins8.getPiece() == null
-
-         // Déplacement en diagonales :
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 9
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 18 && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 27 && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 36 && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 45 && caseDepartPlus36.getPiece()== null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 54 && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 63 && caseDepartPlus54.getPiece() == null && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 72 && caseDepartPlus63.getPiece() == null && caseDepartPlus54.getPiece() == null && caseDepartPlus45.getPiece() == null  && caseDepartPlus36.getPiece() == null && caseDepartPlus27.getPiece() == null && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 7
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 14 && caseDepartPlus7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 21 && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 28 && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 35 && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 42 && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 49 && caseDepartPlus42.getPiece() == null && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepartPlus49.getPiece() == null && caseDepartPlus42.getPiece() == null && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
-
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 9
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 18 && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 27 && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 36 && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 45 && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 54 && caseDepartMoins45.getPiece() == null && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 63 && caseDepartMoins54.getPiece() == null && caseDepartMoins45.getPiece() == null&& caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 72 && caseDepartMoins63.getPiece() == null && caseDepartMoins54.getPiece() == null && caseDepartMoins45.getPiece() == null && caseDepartMoins36.getPiece() == null && caseDepartMoins27.getPiece() == null && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 7
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 14 && caseDepartMoins7.getPiece()== null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 21 && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 28 && caseDepartMoins21.getPiece()== null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 35 && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 42 && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 49 && caseDepartMoins42.getPiece() == null && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
-         || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepartMoins49.getPiece() == null && caseDepartMoins42.getPiece() == null && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
-      )
-      {
-	    return true;
-      } else {
-        return false;
-      }
-      */
 
 
 
@@ -884,48 +513,6 @@ public class JouerService {
             return false;
         }
     }
-    // Déplacements possibles :
-    /*
-    If (
-      // Contrôle diagonale (droite/gauche/haut/bas) :
-      caseDestination.no_case == caseDepart.no_case + 9
-      || caseDestination.no_case == caseDepart.no_case + 18 && caseDepart.no_case.+ 9.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 27 && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 36 && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 45 && caseDepart.no_case.+ 36.piece == null && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 54 && caseDepart.no_case.+ 45.piece == null  && caseDepart.no_case.+ 36.piece == null && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 63 && caseDepart.no_case.+ 54.piece == null && caseDepart.no_case.+ 45.piece == null  && caseDepart.no_case.+ 36.piece == null && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 72 && caseDepart.no_case.+ 63.piece == null && caseDepart.no_case.+ 54.piece == null && caseDepart.no_case.+ 45.piece == null  && caseDepart.no_case.+ 36.piece == null && caseDepart.no_case.+ 27.piece == null && caseDepart.no_case.+ 18.piece == null && caseDepart.no_case.+ 9.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 7
-      || caseDestination.no_case == caseDepart.no_case + 14 && caseDepart.no_case.+ 7.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 21 && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 28 && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 35 && caseDepart.no_case.+ 28.piece == null && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 42 && caseDepart.no_case.+ 35.piece == null && caseDepart.no_case.+ 28.piece == null && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 49 && caseDepart.no_case.+ 42.piece == null && caseDepart.no_case.+ 35.piece == null && caseDepart.no_case.+ 28.piece == null && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
-      || caseDestination.no_case == caseDepart.no_case + 56 && caseDepart.no_case.+ 49.piece == null && caseDepart.no_case.+ 42.piece == null && caseDepart.no_case.+ 35.piece == null && caseDepart.no_case.+ 28.piece == null && caseDepart.no_case.+ 21.piece == null && caseDepart.no_case.+ 14.piece == null && caseDepart.no_case.+ 7.piece == null
-
-      || caseDestination.no_case == caseDepart.no_case - 9
-      || caseDestination.no_case == caseDepart.no_case - 18 && caseDepart.no_case.-9.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 27 && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 36 && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 45 && caseDepart.no_case.-36.piece == null && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 54 && caseDepart.no_case.-45.piece == null && caseDepart.no_case.-36.piece == null && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 63 && caseDepart.no_case.-54.piece == null && caseDepart.no_case.-45.piece == null&& caseDepart.no_case.-36.piece == null && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 72 && caseDepart.no_case.-63.piece == null && caseDepart.no_case.-54.piece == null && caseDepart.no_case.-45.piece == null && caseDepart.no_case.-36.piece == null && caseDepart.no_case.-27.piece == null && caseDepart.no_case.-18.piece == null && caseDepart.no_case.-9.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 7
-      || caseDestination.no_case == caseDepart.no_case - 14 && caseDepart.no_case.- 7.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 21 && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 28 && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 35 && caseDepart.no_case.- 28.piece == null && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 42 && caseDepart.no_case.- 35.piece == null && caseDepart.no_case.- 28.piece == null && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 49 && caseDepart.no_case.- 42.piece == null && caseDepart.no_case.- 35.piece == null && caseDepart.no_case.- 28.piece == null && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
-      || caseDestination.no_case == caseDepart.no_case - 56 && caseDepart.no_case.- 49.piece == null && caseDepart.no_case.- 42.piece == null && caseDepart.no_case.- 35.piece == null && caseDepart.no_case.- 28.piece == null && caseDepart.no_case.- 21.piece == null && caseDepart.no_case.- 14.piece == null && caseDepart.no_case.- 7.piece == null
-      )
-      {
-	    return true;
-      }
-      */
 
 
 
@@ -1082,6 +669,11 @@ public class JouerService {
 
 
 
+
+
+
+
+
     /********************* Méthodes qui contrôlent les déplacements spécifiques et les mises en échec *********************/
 
 
@@ -1170,83 +762,321 @@ public class JouerService {
 
 
 
+
     /**
-     * Méthode qui vérifie si le Grand Roque ou le Petit Roque est correct :
+     * Méthode qui vérifie si le Grand Roque ou le Petit Roque est correct.
      * @return
      * @throws Exception
      */
-    public boolean Roque() throws Exception
+    public boolean Roque(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
-        // Règles de contrôles pour le Petit Roque blanc :
-        /*
+        // Vérification de la validité du Petit Roque Blanc :
+        if(echiquier.get(63).getPiece()!=null)
+        {
+            List<String> nomTourBlanche2 = List.of(echiquier.get(63).getPiece().getType().split(" "));
+            String tourBlancheH1 = nomTourBlanche2.get(0);
+            // Règle de contrôle pour le petit Roque Blanc
+            if (caseDestination.getNo_case() == caseDepart.getNo_case() + 16L
+                    && tourBlancheH1.equals("tour")
+                    && echiquier.get(55).getPiece() == null
+                    && echiquier.get(47).getPiece() == null)
+            {
+                return true;
+            }
+        }
+        // Vérification de la validité du Grand Roque Blanc :
+        if(echiquier.get(7).getPiece()!=null)
+        {
+            List<String> nomTourBlanche1 = List.of(echiquier.get(7).getPiece().getType().split(" "));
+            String tourBlancheA1 = nomTourBlanche1.get(0);
+            // Règles de contrôles pour le Grand Roque Blanc :
+            if (caseDestination.getNo_case() == caseDepart.getNo_case() - 16L
+                && tourBlancheA1.equals("tour")
+                && echiquier.get(15).getPiece() == null
+                && echiquier.get(23).getPiece() == null
+                && echiquier.get(31).getPiece() == null)
+            {
+                return true;
+            }
+        }
+        // Vérification de la validité du petit Roque Noir :
+        if(echiquier.get(56).getPiece()!=null)
+        {
+            List<String> nomTourNoire2 = List.of(echiquier.get(56).getPiece().getType().split(" "));
+            String tourNoireH8 = nomTourNoire2.get(0);
+            // Règles de contrôles pour le petit Roque noir :
+            if(caseDestination.getNo_case() == caseDepart.getNo_case() + 16L
+                && tourNoireH8.equals("tour")
+                && echiquier.get(48).getPiece() == null
+                && echiquier.get(40).getPiece() == null)
+            {
+            return true;
+            }
+        }
+        // Vérification de la validité du Grand Roque Noire:
+        if(echiquier.get(0).getPiece()!=null)
+        {
+            List<String> nomTourNoire1 = List.of(echiquier.get(0).getPiece().getType().split(" "));
+            String tourNoireA8 = nomTourNoire1.get(0);
+            // Règles de contrôles pour le Grand Roque Noire:
+            if(caseDestination.getNo_case() ==caseDepart.getNo_case() - 16L
+                    && tourNoireA8.equals("tour")
+                    && echiquier.get(24).getPiece() == null
+                    && echiquier.get(16).getPiece() == null
+                    && echiquier.get(8).getPiece() == null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    // ALGORITHME DE LA METHODE :
+    /*
+    // Règles de contrôles pour le Petit Roque blanc :
         if (caseDestination.no_case == caseDepart.no_case + 16
             && case.no_case(64).piece == "tour"
             && case.no_case(48).piece == null
             && case.no_case(56).piece == null)
-        {
-                // Récupérer la tour de la case 64 et la placer dans la case 48.
-                // Récupérer le roi de la case 40 et le placer dans la case 56.
-                return true;
-        }
-        // Règles de contrôles pour le Petit Roque noir :
-        else if (caseDestination.no_case == caseDepart.no_case - 16
-                && case.no_case(8).piece == "tour"
-                && case.no_case(16).piece == null
-                && case.no_case(24).piece == null)
-        {
-                // Récupérer la tour de la case 8 et la placer dans la case 24.
-                // Récupérer le roi de la case 32 et le placer dans la case 16.
-                return true;
-        }
-        // Règles de contrôles pour le Grand Roque blanc :
-        else if(caseDestination.no_case ==caseDepart.no_case - 24
-                && case.no_case(8).piece == "tour"
-                && case.no_case(16).piece == null
-                && case.no_case(24).piece == null
-                && case.no_case(32).piece == null)
-        {
-                // Récupérer la tour de la case 8 et la placer dans la case 32.
-                // Récupérer le roi de la case 40 et le placer dans la case 16.
-                return true;
-        }
-        // Règles de contrôles pour le Grand Roque noir :
-        else if(caseDestination.no_case == caseDepart.no_case + 24
-                && case.no_case(64).piece == "tour"
-                && case.no_case(40).piece == null
-                && case.no_case(48).piece == null
-                && case.no_case(56).piece == null)
-        {
-                // Récupérer la tour de la case 64 et la placer dans la case 40.
-                // Récupérer le roi de la case 32 et le placer dans la case 56.
-                return true;
-        }
-        */
-        // Règles de contrôles pour le petit Roque.
+    {
+        // Récupérer la tour de la case 64 et la placer dans la case 48.
+        // Récupérer le roi de la case 40 et le placer dans la case 56.
         return true;
     }
+    */
+    // Règles de contrôles pour le Petit Roque noir :
+    /*
+        else if (caseDestination.no_case == caseDepart.no_case - 16
+            && case.no_case(8).piece == "tour"
+            && case.no_case(16).piece == null
+            && case.no_case(24).piece == null)
+    {
+        // Récupérer la tour de la case 8 et la placer dans la case 24.
+        // Récupérer le roi de la case 32 et le placer dans la case 16.
+        return true;
+    }
+    */
+    // Règles de contrôles pour le Grand Roque blanc :
+    /*
+        else if(caseDestination.no_case ==caseDepart.no_case - 24
+            && case.no_case(8).piece == "tour"
+            && case.no_case(16).piece == null
+            && case.no_case(24).piece == null
+            && case.no_case(32).piece == null)
+    {
+        // Récupérer la tour de la case 8 et la placer dans la case 32.
+        // Récupérer le roi de la case 40 et le placer dans la case 16.
+        return true;
+    }
+    */
+    // Règles de contrôles pour le Grand Roque noir :
+    /*
+        else if(caseDestination.no_case == caseDepart.no_case + 24
+            && case.no_case(64).piece == "tour"
+            && case.no_case(40).piece == null
+            && case.no_case(48).piece == null
+            && case.no_case(56).piece == null)
+    {
+        // Récupérer la tour de la case 64 et la placer dans la case 40.
+        // Récupérer le roi de la case 32 et le placer dans la case 56.
+        return true;
+    }
+    */
+
 
 
 
     /**
-     * Méthode qui transforme un pion quand il atteint le bout de l'échiquier :
+     * Cette méthode exécute le petit Roque Blanc.
+     * @param caseDepart
+     * @param caseDestination
+     * @param piece
+     * @param echiquier
+     */
+    public void petitRoqueBlanc(Case caseDepart, Case caseDestination, Piece piece, List<Case> echiquier)
+    {
+            caseDestination.setPiece(piece);
+            caseDepart.setPiece(null);
+            caseRepository.save(caseDepart);
+            caseRepository.save(caseDestination);
+            Case caseDepartTour = echiquier.get(63);
+            Case caseDestinationTour = echiquier.get(47);
+            caseDestinationTour.setPiece(echiquier.get(63).getPiece());
+            caseDepartTour.setPiece(null);
+            caseRepository.save(caseDepartTour);
+            caseRepository.save(caseDestinationTour);
+    }
+
+
+
+
+    /**
+     * Cette méthode exécute le petit Roque Noir.
+     */
+    public void petitRoqueNoir(Case caseDepart, Case caseDestination, Piece piece, List<Case> echiquier)
+    {
+            caseDestination.setPiece(piece);
+            caseDepart.setPiece(null);
+            caseRepository.save(caseDepart);
+            caseRepository.save(caseDestination);
+            Case caseDepartTour = echiquier.get(56);
+            Case caseDestinationTour = echiquier.get(40);
+            caseDestinationTour.setPiece(echiquier.get(56).getPiece());
+            caseDepartTour.setPiece(null);
+            caseRepository.save(caseDepartTour);
+            caseRepository.save(caseDestinationTour);
+    }
+
+
+
+
+    /**
+     * Cette méthode exécute le grand Roque Blanc.
+     */
+    public void grandRoqueBlanc(Case caseDepart, Case caseDestination, Piece piece, List<Case> echiquier)
+    {
+            caseDestination.setPiece(piece);
+            caseDepart.setPiece(null);
+            caseRepository.save(caseDepart);
+            caseRepository.save(caseDestination);
+            Case caseDepartTour = echiquier.get(7);
+            Case caseDestinationTour = echiquier.get(31);
+            caseDestinationTour.setPiece(echiquier.get(7).getPiece());
+            caseDepartTour.setPiece(null);
+            caseRepository.save(caseDepartTour);
+            caseRepository.save(caseDestinationTour);
+    }
+
+
+
+
+    /**
+     * Cette méthode exécute le grand Roque Noir.
+     */
+    public void grandRoqueNoir(Case caseDepart, Case caseDestination, Piece piece, List<Case> echiquier)
+    {
+            caseDestination.setPiece(piece);
+            caseDepart.setPiece(null);
+            caseRepository.save(caseDepart);
+            caseRepository.save(caseDestination);
+            Case caseDepartTour = echiquier.get(0);
+            Case caseDestinationTour = echiquier.get(24);
+            caseDestinationTour.setPiece(echiquier.get(0).getPiece());
+            caseDepartTour.setPiece(null);
+            caseRepository.save(caseDepartTour);
+            caseRepository.save(caseDestinationTour);
+    }
+
+
+
+
+    /**
+     * Méthode qui identifie si un pion a atteint le bout de l'échiquier :
      * @return
      * @throws Exception
      */
-    public boolean transformationPion() throws Exception
+    public boolean pionBoutEchiquier(Piece piece, Case caseDestination) throws Exception
     {
         // Règles de contrôle pour transformer un pion
-        /*
-        1- Méthode 1 : Vérifier que le pion est arrivé au bout de l’échiquier.
-				—> Si oui : Ouvrir une pop-up.
-				—> Si non : Ne rien faire.
-        2- Méthode 2 : Récupérer la pièce choisi par le joueur et transformer le pion :
-				—> Passer en paramètre la pièce choisie par le joueur :
-						reine, tour, fou, cavalier, pion.
-				—> Utiliser un Switch Case : Selon la pièce choisi, la valeur valeur suivante sera assignée :
-						reine, tour, fou, cavalier, pion.
-        */
-        return true;
+		if(piece.getCouleur().getCouleur().equals("noir")
+            && caseDestination.getNo_case() == 8L
+            || caseDestination.getNo_case() == 16L
+            || caseDestination.getNo_case() == 24L
+            || caseDestination.getNo_case() == 32L
+            || caseDestination.getNo_case() == 40L
+            || caseDestination.getNo_case() == 48L
+            || caseDestination.getNo_case() == 56L
+            || caseDestination.getNo_case() == 64L
+           )
+           {
+               return true;
+           }else if (piece.getCouleur().getCouleur().equals("blanc")
+             && caseDestination.getNo_case() == 1L
+             || caseDestination.getNo_case() == 9L
+             || caseDestination.getNo_case() == 17L
+             || caseDestination.getNo_case() == 25L
+             || caseDestination.getNo_case() == 33L
+             || caseDestination.getNo_case() == 41L
+             || caseDestination.getNo_case() == 49L
+             || caseDestination.getNo_case() == 57L
+           )
+           {
+              return true;
+           } else
+           {
+              return false;
+                }
     }
+
+
+
+
+    /**
+     * Cette méthode remplace le pion par une des pièce choisie.
+     * @param caseDestination
+     * @param typeNouvellePiece
+     * @throws Exception
+     */
+    public List<Case> transformationPion(Case caseDestination, String typeNouvellePiece) throws Exception
+    {
+        // Création de la pièce :
+        Piece pionTransforme = caseDestination.getPiece();
+
+        // Choix de la nouvelle pièce :
+        switch(typeNouvellePiece)
+        {
+            case "reine":
+                // Création Reine :
+                if(pionTransforme.getCouleur().getCouleur().equals("noir"))
+                {
+                    pionTransforme.setType("reine noir");
+                }else
+                {
+                    pionTransforme.setType("reine blanc");
+                }
+                break;
+            case "tour":
+                // Création tour :
+                if(pionTransforme.getCouleur().getCouleur().equals("noir"))
+                {
+                    pionTransforme.setType("tour noir");
+                }else
+                {
+                    pionTransforme.setType("tour blanc");
+                }
+                break;
+            case "fou":
+                // Création fou :
+                if(pionTransforme.getCouleur().getCouleur().equals("noir"))
+                {
+                    pionTransforme.setType("fou noir");
+                }else
+                {
+                    pionTransforme.setType("fou blanc");
+                }
+                break;
+            case "cavalier":
+                if(pionTransforme.getCouleur().getCouleur().equals("noir"))
+                {
+                    pionTransforme.setType("cavalier noir");
+                }else
+                {
+                    pionTransforme.setType("cavalier blanc");
+                }
+            default: // Pion
+                // Création du pion
+                if(pionTransforme.getCouleur().getCouleur().equals("noir"))
+                {
+                    pionTransforme.setType("pion noir");
+                }else
+                {
+                    pionTransforme.setType("pion blanc");
+                }
+        }
+        pieceRepository.save(pionTransforme);
+        List<Case> echiquierMaj = caseRepository.findAll();
+        return echiquierMaj;
+    }
+
 
 
 
@@ -1351,6 +1181,10 @@ public class JouerService {
         }
         return campQuiJoue;
     }
+
+
+
+
 
 
 

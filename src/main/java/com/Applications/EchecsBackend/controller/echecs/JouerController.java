@@ -64,6 +64,18 @@ public class JouerController {
 
 
     /**
+     * Méthode qui déplace transforme les pions quand ils arrivent au bout de l'échiquier.
+     */
+    @PutMapping("/transformer")
+    @PreAuthorize("hasRole('USER')")
+    public List<Case> addCase(@RequestBody Case caseDestination, @RequestBody String typeNouvellePiece) throws Exception {
+        List<Case> echiquierMaj = jouerService.transformationPion(caseDestination, typeNouvellePiece);
+        return echiquierMaj;
+    }
+
+
+
+    /**
      * Méthode qui déclare l'abandon de la partie.
      */
     /*
