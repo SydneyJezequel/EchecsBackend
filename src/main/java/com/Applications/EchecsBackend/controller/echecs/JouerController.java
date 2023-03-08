@@ -56,7 +56,7 @@ public class JouerController {
      */
     @PutMapping("/deplacer")
     @PreAuthorize("hasRole('USER')")
-    public List<Case> addCase(@RequestBody List<Case> casesDeplacement) throws Exception {
+    public List<Case> deplacerPiece(@RequestBody List<Case> casesDeplacement) throws Exception {
         List<Case> echiquierMaj = jouerService.deplacerPiece(casesDeplacement);
         return echiquierMaj;
     }
@@ -68,9 +68,8 @@ public class JouerController {
      */
     @PutMapping("/transformer")
     @PreAuthorize("hasRole('USER')")
-    public List<Case> addCase(@RequestBody Case caseDestination, @RequestBody String typeNouvellePiece) throws Exception {
-        List<Case> echiquierMaj = jouerService.transformationPion(caseDestination, typeNouvellePiece);
-        return echiquierMaj;
+    public void transformationPion(@RequestBody Case caseDestination) throws Exception {
+        jouerService.transformationPion(caseDestination);
     }
 
 

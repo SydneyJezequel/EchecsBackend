@@ -191,13 +191,6 @@ public class JouerService {
                     // echecAuRoi();
                     // echecEtMat();
                     echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
-                    if(pionBoutEchiquier(piece, caseDestination)) {
-                    /*
-                      1- Méthode 1 : Vérifier que le pion est arrivé au bout de l’échiquier.
-				        —> Si oui : Ouvrir une pop-up.
-				        —> Si non : Ne rien faire.
-		            */
-                    }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -674,6 +667,182 @@ public class JouerService {
 
 
 
+    /********************* Méthodes qui définissent les bordures pour toutes les pièces *********************/
+
+
+
+    /**
+     * Méthode qui définit les limites de l'échiquier pour un Roi.
+     * @return
+     */
+    /*
+    public boolean borduresRoi(Piece piece)
+    {
+        List<String> nomPiece = List.of(piece.getType().split(" "));
+        String typeDePiece = nomPiece.get(0);
+        if(typeDePiece.equals("roi")
+            &&
+            ||
+            ||
+            ||
+            || )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    */
+
+
+
+    /**
+     * Méthode qui définit les limites de l'échiquier pour une Dame.
+     * @return
+     */
+    /*
+    public boolean borduresDame(Piece piece)
+    {
+
+        List<String> nomPiece = List.of(piece.getType().split(" "));
+        String typeDePiece = nomPiece.get(0);
+        if(typeDePiece.equals("reine")
+           &&
+           ||
+           ||
+           ||
+           || )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    */
+
+
+    /**
+     * Méthode qui définit les limites de l'échiquier pour une Tour.
+     * @return
+     */
+    /*
+    public boolean borduresTour(Piece piece)
+    {
+        List<String> nomPiece = List.of(piece.getType().split(" "));
+        String typeDePiece = nomPiece.get(0);
+        if(typeDePiece.equals("tour")
+           &&
+           ||
+           ||
+           ||
+           || )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    */
+
+
+    /**
+     * Méthode qui définit les limites de l'échiquier pour un Fou.
+     * @return
+     */
+    /*
+    public boolean borduresFou(Piece piece)
+    {
+        List<String> nomPiece = List.of(piece.getType().split(" "));
+        String typeDePiece = nomPiece.get(0);
+        if(typeDePiece.equals("roi")
+           &&
+           ||
+           ||
+           ||
+           || )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    */
+
+
+    /**
+     * Méthode qui définit les limites de l'échiquier pour un Cavalier.
+     * @return
+     */
+    /*
+    public boolean borduresCavalier(Piece piece)
+    {
+        List<String> nomPiece = List.of(piece.getType().split(" "));
+        String typeDePiece = nomPiece.get(0);
+        if(typeDePiece.equals("roi")
+           &&
+           ||
+           ||
+           ||
+           || )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    */
+
+
+    /**
+     * Méthode qui définit les limites de l'échiquier pour un Pion.
+     * @return
+     */
+    /*
+    public boolean borduresPion(Piece piece)
+    {
+        List<String> nomPiece = List.of(piece.getType().split(" "));
+        String typeDePiece = nomPiece.get(0);
+        if(typeDePiece.equals("roi")
+           &&
+           ||
+           ||
+           ||
+           || )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /********************* Méthodes qui contrôlent les déplacements spécifiques et les mises en échec *********************/
 
 
@@ -830,57 +999,6 @@ public class JouerService {
         }
         return false;
     }
-    // ALGORITHME DE LA METHODE :
-    /*
-    // Règles de contrôles pour le Petit Roque blanc :
-        if (caseDestination.no_case == caseDepart.no_case + 16
-            && case.no_case(64).piece == "tour"
-            && case.no_case(48).piece == null
-            && case.no_case(56).piece == null)
-    {
-        // Récupérer la tour de la case 64 et la placer dans la case 48.
-        // Récupérer le roi de la case 40 et le placer dans la case 56.
-        return true;
-    }
-    */
-    // Règles de contrôles pour le Petit Roque noir :
-    /*
-        else if (caseDestination.no_case == caseDepart.no_case - 16
-            && case.no_case(8).piece == "tour"
-            && case.no_case(16).piece == null
-            && case.no_case(24).piece == null)
-    {
-        // Récupérer la tour de la case 8 et la placer dans la case 24.
-        // Récupérer le roi de la case 32 et le placer dans la case 16.
-        return true;
-    }
-    */
-    // Règles de contrôles pour le Grand Roque blanc :
-    /*
-        else if(caseDestination.no_case ==caseDepart.no_case - 24
-            && case.no_case(8).piece == "tour"
-            && case.no_case(16).piece == null
-            && case.no_case(24).piece == null
-            && case.no_case(32).piece == null)
-    {
-        // Récupérer la tour de la case 8 et la placer dans la case 32.
-        // Récupérer le roi de la case 40 et le placer dans la case 16.
-        return true;
-    }
-    */
-    // Règles de contrôles pour le Grand Roque noir :
-    /*
-        else if(caseDestination.no_case == caseDepart.no_case + 24
-            && case.no_case(64).piece == "tour"
-            && case.no_case(40).piece == null
-            && case.no_case(48).piece == null
-            && case.no_case(56).piece == null)
-    {
-        // Récupérer la tour de la case 64 et la placer dans la case 40.
-        // Récupérer le roi de la case 32 et le placer dans la case 56.
-        return true;
-    }
-    */
 
 
 
@@ -969,11 +1087,13 @@ public class JouerService {
 
 
 
+    // CETTE METHODE SERA PEUT ETRE A SUPPRIMER :
     /**
      * Méthode qui identifie si un pion a atteint le bout de l'échiquier :
      * @return
      * @throws Exception
      */
+    /*
     public boolean pionBoutEchiquier(Piece piece, Case caseDestination) throws Exception
     {
         // Règles de contrôle pour transformer un pion
@@ -1006,20 +1126,20 @@ public class JouerService {
               return false;
                 }
     }
-
+    */
 
 
 
     /**
      * Cette méthode remplace le pion par une des pièce choisie.
-     * @param caseDestination
-     * @param typeNouvellePiece
+     * @param caseDestination : Contient la case de Destination du pion et le type de la nouvelle Pièce.
      * @throws Exception
      */
-    public List<Case> transformationPion(Case caseDestination, String typeNouvellePiece) throws Exception
+    public void transformationPion(Case caseDestination) throws Exception
     {
         // Création de la pièce :
         Piece pionTransforme = caseDestination.getPiece();
+        String typeNouvellePiece = caseDestination.getPiece().getType();
 
         // Choix de la nouvelle pièce :
         switch(typeNouvellePiece)
@@ -1073,8 +1193,6 @@ public class JouerService {
                 }
         }
         pieceRepository.save(pionTransforme);
-        List<Case> echiquierMaj = caseRepository.findAll();
-        return echiquierMaj;
     }
 
 
