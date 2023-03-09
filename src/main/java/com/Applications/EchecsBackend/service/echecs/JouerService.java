@@ -110,7 +110,7 @@ public class JouerService {
         switch (typeDePiece) {
             case "roi":
                 // Déplacement de la pièce :
-                if (deplacementRoi(caseDepart, caseDestination, echiquier)) {
+                if (deplacementRoi(caseDepart, caseDestination, echiquier) /*&& borduresRoi(caseDepart, caseDestination)*/) {
                     // Contrôles à exécuter sur le Roi :
                         //echecAuRoi();
                         // echecEtPat();
@@ -139,7 +139,7 @@ public class JouerService {
                 break;
             case "reine":
                 // Déplacement de la pièce :
-                if(deplacementReine(caseDepart, caseDestination, echiquier))
+                if(deplacementDame(caseDepart, caseDestination, echiquier) /*&& borduresDame(caseDepart, caseDestination)*/)
                 {
                     // Contrôles à executer sur la Reine :
                     echecAuRoi();
@@ -151,7 +151,7 @@ public class JouerService {
                 break;
             case "tour":
                 // Déplacement de la pièce :
-                if(deplacementTour(caseDepart, caseDestination, echiquier))
+                if(deplacementTour(caseDepart, caseDestination, echiquier) /*&& borduresTour(caseDepart, caseDestination)*/)
                 {
                     // Contrôles à exécuter sur la tour :
                     echecAuRoi();
@@ -163,7 +163,7 @@ public class JouerService {
                 break;
             case "fou":
                 // Déplacement de la pièce :
-                if(deplacementFou(caseDepart, caseDestination, echiquier))
+                if(deplacementFou(caseDepart, caseDestination, echiquier) /*&& borduresFou(caseDepart, caseDestination)*/)
                 {
                     // Contrôles à exécuter sur le Fou :
                     // echecAuRoi();
@@ -175,7 +175,7 @@ public class JouerService {
                 break;
             case "cavalier":
                 // Déplacement de la pièce :
-                if(deplacementCavalier(caseDepart, caseDestination, echiquier)) {
+                if(deplacementCavalier(caseDepart, caseDestination, echiquier) /*&& borduresCavalier(caseDepart, caseDestination)*/) {
                     // Contrôles à exécuter sur le Cavalier :
                     // echecAuRoi();
                     // echecEtMat();
@@ -186,7 +186,7 @@ public class JouerService {
                 break;
             case "pion":
                 // Déplacement de la pièce :
-                if(deplacementPion(caseDepart, caseDestination, piece, echiquier)) {
+                if(deplacementPion(caseDepart, caseDestination, piece, echiquier) /*&& borduresPion(caseDepart, caseDestination)*/) {
                     // Contrôles à exécuter sur le Pion :
                     // echecAuRoi();
                     // echecEtMat();
@@ -307,7 +307,7 @@ public class JouerService {
      * @return
      * @throws Exception
      */
-    public boolean deplacementReine(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
+    public boolean deplacementDame(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
         if(deplacementTour(caseDepart, caseDestination, echiquier) || deplacementFou(caseDepart, caseDestination, echiquier))
         {
@@ -675,26 +675,29 @@ public class JouerService {
      * Méthode qui définit les limites de l'échiquier pour un Roi.
      * @return
      */
-    /*
-    public boolean borduresRoi(Piece piece)
+    public boolean borduresRoi(Case caseDepart, Case caseDestination)
     {
+        Piece piece = caseDepart.getPiece();
         List<String> nomPiece = List.of(piece.getType().split(" "));
         String typeDePiece = nomPiece.get(0);
         if(typeDePiece.equals("roi")
-            &&
-            ||
-            ||
-            ||
-            || )
-        {
-            return true;
-        }
-        else
+            && caseDepart.getNo_case() == 40L
+            || caseDepart.getNo_case() == 33L
+            && caseDestination.getNo_case() == 33L
+            || caseDestination.getNo_case() == 41L
+            || caseDestination.getNo_case() == 49L
+            || caseDestination.getNo_case() == 24L
+            || caseDestination.getNo_case() == 32L
+            || caseDestination.getNo_case() == 40L
+            )
         {
             return false;
         }
+        else
+        {
+            return true;
+        }
     }
-    */
 
 
 
@@ -702,131 +705,221 @@ public class JouerService {
      * Méthode qui définit les limites de l'échiquier pour une Dame.
      * @return
      */
-    /*
-    public boolean borduresDame(Piece piece)
+    public boolean borduresDame(Case caseDepart, Case caseDestination)
     {
-
+        Piece piece = caseDepart.getPiece();
         List<String> nomPiece = List.of(piece.getType().split(" "));
         String typeDePiece = nomPiece.get(0);
         if(typeDePiece.equals("reine")
-           &&
-           ||
-           ||
-           ||
-           || )
-        {
-            return true;
-        }
-        else
+           && caseDepart.getNo_case() == 32L
+           || caseDepart.getNo_case() == 25L
+           && caseDestination.getNo_case() == 25L
+           || caseDestination.getNo_case() == 33L
+           || caseDestination.getNo_case() == 41L
+           || caseDestination.getNo_case() == 18L
+           || caseDestination.getNo_case() == 50L
+           || caseDestination.getNo_case() == 11L
+           || caseDestination.getNo_case() == 4L
+           || caseDestination.getNo_case() == 16L
+           || caseDestination.getNo_case() == 24L
+           || caseDestination.getNo_case() == 32L
+           || caseDestination.getNo_case() == 7L
+           || caseDestination.getNo_case() == 23L
+           || caseDestination.getNo_case() == 39L
+        )
         {
             return false;
         }
+        else
+        {
+            return true;
+        }
     }
-    */
+
 
 
     /**
      * Méthode qui définit les limites de l'échiquier pour une Tour.
      * @return
      */
-    /*
-    public boolean borduresTour(Piece piece)
+    public boolean borduresTour(Case caseDepart, Case caseDestination)
     {
+        Piece piece = caseDepart.getPiece();
         List<String> nomPiece = List.of(piece.getType().split(" "));
         String typeDePiece = nomPiece.get(0);
         if(typeDePiece.equals("tour")
-           &&
-           ||
-           ||
-           ||
-           || )
-        {
-            return true;
-        }
-        else
+           && caseDepart.getNo_case() == 8L
+           || caseDepart.getNo_case() == 57L
+           && caseDestination.getNo_case() == 9L
+           || caseDestination.getNo_case() == 56L
+           || caseDestination.getNo_case() == 50L
+           || caseDestination.getNo_case() == 51L
+           || caseDestination.getNo_case() == 52L
+           || caseDestination.getNo_case() == 54L
+           || caseDestination.getNo_case() == 55L
+        )
         {
             return false;
         }
+        else
+        {
+            return true;
+        }
     }
-    */
+
 
 
     /**
      * Méthode qui définit les limites de l'échiquier pour un Fou.
      * @return
      */
-    /*
-    public boolean borduresFou(Piece piece)
+    public boolean borduresFou(Case caseDepart, Case caseDestination)
     {
+        Piece piece = caseDepart.getPiece();
         List<String> nomPiece = List.of(piece.getType().split(" "));
         String typeDePiece = nomPiece.get(0);
-        if(typeDePiece.equals("roi")
-           &&
-           ||
-           ||
-           ||
-           || )
-        {
-            return true;
-        }
-        else
+        if(typeDePiece.equals("fou")
+           && caseDepart.getNo_case() == 24L
+           || caseDepart.getNo_case() == 48L
+           || caseDepart.getNo_case() == 17L
+           || caseDepart.getNo_case() == 41L
+           && caseDestination.getNo_case() == 17L
+           || caseDestination.getNo_case() == 10L
+           || caseDestination.getNo_case() == 3L
+           || caseDestination.getNo_case() == 33L
+           || caseDestination.getNo_case() == 57L
+           || caseDestination.getNo_case() == 41L
+           || caseDestination.getNo_case() == 34L
+           || caseDestination.getNo_case() == 27L
+           || caseDestination.getNo_case() == 20L
+           || caseDestination.getNo_case() == 13L
+           || caseDestination.getNo_case() == 6L
+           || caseDestination.getNo_case() == 24L
+           || caseDestination.getNo_case() == 31L
+           || caseDestination.getNo_case() == 38L
+           || caseDestination.getNo_case() == 45L
+           || caseDestination.getNo_case() == 52L
+           || caseDestination.getNo_case() == 59L
+           || caseDestination.getNo_case() == 8L
+           || caseDestination.getNo_case() == 48L
+           || caseDestination.getNo_case() == 55L
+           || caseDestination.getNo_case() == 62L
+           || caseDestination.getNo_case() == 32L
+           || caseDestination.getNo_case() == 23L
+           || caseDestination.getNo_case() == 14L
+           || caseDestination.getNo_case() == 5L
+        )
         {
             return false;
         }
+        else
+        {
+            return true;
+        }
     }
-    */
+
 
 
     /**
      * Méthode qui définit les limites de l'échiquier pour un Cavalier.
      * @return
      */
-    /*
-    public boolean borduresCavalier(Piece piece)
+    public boolean borduresCavalier(Case caseDepart, Case caseDestination)
     {
+        Piece piece = caseDepart.getPiece();
         List<String> nomPiece = List.of(piece.getType().split(" "));
         String typeDePiece = nomPiece.get(0);
-        if(typeDePiece.equals("roi")
-           &&
-           ||
-           ||
-           ||
-           || )
-        {
-            return true;
-        }
-        else
+        if(typeDePiece.equals("cavalier")
+           && caseDepart.getNo_case() == 16L
+           || caseDepart.getNo_case() == 49L
+           || caseDepart.getNo_case() == 9L
+           && caseDestination.getNo_case() == 1L
+           || caseDestination.getNo_case() == 10L
+           || caseDestination.getNo_case() == 26L
+           || caseDestination.getNo_case() == 33L
+           || caseDestination.getNo_case() == 41L
+           || caseDestination.getNo_case() == 50L
+           || caseDestination.getNo_case() == 15L
+           || caseDestination.getNo_case() == 24L
+           || caseDestination.getNo_case() == 64L
+           || caseDestination.getNo_case() == 55L
+           || caseDestination.getNo_case() == 39L
+           || caseDestination.getNo_case() == 32L
+        )
         {
             return false;
         }
+        else
+        {
+            return true;
+        }
     }
-    */
+
 
 
     /**
      * Méthode qui définit les limites de l'échiquier pour un Pion.
      * @return
      */
-    /*
-    public boolean borduresPion(Piece piece)
+    public boolean borduresPion(Case caseDepart, Case caseDestination)
     {
+       boolean deplacementAutorise = true;
+        Piece piece = caseDepart.getPiece();
         List<String> nomPiece = List.of(piece.getType().split(" "));
         String typeDePiece = nomPiece.get(0);
-        if(typeDePiece.equals("roi")
-           &&
-           ||
-           ||
-           ||
-           || )
-        {
-            return true;
+        if(typeDePiece.equals("pion")) {
+            // Pion Blanc :
+            if (caseDepart.getNo_case() == 1L && caseDestination.getNo_case() == 16 || caseDestination.getNo_case() == 24) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 9L && caseDestination.getNo_case() == 8 || caseDestination.getNo_case() == 16 || caseDestination.getNo_case() == 24) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 17L && caseDestination.getNo_case() == 16 || caseDestination.getNo_case() == 24 || caseDestination.getNo_case() == 32) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 25L && caseDestination.getNo_case() == 24 || caseDestination.getNo_case() == 32 || caseDestination.getNo_case() == 340) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 33L && caseDestination.getNo_case() == 32 || caseDestination.getNo_case() == 40 || caseDestination.getNo_case() == 48) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 41L && caseDestination.getNo_case() == 40 || caseDestination.getNo_case() == 48 || caseDestination.getNo_case() == 46) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 49L && caseDestination.getNo_case() == 48 || caseDestination.getNo_case() == 56 || caseDestination.getNo_case() == 64) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 57L && caseDestination.getNo_case() == 56 || caseDestination.getNo_case() == 64) {
+                deplacementAutorise = false;
+            }
+
+            // Pion Noir :
+            if (caseDepart.getNo_case() == 8L && caseDestination.getNo_case() == 9 || caseDestination.getNo_case() == 17 || caseDestination.getNo_case() == 32) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 16L && caseDestination.getNo_case() == 1 || caseDestination.getNo_case() == 9 || caseDestination.getNo_case() == 17) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 24L && caseDestination.getNo_case() == 9 || caseDestination.getNo_case() == 17 || caseDestination.getNo_case() == 25) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 32L && caseDestination.getNo_case() == 17 || caseDestination.getNo_case() == 25 || caseDestination.getNo_case() == 33) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 40L && caseDestination.getNo_case() == 25 || caseDestination.getNo_case() == 33 || caseDestination.getNo_case() == 41) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 48L && caseDestination.getNo_case() == 33 || caseDestination.getNo_case() == 41 || caseDestination.getNo_case() == 49) {
+                deplacementAutorise = false;
+            }
+            if (caseDepart.getNo_case() == 56L && caseDestination.getNo_case() == 41 || caseDestination.getNo_case() == 49 || caseDestination.getNo_case() == 57) {
+                deplacementAutorise = false;
+            }
         }
-        else
-        {
-            return false;
-        }
+        return deplacementAutorise;
     }
-    */
+
 
 
 
