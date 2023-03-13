@@ -3,6 +3,9 @@ package com.Applications.EchecsBackend.service.echecs.deplacements;
 import com.Applications.EchecsBackend.models.echecs.Case;
 import com.Applications.EchecsBackend.models.echecs.Piece;
 import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
+import com.Applications.EchecsBackend.repository.echecs.PartieRepository;
+import com.Applications.EchecsBackend.repository.echecs.PieceRepository;
+import com.Applications.EchecsBackend.service.echecs.gestionPartie.GestionDesParties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -22,18 +25,36 @@ public class DeplacementRoi {
 
 
     // ********************* Attributs ******************** :
-
     Piece roi = new Piece();
     private final CaseRepository caseRepository;
-
-
+    private final PieceRepository pieceRepository;
+    private final GestionDesParties gestionDesParties;
+    private final DeplacementDame deplacementDame;
+    private final DeplacementTour deplacementTour;
+    private final DeplacementFou deplacementFou;
+    private final DeplacementCavalier deplacementCavalier;
+    private final DeplacementPion deplacementPion;
 
 
 
     // ********************* Constructeur ******************** :
     @Autowired
-    public DeplacementRoi(CaseRepository caseRepository) {
+    public DeplacementRoi(CaseRepository caseRepository,
+                          PieceRepository pieceRepository,
+                          GestionDesParties gestionDesParties,
+                          DeplacementDame deplacementDame,
+                          DeplacementTour deplacementTour,
+                          DeplacementFou deplacementFou,
+                          DeplacementCavalier deplacementCavalier,
+                          DeplacementPion deplacementPion) {
         this.caseRepository = caseRepository;
+        this.pieceRepository = pieceRepository;
+        this.gestionDesParties = gestionDesParties;
+        this.deplacementDame = deplacementDame;
+        this.deplacementTour = deplacementTour;
+        this.deplacementFou = deplacementFou;
+        this.deplacementCavalier = deplacementCavalier;
+        this.deplacementPion = deplacementPion;
     }
 
 
@@ -134,6 +155,63 @@ public class DeplacementRoi {
 			        —> On break la boucle.
 			        —> On renvoie la pop-up : « Echec au roi ».
          */
+
+        // VERSION DE LA FONCTIONNALITE A TESTER :
+        /*
+        // Attributs :
+        List<Case> echiquier = caseRepository.findAll();
+        List<Case> positionsCampAdverse;
+        Case caseDepart;
+        Case caseDestination;
+        Piece piece;
+        boolean echecAuRoi = false;
+
+        // 1- Récuépration du roi du camp adverse :
+        caseDestination = recuperationCaseDuRoiAdverse();
+        piece = caseDestination.getPiece();
+
+        // 2- Récupération des cases ou se trouvent les pièces du camp adverse :
+        positionsCampAdverse = gestionDesParties.positionsCampsAdverse();
+
+        // 3- Contrôle pour savoir si le roi est en echec :
+        for(int i = 0; i<=positionsCampAdverse.size(); i++)
+        {
+            caseDepart = positionsCampAdverse.get(i);
+            List<String> nomPiece = List.of(positionsCampAdverse.get(i).getPiece().getType().split(" "));
+            String typeDePiece = nomPiece.get(0);
+            if(typeDePiece.equals("reine")) {
+                if (deplacementDame.deplacementDame(caseDepart, caseDestination, echiquier)) {
+                    echecAuRoi = true;
+                    break;
+                }
+            }else if(typeDePiece.equals("tour")) {
+                if(deplacementTour.deplacementTour(caseDepart, caseDestination, echiquier))
+                {
+                    echecAuRoi = true;
+                    break;
+                }
+            }else if(typeDePiece.equals("fou")) {
+                if(deplacementFou.deplacementFou(caseDepart, caseDestination, echiquier))
+                {
+                    echecAuRoi = true;
+                    break;
+                }
+            }else if(typeDePiece.equals("cavalier")) {
+                if(deplacementCavalier.deplacementCavalier(caseDepart, caseDestination, echiquier))
+                {
+                    echecAuRoi = true;
+                    break;
+                }
+            }else if(typeDePiece.equals("pion")) {
+                if(deplacementPion.deplacementPion(caseDepart, caseDestination, piece, echiquier))
+                {
+                    echecAuRoi = true;
+                    break;
+                }
+            }
+        }
+        return echecAuRoi;
+        */
         return true;
     }
 
@@ -166,7 +244,7 @@ public class DeplacementRoi {
 			                —> On renvoie la pop-up : « Partie terminée : Echec et mat ».
          */
         // VERSION FINALE DU CODE :
-        if(echecAuRoi()==true && deplacementRoi(caseDepart, caseDestination, echiquier)==false)
+        if(echecAuRoi() && !deplacementRoi(caseDepart, caseDestination, echiquier))
         {
             return true;
         }
@@ -174,6 +252,36 @@ public class DeplacementRoi {
         {
             return false;
         }
+    }
+
+
+
+    /**
+     * Méthode qui renvoie la case sur laquelle se trouve le roi du camp adverse.
+     * @return caseDestination
+     */
+    public Case recuperationCaseDuRoiAdverse()
+    {
+        Case caseDestination = new Case();
+        // Attributs :
+        List<Case> echiquier = caseRepository.findAll();
+        // Récupération du roi du camp adverse :
+        if (gestionDesParties.campQuiJoue().equals("blanc")) {
+            for (int i = 0; i <= echiquier.size(); i++) {
+                if (echiquier.get(i).getPiece().getType().equals("roi noir")) {
+                    caseDestination = echiquier.get(i);
+                    break;
+                }
+            }
+        } else {
+            for (int i = 0; i <= echiquier.size(); i++) {
+                if (echiquier.get(i).getPiece().getType().equals("roi blanc")) {
+                    caseDestination = echiquier.get(i);
+                    break;
+                }
+            }
+        }
+        return caseDestination;
     }
 
 
