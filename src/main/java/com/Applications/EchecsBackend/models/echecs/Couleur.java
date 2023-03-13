@@ -8,12 +8,14 @@ import jakarta.persistence.Table;
 
 
 
+
 /**
  * Classe qui représente les couleurs des pièces
  */
 @Entity
 @Table(name = "couleur")
 public class Couleur {
+
 
 
 
@@ -30,8 +32,8 @@ public class Couleur {
 
 
 
-    // *********************** Constructeur ***********************
 
+    // *********************** Constructeur ***********************
     public Couleur() {
     }
 
@@ -43,6 +45,7 @@ public class Couleur {
         this.no_couleur = no_couleur;
         this.couleur = couleur;
     }
+
 
 
 
@@ -61,6 +64,7 @@ public class Couleur {
     public void setCouleur(String couleur) {
         this.couleur = couleur;
     }
+
 
 
 

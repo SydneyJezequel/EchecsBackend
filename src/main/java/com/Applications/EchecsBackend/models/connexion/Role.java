@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 
 
+
 /**
  * Classe qui représente un Rôle.
  */
@@ -15,8 +16,8 @@ public class Role {
 
 
 
-    /********************** Attributs ********************/
 
+    /********************** Attributs ********************/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -28,8 +29,8 @@ public class Role {
 
 
 
-    /********************** Constructeurs ********************/
 
+    /********************** Constructeurs ********************/
     public Role() {}
 
     public Role(ERole name) {
@@ -39,8 +40,8 @@ public class Role {
 
 
 
-    /********************** Getters & Setters ********************/
 
+    /********************** Getters & Setters ********************/
     public Integer getId() {
         return id;
     }
@@ -56,6 +57,7 @@ public class Role {
     public void setName(ERole name) {
         this.name = name;
     }
+
 
 
 

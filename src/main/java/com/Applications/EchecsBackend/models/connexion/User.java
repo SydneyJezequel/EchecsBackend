@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 
 
+
 /**
  * Classe qui représente un User.
  */
@@ -19,6 +20,7 @@ import javax.validation.constraints.Size;
                 @UniqueConstraint(columnNames = "email")
         })
 public class User {
+
 
 
 
@@ -50,6 +52,7 @@ public class User {
 
 
 
+
     /********************** Constructeur ********************/
     public User() {}
 
@@ -65,6 +68,7 @@ public class User {
         this.password = password;
         this.roles = roles;
     }
+
 
 
 
@@ -108,6 +112,7 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
 
 
 

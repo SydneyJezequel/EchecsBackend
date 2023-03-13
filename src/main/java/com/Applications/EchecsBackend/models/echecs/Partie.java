@@ -5,12 +5,15 @@ import jakarta.persistence.*;
 
 
 
+
+
 /**
  * Classe qui représente les cases de l'échiquier
  */
 @Entity
 @Table(name="partie")
 public class Partie {
+
 
 
 
@@ -38,6 +41,7 @@ public class Partie {
 
 
 
+
     // ********************* Constructeur ******************** :
 
     public Partie() {}
@@ -49,6 +53,7 @@ public class Partie {
         this.userCampNoir = userCampNoir;
         this.userGagnant = userGagnant;
     }
+
 
 
 
@@ -71,31 +76,6 @@ public class Partie {
         this.nombreDeTour = nombreDeTour;
     }
 
-    /*
-    public User getUserCampBlanc() {
-        return userCampBlanc;
-    }
-
-    public void setUserCampBlanc(User userCampBlanc) {
-        this.userCampBlanc = userCampBlanc;
-    }
-
-    public User getUserCampNoir() {
-        return userCampNoir;
-    }
-
-    public void setUserCampNoir(User userCampNoir) {
-        this.userCampNoir = userCampNoir;
-    }
-
-    public User getUserGagnant() {
-        return userGagnant;
-    }
-
-    public void setUserGagnant(User userGagnant) {
-        this.userGagnant = userGagnant;
-    }
-    */
 
 
 

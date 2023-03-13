@@ -7,6 +7,7 @@ import org.hibernate.annotations.Cascade;
 
 
 
+
 /**
  * Classe qui représente les cases de l'échiquier
  */
@@ -17,8 +18,8 @@ public class Case {
 
 
 
-    // *********************** Attributs ***********************
 
+    // *********************** Attributs ***********************
     @Id
     @Column(nullable = false, name="id_case")
     private Long no_case;
@@ -39,8 +40,8 @@ public class Case {
 
 
 
-    // *********************** Constructeur ***********************
 
+    // *********************** Constructeur ***********************
     public Case() {}
 
     public Case(String colonne, int ligne, Couleur couleur) {
@@ -75,8 +76,8 @@ public class Case {
 
 
 
-    // *********************** Getter & Setter ***********************
 
+    // *********************** Getter & Setter ***********************
     public Long getNo_case() {
         return no_case;
     }
@@ -99,6 +100,7 @@ public class Case {
     public void setCouleur(Couleur couleur) {this.couleur = couleur;}
     public Piece getPiece() {return piece;}
     public void setPiece(Piece piece) {this.piece = piece;}
+
 
 
 

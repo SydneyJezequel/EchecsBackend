@@ -2,10 +2,12 @@ package com.Applications.EchecsBackend.controller.echecs;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
 import com.Applications.EchecsBackend.service.echecs.JouerService;
+import com.Applications.EchecsBackend.service.echecs.deplacements.DeplacementPion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+
 
 
 
@@ -20,26 +22,28 @@ public class JouerController {
 
 
 
-    // ********************* Attributs *********************
 
+    // ********************* Attributs *********************
     private final JouerService jouerService;
+    private final DeplacementPion deplacementPion;
     private List<Case> casesDeplacement;
 
 
 
 
-    // ********************* Constructeur *********************
 
+    // ********************* Constructeur *********************
     @Autowired
-    public JouerController (JouerService jouerService) {
+    public JouerController (JouerService jouerService, DeplacementPion deplacementPion) {
         this.jouerService= jouerService;
+        this.deplacementPion=deplacementPion;
     }
 
 
 
 
-    /****************************** Méthodes ******************************/
 
+    /****************************** Méthodes ******************************/
     /**
      * Méthode qui renvoie toutes les cases de l'échiquier.
      */
@@ -69,7 +73,7 @@ public class JouerController {
     @PutMapping("/transformer")
     @PreAuthorize("hasRole('USER')")
     public void transformationPion(@RequestBody Case caseDestination) throws Exception {
-        jouerService.transformationPion(caseDestination);
+        deplacementPion.transformationPion(caseDestination);
     }
 
 
@@ -84,6 +88,7 @@ public class JouerController {
         // UN MESSAGE D'ABANDON DEVRA ETRE RENVOYE AU USER.
     }
     */
+
 
 
 

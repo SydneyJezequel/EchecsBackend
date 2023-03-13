@@ -15,6 +15,7 @@ import java.util.List;
 
 
 
+
 /**
  * Service qui gère les fonctionnalités pour initialiser une partie d'échecs.
  */
@@ -24,8 +25,8 @@ public class DemarrerUnePartieService {
 
 
 
-    // ********************* Dépendances *********************
 
+    // ********************* Dépendances *********************
     @Autowired
     private final PieceRepository pieceRepository;
     @Autowired
@@ -36,8 +37,8 @@ public class DemarrerUnePartieService {
 
 
 
-    // ********************* Constructeur *********************
 
+    // ********************* Constructeur *********************
     @Autowired
     public DemarrerUnePartieService (PieceRepository pieceRepository, CaseRepository caseRepository, CouleurRepository couleurRepository) {
         this.pieceRepository = pieceRepository;
@@ -48,10 +49,11 @@ public class DemarrerUnePartieService {
 
 
 
-    /*************************************** Méthodes **************************************/
 
+    /*************************************** Méthodes **************************************/
     /**
      * Méthode qui Ré-initialise l'Echequier :
+     * @return caseRepository.saveAll(echiquier)
      */
     public List<Case> ReinitialiserEchequier(String camp) {
 
@@ -134,74 +136,6 @@ public class DemarrerUnePartieService {
 
         //3.2- Initialisation des Cases :
         List<Case> echiquier = new ArrayList<Case>();
-        // ANCIENNE VERSION :
-        /*
-                List<Case> echiquier = new ArrayList<Case>();
-        Case caseA1 = new Case(1L, "A",1, blanc,tourBlanche1);
-        Case caseA2 = new Case(2L, "A",2,blanc,pionBlanc1);
-        Case caseA3 = new Case(3L, "A",3,noir,null);
-        Case caseA4 = new Case(4L,"A",4,blanc,null);
-        Case caseA5 = new Case(5L,"A",5,noir,null);
-        Case caseA6 = new Case(6L,"A",6,blanc,null);
-        Case caseA7 = new Case(7L,"A",7,noir,pionNoir1);
-        Case caseA8 = new Case(8L,"A",8,blanc,tourNoire1);
-        Case caseB1 = new Case(9L,"B",1,blanc,cavalierBlanc1);
-        Case caseB2 = new Case(10L,"B",2,noir,pionBlanc2);
-        Case caseB3 = new Case(11L,"B",3,blanc,null);
-        Case caseB4 = new Case(12L,"B",4,noir,null);
-        Case caseB5 = new Case(13L,"B",5,blanc,null);
-        Case caseB6 = new Case(14L,"B",6,noir,null);
-        Case caseB7 = new Case(15L,"B",7,blanc,pionNoir2);
-        Case caseB8 = new Case(16L,"B",8,noir,cavalierNoir1);
-        Case caseC1 = new Case(17L,"C",1,noir,fouBlanc1);
-        Case caseC2 = new Case(18L,"C",2,blanc,pionBlanc3);
-        Case caseC3 = new Case(19L,"C",3,noir,null);
-        Case caseC4 = new Case(20L,"C",4,blanc,null);
-        Case caseC5 = new Case(21L,"C",5,noir,null);
-        Case caseC6 = new Case(22L,"C",6,blanc,null);
-        Case caseC7 = new Case(23L,"C",7,noir,pionNoir3);
-        Case caseC8 = new Case(24L,"C",8,blanc,fouNoir1);
-        Case caseD1 = new Case(25L,"D",1,blanc,roiBlanc);
-        Case caseD2 = new Case(26L,"D",2,noir,pionBlanc4);
-        Case caseD3 = new Case(27L,"D",3,blanc,null);
-        Case caseD4= new Case(28L,"D",4,noir,null);
-        Case caseD5 = new Case(29L,"D",5,blanc,null);
-        Case caseD6 = new Case(30L,"D",6,noir,null);
-        Case caseD7 = new Case(31L,"D",7,blanc,pionNoir4);
-        Case caseD8 = new Case(32L,"D",8,noir,roiNoir);
-        Case caseE1 = new Case(33L,"E",1,noir,reineBlanc);
-        Case caseE2 = new Case(34L,"E",2,blanc,pionBlanc5);
-        Case caseE3 = new Case(35L,"E",3,noir,null);
-        Case caseE4 = new Case(36L,"E",4,blanc,null);
-        Case caseE5 = new Case(37L,"E",5,noir,null);
-        Case caseE6 = new Case(38L,"E",6,blanc,null);
-        Case caseE7 = new Case(39L,"E",7,noir,pionNoir5);
-        Case caseE8 = new Case(40L,"E",8,blanc,reineNoir);
-        Case caseF1 = new Case(41L,"F",1,blanc,fouBlanc2);
-        Case caseF2 = new Case(42L,"F",2,noir,pionBlanc6);
-        Case caseF3 = new Case(43L,"F",3,blanc,null);
-        Case caseF4 = new Case(44L,"F",4,noir,null);
-        Case caseF5 = new Case(45L,"F",5,blanc,null);
-        Case caseF6 = new Case(46L,"F",6,noir,null);
-        Case caseF7 = new Case(47L,"F",7,blanc,pionNoir6);
-        Case caseF8 = new Case(48L,"F",8,noir,fouNoir2);
-        Case caseG1 = new Case(49L,"G",1,noir,cavalierBlanc2);
-        Case caseG2 = new Case(50L,"G",2,blanc,pionBlanc7);
-        Case caseG3 = new Case(51L,"G",3,noir,null);
-        Case caseG4 = new Case(52L,"G",4,blanc,null);
-        Case caseG5 = new Case(53L,"G",5,noir,null);
-        Case caseG6 = new Case(54L,"G",6,blanc,null);
-        Case caseG7 = new Case(55L,"G",7,noir,pionNoir7);
-        Case caseG8 = new Case(56L,"G",8,blanc,cavalierNoir2);
-        Case caseH1 = new Case(57L,"H",1,blanc,tourBlanche2);
-        Case caseH2 = new Case(58L,"H",2,noir,pionBlanc8);
-        Case caseH3 = new Case(59L,"H",3,blanc,null);
-        Case caseH4 = new Case(60L,"H",4,noir,null);
-        Case caseH5 = new Case(61L,"H",5,blanc,null);
-        Case caseH6 = new Case(62L,"H",6,noir,null);
-        Case caseH7 = new Case(63L,"H",7,blanc,pionNoir8);
-        Case caseH8 = new Case(64L,"H",8,noir,tourNoire2);
-        */
         if(camp.equals("noir")) {
             System.out.println("Le camp est noir");
 
@@ -343,15 +277,6 @@ public class DemarrerUnePartieService {
             echiquier.add(caseA6);
             echiquier.add(caseA7);
             echiquier.add(caseA8);
-
-
-
-            // ***************TEST NOIR ***************
-            for(int i=0; i<echiquier.size(); i++)
-            {
-                System.out.println(echiquier.get(i).getColonne()+echiquier.get(i).getLigne());
-            }
-            // ***************TEST NOIR ***************
 
             // 4- Renvoie de l'échiquier vers le Front :
             return caseRepository.saveAll(echiquier);
@@ -499,224 +424,16 @@ public class DemarrerUnePartieService {
             echiquier.add(caseH2);
             echiquier.add(caseH1);
 
-            // ***************TEST BLANC ***************
-            for(int i=0; i<echiquier.size(); i++)
-            {
-                System.out.println(echiquier.get(i).getColonne()+echiquier.get(i).getLigne());
-            }
-            // ***************TEST BLANC ***************
-
             // 4- Renvoie de l'échiquier vers le Front :
             return caseRepository.saveAll(echiquier);
         }
-        // 3.2.2- Initialisation de l'échiquier pour le camp noir :
-        /*
-        echiquier.add(caseA1);
-        echiquier.add(caseA2);
-        echiquier.add(caseA3);
-        echiquier.add(caseA4);
-        echiquier.add(caseA5);
-        echiquier.add(caseA6);
-        echiquier.add(caseA7);
-        echiquier.add(caseA8);
-        echiquier.add(caseB1);
-        echiquier.add(caseB2);
-        echiquier.add(caseB3);
-        echiquier.add(caseB4);
-        echiquier.add(caseB5);
-        echiquier.add(caseB6);
-        echiquier.add(caseB7);
-        echiquier.add(caseB8);
-        echiquier.add(caseC1);
-        echiquier.add(caseC2);
-        echiquier.add(caseC3);
-        echiquier.add(caseC4);
-        echiquier.add(caseC5);
-        echiquier.add(caseC6);
-        echiquier.add(caseC7);
-        echiquier.add(caseC8);
-        echiquier.add(caseD1);
-        echiquier.add(caseD2);
-        echiquier.add(caseD3);
-        echiquier.add(caseD4);
-        echiquier.add(caseD5);
-        echiquier.add(caseD6);
-        echiquier.add(caseD7);
-        echiquier.add(caseD8);
-        echiquier.add(caseE1);
-        echiquier.add(caseE2);
-        echiquier.add(caseE3);
-        echiquier.add(caseE4);
-        echiquier.add(caseE5);
-        echiquier.add(caseE6);
-        echiquier.add(caseE7);
-        echiquier.add(caseE8);
-        echiquier.add(caseF1);
-        echiquier.add(caseF2);
-        echiquier.add(caseF3);
-        echiquier.add(caseF4);
-        echiquier.add(caseF5);
-        echiquier.add(caseF6);
-        echiquier.add(caseF7);
-        echiquier.add(caseF8);
-        echiquier.add(caseG1);
-        echiquier.add(caseG2);
-        echiquier.add(caseG3);
-        echiquier.add(caseG4);
-        echiquier.add(caseG5);
-        echiquier.add(caseG6);
-        echiquier.add(caseG7);
-        echiquier.add(caseG8);
-        echiquier.add(caseH1);
-        echiquier.add(caseH2);
-        echiquier.add(caseH3);
-        echiquier.add(caseH4);
-        echiquier.add(caseH5);
-        echiquier.add(caseH6);
-        echiquier.add(caseH7);
-        echiquier.add(caseH8);
-
-        // 4- Renvoie de l'échiquier vers le Front :
-        return caseRepository.saveAll(echiquier);
-        */
     }
-    // SAUVEGARGE ANCIENNE VERSION ECHIQUIER :
-/*
-        List<Case> echiquier = new ArrayList<Case>();
-        Case caseA1 = new Case(1L, "A",1, blanc,tourBlanche1);
-        echiquier.add(caseA1);
-        Case caseA2 = new Case(2L, "A",2,blanc,pionBlanc1);
-        echiquier.add(caseA2);
-        Case caseA3 = new Case(3L, "A",3,noir,null);
-        echiquier.add(caseA3);
-        Case caseA4 = new Case(4L,"A",4,blanc,null);
-        echiquier.add(caseA4);
-        Case caseA5 = new Case(5L,"A",5,noir,null);
-        echiquier.add(caseA5);
-        Case caseA6 = new Case(6L,"A",6,blanc,null);
-        echiquier.add(caseA6);
-        Case caseA7 = new Case(7L,"A",7,noir,pionNoir1);
-        echiquier.add(caseA7);
-        Case caseA8 = new Case(8L,"A",8,blanc,tourNoire1);
-        echiquier.add(caseA8);
-        Case caseB1 = new Case(9L,"B",1,blanc,cavalierBlanc1);
-        echiquier.add(caseB1);
-        Case caseB2 = new Case(10L,"B",2,noir,pionBlanc2);
-        echiquier.add(caseB2);
-        Case caseB3 = new Case(11L,"B",3,blanc,null);
-        echiquier.add(caseB3);
-        Case caseB4 = new Case(12L,"B",4,noir,null);
-        echiquier.add(caseB4);
-        Case caseB5 = new Case(13L,"B",5,blanc,null);
-        echiquier.add(caseB5);
-        Case caseB6 = new Case(14L,"B",6,noir,null);
-        echiquier.add(caseB6);
-        Case caseB7 = new Case(15L,"B",7,blanc,pionNoir2);
-        echiquier.add(caseB7);
-        Case caseB8 = new Case(16L,"B",8,noir,cavalierNoir1);
-        echiquier.add(caseB8);
-        Case caseC1 = new Case(17L,"C",1,noir,fouBlanc1);
-        echiquier.add(caseC1);
-        Case caseC2 = new Case(18L,"C",2,blanc,pionBlanc3);
-        echiquier.add(caseC2);
-        Case caseC3 = new Case(19L,"C",3,noir,null);
-        echiquier.add(caseC3);
-        Case caseC4 = new Case(20L,"C",4,blanc,null);
-        echiquier.add(caseC4);
-        Case caseC5 = new Case(21L,"C",5,noir,null);
-        echiquier.add(caseC5);
-        Case caseC6 = new Case(22L,"C",6,blanc,null);
-        echiquier.add(caseC6);
-        Case caseC7 = new Case(23L,"C",7,noir,pionNoir3);
-        echiquier.add(caseC7);
-        Case caseC8 = new Case(24L,"C",8,blanc,fouNoir1);
-        echiquier.add(caseC8);
-        Case caseD1 = new Case(25L,"D",1,blanc,roiBlanc);
-        echiquier.add(caseD1);
-        Case caseD2 = new Case(26L,"D",2,noir,pionBlanc4);
-        echiquier.add(caseD2);
-        Case caseD3 = new Case(27L,"D",3,blanc,null);
-        echiquier.add(caseD3);
-        Case caseD4= new Case(28L,"D",4,noir,null);
-        echiquier.add(caseD4);
-        Case caseD5 = new Case(29L,"D",5,blanc,null);
-        echiquier.add(caseD5);
-        Case caseD6 = new Case(30L,"D",6,noir,null);
-        echiquier.add(caseD6);
-        Case caseD7 = new Case(31L,"D",7,blanc,pionNoir4);
-        echiquier.add(caseD7);
-        Case caseD8 = new Case(32L,"D",8,noir,roiNoir);
-        echiquier.add(caseD8);
-        Case caseE1 = new Case(33L,"E",1,noir,reineBlanc);
-        echiquier.add(caseE1);
-        Case caseE2 = new Case(34L,"E",2,blanc,pionBlanc5);
-        echiquier.add(caseE2);
-        Case caseE3 = new Case(35L,"E",3,noir,null);
-        echiquier.add(caseE3);
-        Case caseE4 = new Case(36L,"E",4,blanc,null);
-        echiquier.add(caseE4);
-        Case caseE5 = new Case(37L,"E",5,noir,null);
-        echiquier.add(caseE5);
-        Case caseE6 = new Case(38L,"E",6,blanc,null);
-        echiquier.add(caseE6);
-        Case caseE7 = new Case(39L,"E",7,noir,pionNoir5);
-        echiquier.add(caseE7);
-        Case caseE8 = new Case(40L,"E",8,blanc,reineNoir);
-        echiquier.add(caseE8);
-        Case caseF1 = new Case(41L,"F",1,blanc,fouBlanc2);
-        echiquier.add(caseF1);
-        Case caseF2 = new Case(42L,"F",2,noir,pionBlanc6);
-        echiquier.add(caseF2);
-        Case caseF3 = new Case(43L,"F",3,blanc,null);
-        echiquier.add(caseF3);
-        Case caseF4 = new Case(44L,"F",4,noir,null);
-        echiquier.add(caseF4);
-        Case caseF5 = new Case(45L,"F",5,blanc,null);
-        echiquier.add(caseF5);
-        Case caseF6 = new Case(46L,"F",6,noir,null);
-        echiquier.add(caseF6);
-        Case caseF7 = new Case(47L,"F",7,blanc,pionNoir6);
-        echiquier.add(caseF7);
-        Case caseF8 = new Case(48L,"F",8,noir,fouNoir2);
-        echiquier.add(caseF8);
-        Case caseG1 = new Case(49L,"G",1,noir,cavalierBlanc2);
-        echiquier.add(caseG1);
-        Case caseG2 = new Case(50L,"G",2,blanc,pionBlanc7);
-        echiquier.add(caseG2);
-        Case caseG3 = new Case(51L,"G",3,noir,null);
-        echiquier.add(caseG3);
-        Case caseG4 = new Case(52L,"G",4,blanc,null);
-        echiquier.add(caseG4);
-        Case caseG5 = new Case(53L,"G",5,noir,null);
-        echiquier.add(caseG5);
-        Case caseG6 = new Case(54L,"G",6,blanc,null);
-        echiquier.add(caseG6);
-        Case caseG7 = new Case(55L,"G",7,noir,pionNoir7);
-        echiquier.add(caseG7);
-        Case caseG8 = new Case(56L,"G",8,blanc,cavalierNoir2);
-        echiquier.add(caseG8);
-        Case caseH1 = new Case(57L,"H",1,blanc,tourBlanche2);
-        echiquier.add(caseH1);
-        Case caseH2 = new Case(58L,"H",2,noir,pionBlanc8);
-        echiquier.add(caseH2);
-        Case caseH3 = new Case(59L,"H",3,blanc,null);
-        echiquier.add(caseH3);
-        Case caseH4 = new Case(60L,"H",4,noir,null);
-        echiquier.add(caseH4);
-        Case caseH5 = new Case(61L,"H",5,blanc,null);
-        echiquier.add(caseH5);
-        Case caseH6 = new Case(62L,"H",6,noir,null);
-        echiquier.add(caseH6);
-        Case caseH7 = new Case(63L,"H",7,blanc,pionNoir8);
-        echiquier.add(caseH7);
-        Case caseH8 = new Case(64L,"H",8,noir,tourNoire2);
-        echiquier.add(caseH8);
-*/
+
 
 
     /**
      * Méthode qui affiche l'échiquier
-     * @return
+     * @return echiquierInitialise
      */
     public List<Case> getEchequier() {
 
@@ -775,6 +492,7 @@ public class DemarrerUnePartieService {
 
         return echiquierInitialise;
     }
+
 
 
 

@@ -3,6 +3,7 @@ package com.Applications.EchecsBackend.models.connexion;
 
 
 
+
 /**
  * Enumération qui liste les rôles.
  */
