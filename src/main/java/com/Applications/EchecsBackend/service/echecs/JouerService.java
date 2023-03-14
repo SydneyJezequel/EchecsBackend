@@ -100,6 +100,37 @@ public class JouerService {
 
 
     /**
+     * Méthode qui exécute le déplacement des pièces et contrôle si le roi
+     * est en échec
+     */
+    public int echecAuRoi() throws Exception {
+
+        // Attributs :
+        int pasEchecAuRoi = 0;
+        int echecAuRoi = 1;
+        int echecEtMat = 2;
+
+        // Exécution des méthodes :
+        if(deplacementRoi.echecAuRoi())
+        {
+            if(deplacementRoi.echecEtMat())
+            {
+                return echecEtMat;
+            }
+            else
+            {
+                return echecAuRoi;
+            }
+        }
+        else
+        {
+            return pasEchecAuRoi;
+        }
+    }
+
+
+
+    /**
      * Méthode qui déplace les pièces.
      * Cette méthode va appeler les méthodes qui réalisent les contrôles
      * pour les déplacements de chaque pièce (ex : deplacementRoi(), deplacementReine(), etc.) :
@@ -127,7 +158,7 @@ public class JouerService {
         switch (typeDePiece) {
             case "roi":
                 // Déplacement de la pièce :
-                if (deplacementRoi.deplacementRoi(caseDepart, caseDestination, echiquier) /*&& borduresRoi(caseDepart, caseDestination)*/) {
+                if (deplacementRoi.deplacementRoi(caseDepart, caseDestination) /*&& borduresRoi(caseDepart, caseDestination)*/) {
                     // Contrôles à exécuter sur le Roi :
                         //echecAuRoi();
                         // echecEtPat();
@@ -159,8 +190,6 @@ public class JouerService {
                 if(deplacementDame.deplacementDame(caseDepart, caseDestination, echiquier) /*&& borduresDame(caseDepart, caseDestination)*/)
                 {
                     // Contrôles à executer sur la Reine :
-                    deplacementRoi.echecAuRoi();
-                    deplacementRoi.echecEtMat(caseDepart, caseDestination, echiquier);
                     echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
                 } else {
                     echiquierMaj = caseRepository.findAll();
@@ -171,8 +200,6 @@ public class JouerService {
                 if(deplacementTour.deplacementTour(caseDepart, caseDestination, echiquier) /*&& borduresTour(caseDepart, caseDestination)*/)
                 {
                     // Contrôles à exécuter sur la tour :
-                    deplacementRoi.echecAuRoi();
-                    deplacementRoi.echecEtMat(caseDepart, caseDestination, echiquier);
                     echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
                 } else {
                     echiquierMaj = caseRepository.findAll();
@@ -183,8 +210,6 @@ public class JouerService {
                 if(deplacementFou.deplacementFou(caseDepart, caseDestination, echiquier) /*&& borduresFou(caseDepart, caseDestination)*/)
                 {
                     // Contrôles à exécuter sur le Fou :
-                    deplacementRoi.echecAuRoi();
-                    deplacementRoi.echecEtMat(caseDepart, caseDestination, echiquier);
                     echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
                 } else {
                     echiquierMaj = caseRepository.findAll();
@@ -194,8 +219,6 @@ public class JouerService {
                 // Déplacement de la pièce :
                 if(deplacementCavalier.deplacementCavalier(caseDepart, caseDestination, echiquier) /*&& borduresCavalier(caseDepart, caseDestination)*/) {
                     // Contrôles à exécuter sur le Cavalier :
-                    deplacementRoi.echecAuRoi();
-                    deplacementRoi.echecEtMat(caseDepart, caseDestination, echiquier);
                     echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
                 } else {
                     echiquierMaj = caseRepository.findAll();
@@ -205,8 +228,6 @@ public class JouerService {
                 // Déplacement de la pièce :
                 if(deplacementPion.deplacementPion(caseDepart, caseDestination, piece, echiquier) /*&& borduresPion(caseDepart, caseDestination)*/) {
                     // Contrôles à exécuter sur le Pion :
-                    deplacementRoi.echecAuRoi();
-                    deplacementRoi.echecEtMat(caseDepart, caseDestination, echiquier);
                     echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
                 } else {
                     echiquierMaj = caseRepository.findAll();

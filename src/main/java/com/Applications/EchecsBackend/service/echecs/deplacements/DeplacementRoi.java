@@ -1,17 +1,18 @@
 package com.Applications.EchecsBackend.service.echecs.deplacements;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
+import com.Applications.EchecsBackend.models.echecs.Couleur;
 import com.Applications.EchecsBackend.models.echecs.Piece;
 import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
-import com.Applications.EchecsBackend.repository.echecs.PartieRepository;
+import com.Applications.EchecsBackend.repository.echecs.CouleurRepository;
 import com.Applications.EchecsBackend.repository.echecs.PieceRepository;
 import com.Applications.EchecsBackend.service.echecs.gestionPartie.GestionDesParties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
-
-
-
+import java.util.Optional;
 
 
 /**
@@ -28,6 +29,8 @@ public class DeplacementRoi {
     Piece roi = new Piece();
     private final CaseRepository caseRepository;
     private final PieceRepository pieceRepository;
+
+    private final CouleurRepository couleurRepository;
     private final GestionDesParties gestionDesParties;
     private final DeplacementDame deplacementDame;
     private final DeplacementTour deplacementTour;
@@ -41,6 +44,7 @@ public class DeplacementRoi {
     @Autowired
     public DeplacementRoi(CaseRepository caseRepository,
                           PieceRepository pieceRepository,
+                          CouleurRepository couleurRepository,
                           GestionDesParties gestionDesParties,
                           DeplacementDame deplacementDame,
                           DeplacementTour deplacementTour,
@@ -49,6 +53,7 @@ public class DeplacementRoi {
                           DeplacementPion deplacementPion) {
         this.caseRepository = caseRepository;
         this.pieceRepository = pieceRepository;
+        this.couleurRepository = couleurRepository;
         this.gestionDesParties = gestionDesParties;
         this.deplacementDame = deplacementDame;
         this.deplacementTour = deplacementTour;
@@ -69,7 +74,7 @@ public class DeplacementRoi {
      * @return boolean
      * @throws Exception
      */
-    public boolean deplacementRoi(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
+    public boolean deplacementRoi(Case caseDepart, Case caseDestination) throws Exception
     {
         // VERSION TEMPORAIRE : AJOUTER UN BLOCAGE DE DEPLACEMENT SUR LES PIECES DU MEME CAMP.
         // Récupération des numéros des cases :
@@ -138,7 +143,81 @@ public class DeplacementRoi {
      */
     public boolean echecAuRoi() throws Exception
     {
-        // REGLES DE L'ALGORITHME :
+        // VERSION DE LA FONCTIONNALITE A TESTER :
+        // Attributs :
+        List<Case> echiquier = caseRepository.findAll();
+        List<Case> positionsCampAdverse;
+        Case caseDepart;
+        Case caseDestination;
+        Piece piece;
+        boolean echecAuRoi = false;
+
+        // 1- Récupération du roi du camp adverse :
+        caseDestination = recuperationCaseDuRoiAdverse();
+        piece = caseDestination.getPiece();
+
+        // 2- Récupération des cases où se trouvent les pièces du camp adverse :
+        positionsCampAdverse = gestionDesParties.positionsCampsAdverse();
+
+        // 3- Contrôle pour savoir si le roi est en echec :
+        for(int i = 0; i<positionsCampAdverse.size(); i++)
+        {
+            // Récupération du type des pièces du camp adverse :
+            caseDepart = positionsCampAdverse.get(i);
+            List<String> nomPiece = List.of(positionsCampAdverse.get(i).getPiece().getType().split(" "));
+            String typeDePiece = nomPiece.get(0);
+
+            // Contrôle du type de pièce :
+            if(typeDePiece.equals("reine")) {
+                if (deplacementDame.deplacementDame(caseDepart, caseDestination, echiquier)) {
+                    echecAuRoi = true;
+                    //************* TEST *************
+                    System.out.println("echec au roi");
+                    //************* TEST *************
+                    break;
+                }
+            }else if(typeDePiece.equals("tour")) {
+                if(deplacementTour.deplacementTour(caseDepart, caseDestination, echiquier))
+                {
+                    echecAuRoi = true;
+                    //************* TEST *************
+                    System.out.println("echec au roi");
+                    //************* TEST *************
+                    break;
+                }
+            }else if(typeDePiece.equals("fou")) {
+                if(deplacementFou.deplacementFou(caseDepart, caseDestination, echiquier))
+                {
+                    echecAuRoi = true;
+                    //************* TEST *************
+                    System.out.println("echec au roi");
+                    //************* TEST *************
+                    break;
+                }
+            }else if(typeDePiece.equals("cavalier")) {
+                if(deplacementCavalier.deplacementCavalier(caseDepart, caseDestination, echiquier))
+                {
+                    echecAuRoi = true;
+                    //************* TEST *************
+                    System.out.println("echec au roi");
+                    //************* TEST *************
+                    break;
+                }
+            }else if(typeDePiece.equals("pion")) {
+                if(deplacementPion.deplacementPion(caseDepart, caseDestination, piece, echiquier))
+                {
+                    echecAuRoi = true;
+                    //************* TEST *************
+                    System.out.println("echec au roi");
+                    //************* TEST *************
+                    break;
+                }
+            }
+        }
+        return echecAuRoi;
+        // return true;
+    }
+    // REGLES DE L'ALGORITHME :
         /*
                // 1- Récupération la position de toutes les pièces du camp adverse.
 	              Stocker dans un array toutes les cases de l’échiquier ou piece.couleur != roi.couleur
@@ -156,65 +235,6 @@ public class DeplacementRoi {
 			        —> On renvoie la pop-up : « Echec au roi ».
          */
 
-        // VERSION DE LA FONCTIONNALITE A TESTER :
-        /*
-        // Attributs :
-        List<Case> echiquier = caseRepository.findAll();
-        List<Case> positionsCampAdverse;
-        Case caseDepart;
-        Case caseDestination;
-        Piece piece;
-        boolean echecAuRoi = false;
-
-        // 1- Récuépration du roi du camp adverse :
-        caseDestination = recuperationCaseDuRoiAdverse();
-        piece = caseDestination.getPiece();
-
-        // 2- Récupération des cases ou se trouvent les pièces du camp adverse :
-        positionsCampAdverse = gestionDesParties.positionsCampsAdverse();
-
-        // 3- Contrôle pour savoir si le roi est en echec :
-        for(int i = 0; i<=positionsCampAdverse.size(); i++)
-        {
-            caseDepart = positionsCampAdverse.get(i);
-            List<String> nomPiece = List.of(positionsCampAdverse.get(i).getPiece().getType().split(" "));
-            String typeDePiece = nomPiece.get(0);
-            if(typeDePiece.equals("reine")) {
-                if (deplacementDame.deplacementDame(caseDepart, caseDestination, echiquier)) {
-                    echecAuRoi = true;
-                    break;
-                }
-            }else if(typeDePiece.equals("tour")) {
-                if(deplacementTour.deplacementTour(caseDepart, caseDestination, echiquier))
-                {
-                    echecAuRoi = true;
-                    break;
-                }
-            }else if(typeDePiece.equals("fou")) {
-                if(deplacementFou.deplacementFou(caseDepart, caseDestination, echiquier))
-                {
-                    echecAuRoi = true;
-                    break;
-                }
-            }else if(typeDePiece.equals("cavalier")) {
-                if(deplacementCavalier.deplacementCavalier(caseDepart, caseDestination, echiquier))
-                {
-                    echecAuRoi = true;
-                    break;
-                }
-            }else if(typeDePiece.equals("pion")) {
-                if(deplacementPion.deplacementPion(caseDepart, caseDestination, piece, echiquier))
-                {
-                    echecAuRoi = true;
-                    break;
-                }
-            }
-        }
-        return echecAuRoi;
-        */
-        return true;
-    }
-
 
 
     /**
@@ -222,9 +242,31 @@ public class DeplacementRoi {
      * @return boolean
      * @throws Exception
      */
-    public boolean echecEtMat(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
+    public boolean echecEtMat() throws Exception
     {
-        // REGLES DE L'ALGORITHME :
+        // Attributs :
+        boolean echecEtMat = true;
+        Case caseDepartDuRoi = recuperationCaseDuRoiAdverse();
+        List<Case> casesAutourDuRoi = casesAutourDuRoi(caseDepartDuRoi);
+
+        // Exécution du contrôle :
+        for(int i=0; i<casesAutourDuRoi.size(); i++)
+        {
+            if(deplacementRoi(caseDepartDuRoi, casesAutourDuRoi.get(i)))
+            {
+                echecEtMat = false;
+                break;
+            }
+        }
+         //************* TEST *************
+        if(echecEtMat==true)
+        {
+               System.out.println("echec au et mat");
+        }
+        //************* TEST *************
+        return echecEtMat;
+    }
+    // REGLES DE L'ALGORITHME :
         /*
                // 1- Récupération la position de toutes les pièces du camp adverse.
 	              Stocker dans un array toutes les cases de l’échiquier ou piece.couleur != roi.couleur
@@ -243,15 +285,38 @@ public class DeplacementRoi {
 			           Si la méthode de déplacement du roi renvoie false (Roi en échec + Roi ne peut se déplacer) :
 			                —> On renvoie la pop-up : « Partie terminée : Echec et mat ».
          */
-        // VERSION FINALE DU CODE :
-        if(echecAuRoi() && !deplacementRoi(caseDepart, caseDestination, echiquier))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+
+
+
+    /**
+     * Méthode qui récupère les cases autour du roi :
+     * @return casesAutourDuRoi
+     */
+    public List<Case> casesAutourDuRoi(Case caseDepartDuRoi)
+    {
+        // Attributs :
+        List<Case> casesAutourDuRoi = new ArrayList<>();
+
+        // Ajout des cases autour du roi dans le tableau :
+        Case caseAutourDuRoi1 =  caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() + 1L);
+        casesAutourDuRoi.add(caseAutourDuRoi1);
+        Case caseAutourDuRoi2 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() - 1L);
+        casesAutourDuRoi.add(caseAutourDuRoi2);
+        Case caseAutourDuRoi3 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() + 8L);
+        casesAutourDuRoi.add(caseAutourDuRoi3);
+        Case caseAutourDuRoi4 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() - 8L);
+        casesAutourDuRoi.add(caseAutourDuRoi4);
+        Case caseAutourDuRoi5 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() + 7L);
+        casesAutourDuRoi.add(caseAutourDuRoi5);
+        Case caseAutourDuRoi6 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() - 7L);
+        casesAutourDuRoi.add(caseAutourDuRoi6);
+        Case caseAutourDuRoi7 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() + 9L);
+        casesAutourDuRoi.add(caseAutourDuRoi7);
+        Case caseAutourDuRoi8 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() - 9L);
+        casesAutourDuRoi.add(caseAutourDuRoi8);
+
+        // Renvoie du tableau :
+        return casesAutourDuRoi;
     }
 
 
@@ -262,24 +327,35 @@ public class DeplacementRoi {
      */
     public Case recuperationCaseDuRoiAdverse()
     {
-        Case caseDestination = new Case();
         // Attributs :
-        List<Case> echiquier = caseRepository.findAll();
+        String campQuiJoue = gestionDesParties.campQuiJoue();
+        Case caseDestination;
+        String roiBlanc = "roi blanc";
+        String roiNoir = "roi noir";
+        // Piece roiBlanc = new Piece(29L, "roi blanc", campBlanc, 'A');
+        // Piece roiNoir = new Piece(30L, "roi noir", campNoir, 'A');
+
         // Récupération du roi du camp adverse :
-        if (gestionDesParties.campQuiJoue().equals("blanc")) {
+        if (campQuiJoue.equals("blanc")) {
+            caseDestination = caseRepository.recupererLaCaseDuRoi(roiNoir);
+            /*
             for (int i = 0; i <= echiquier.size(); i++) {
                 if (echiquier.get(i).getPiece().getType().equals("roi noir")) {
                     caseDestination = echiquier.get(i);
                     break;
                 }
             }
+            */
         } else {
+            caseDestination = caseRepository.recupererLaCaseDuRoi(roiBlanc);
+            /*
             for (int i = 0; i <= echiquier.size(); i++) {
                 if (echiquier.get(i).getPiece().getType().equals("roi blanc")) {
                     caseDestination = echiquier.get(i);
                     break;
                 }
             }
+            */
         }
         return caseDestination;
     }

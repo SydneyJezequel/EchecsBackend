@@ -77,6 +77,19 @@ public class JouerController {
     }
 
 
+    /**
+     * Méthode qui vérifie si le roi est en échec (Echec au Roi, Echec et Mat).
+     * @return boolean echecAuRoi
+     * @throws Exception
+     */
+    @GetMapping("/echec_au_roi")
+    @PreAuthorize("hasRole('USER')")
+    public int echecAuRoi() throws Exception
+    {
+        return jouerService.echecAuRoi();
+    }
+
+
 
     /**
      * Méthode qui déclare l'abandon de la partie.

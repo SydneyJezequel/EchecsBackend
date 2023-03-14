@@ -68,23 +68,40 @@ public class GestionDesParties {
      * Méthode qui récupère les positions de toutes les pièces du camp adverse.
      * @return positionsCampAdverse
      */
-
     public List<Case> positionsCampsAdverse() {
 
+        // Attributs :
+        String campQuiJoue;
+        List<Case> positionsCampAdverse = new ArrayList<Case>();
+
         // 1- Identification du camp qui joue :
-        String campQuiJoue = campQuiJoue();
+        campQuiJoue = campQuiJoue();
 
         // 2- Récupérer toutes les cases et les trier par id de case :
-        List<Case> echiquier = caseRepository.findAll();
+        /*
+        echiquier = caseRepository.findAll();
         echiquier.sort(Comparator.comparing(Case::getNo_case));
+        */
+
         // 3- Récupérer toutes les cases du camp adverse :
-        List<Case> positionsCampAdverse = new ArrayList<Case>();
+        if(campQuiJoue.equals("blanc"))
+        {
+            positionsCampAdverse = caseRepository.RecupererCasesCampAdverse("noir");
+        }
+        else
+        {
+            positionsCampAdverse = caseRepository.RecupererCasesCampAdverse("blanc");
+        }
+        /*
         for(int i = 0; i<=echiquier.size() ; i++)
         {
+
             if(!echiquier.get(i).getPiece().getCouleur().getCouleur().equals(campQuiJoue)){
                 positionsCampAdverse.add(echiquier.get(i));
             }
+
         }
+        */
         // 4- Renvoie des positions du camp adverse :
         return positionsCampAdverse;
     }
@@ -96,25 +113,58 @@ public class GestionDesParties {
      * La valeur renvoyée est une string nommée "camp".
      * @return campQuiJoue
      */
-
     public String campQuiJoue()
     {
-        Long id = 1L;
-        Optional<Partie> partie = partieRepository.findById(id);
-        int nombreDeTour = partie.get().getNombreDeTour();
+        // Attributs :
         String campQuiJoue;
+        String noir = "noir";
+        String blanc = "blanc";
+        // List<String> nomPiece = List.of(caseDepart.getPiece().getType().split(" "));
+        // String typeDePiece = nomPiece.get(0);
+
+        Long id = 1L;
+        Partie partie = partieRepository.findById(id).orElse(null);
+        int nombreDeTour = partie.getNombreDeTour();
+
+        if(nombreDeTour % 2 == 0)
+        {
+            campQuiJoue = noir;
+        }
+        else
+        {
+            campQuiJoue = blanc;
+        }
+
         // Identification du camp qui joue et mise à jour du nombre de tour :
+        /*
         if(nombreDeTour % 2 == 0){
-            campQuiJoue = "noir";
-            nombreDeTour++;
-            partie.get().setNombreDeTour(nombreDeTour);
+            campQuiJoue = noir;
+            nombreDeTour = miseAJourDuNombreDeTour(nombreDeTour);
+            partie.setNombreDeTour(nombreDeTour);
             partieRepository.save(partie);
         } else {
-            campQuiJoue = "blanc";
-            nombreDeTour++;
+            campQuiJoue = blanc;
+            nombreDeTour = miseAJourDuNombreDeTour(nombreDeTour);
+            partie.setNombreDeTour(nombreDeTour);
+            partieRepository.save(partie);
         }
+        */
         return campQuiJoue;
     }
+
+
+
+    /**
+     * Cette méthode met à jour le nombre de tour après le coup
+     * de chaque joueur.
+     * @return nombreDeTour
+     */
+    public int miseAJourDuNombreDeTour(int nombreDeTour)
+    {
+        nombreDeTour++;
+        return nombreDeTour;
+    }
+
 
 
 
