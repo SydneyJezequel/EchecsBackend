@@ -31,7 +31,7 @@ public interface CaseRepository extends JpaRepository<Case, Long>{
 
     // Récupérer une case via son id :
     @Query("SELECT c FROM Case c WHERE c.no_case = :id")
-    Case RecupererCasesAutourDuRoi(@Param("id") Long id);
+    Case recupererCasesParId(@Param("id") Long id);
 
 
     // Récupérer la case du roi via le paramètre "type" du roi :

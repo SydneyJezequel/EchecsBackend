@@ -7,6 +7,7 @@ import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
 import com.Applications.EchecsBackend.repository.echecs.PartieRepository;
 import com.Applications.EchecsBackend.repository.echecs.PieceRepository;
 import com.Applications.EchecsBackend.service.echecs.deplacements.*;
+import com.Applications.EchecsBackend.service.echecs.gestionPartie.GestionDesParties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class JouerService {
 
     private final CaseRepository caseRepository;
     private final DemarrerUnePartieService demarrerUnePartieService;
+    private final GestionDesParties gestionDesParties;
     private final PieceRepository pieceRepository;
     private final PartieRepository partieRepository;
     private final DeplacementRoi deplacementRoi;
@@ -48,6 +50,7 @@ public class JouerService {
     @Autowired
     public JouerService(CaseRepository caseRepository,
                         DemarrerUnePartieService demarrerUnePartieService,
+                        GestionDesParties gestionDesParties,
                         PieceRepository pieceRepository,
                         PartieRepository partieRepository,
                         DeplacementRoi deplacementRoi,
@@ -58,6 +61,7 @@ public class JouerService {
     {
         this.caseRepository = caseRepository;
         this.demarrerUnePartieService = demarrerUnePartieService;
+        this.gestionDesParties = gestionDesParties;
         this.pieceRepository = pieceRepository;
         this.partieRepository = partieRepository;
         this.deplacementRoi = deplacementRoi;
@@ -236,7 +240,11 @@ public class JouerService {
             default: // Si aucune pièce n'est sélectionnée :
                     echiquierMaj = caseRepository.findAll();
         }
-        // 4- Renvoie de l'échiquier maj
+
+        // 4- Mise à jour du nombre de tour :
+        gestionDesParties.miseAJourDuNombreDeTour();
+
+        // 5- Renvoie de l'échiquier maj :
         return echiquierMaj;
     }
 

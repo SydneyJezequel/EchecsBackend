@@ -6,6 +6,7 @@ import com.Applications.EchecsBackend.models.echecs.Piece;
 import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
 import com.Applications.EchecsBackend.repository.echecs.CouleurRepository;
 import com.Applications.EchecsBackend.repository.echecs.PieceRepository;
+import com.Applications.EchecsBackend.service.echecs.gestionPartie.GestionDesParties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -28,6 +29,9 @@ public class DemarrerUnePartieService {
 
     // ********************* Dépendances *********************
     @Autowired
+    private final GestionDesParties gestionDesParties;
+
+    @Autowired
     private final PieceRepository pieceRepository;
     @Autowired
     private final CaseRepository caseRepository;
@@ -40,7 +44,8 @@ public class DemarrerUnePartieService {
 
     // ********************* Constructeur *********************
     @Autowired
-    public DemarrerUnePartieService (PieceRepository pieceRepository, CaseRepository caseRepository, CouleurRepository couleurRepository) {
+    public DemarrerUnePartieService (GestionDesParties gestionDesParties, PieceRepository pieceRepository, CaseRepository caseRepository, CouleurRepository couleurRepository) {
+        this.gestionDesParties = gestionDesParties;
         this.pieceRepository = pieceRepository;
         this.caseRepository = caseRepository;
         this.couleurRepository = couleurRepository;
@@ -57,16 +62,19 @@ public class DemarrerUnePartieService {
      */
     public List<Case> ReinitialiserEchequier(String camp) {
 
-        // 1- Suppression de l'Echiquier en BDD de la partie en cours :
+        // 1-Ré-initialisation de l'échiquier :
+        gestionDesParties.reinitialisationDuNombreDeTour();
+
+        // 2- Suppression de l'Echiquier en BDD de la partie en cours :
         pieceRepository.deleteAll();
         caseRepository.deleteAll();
 
-        // 2- Création des camps :
+        // 3- Création des camps :
         Couleur blanc = couleurRepository.getReferenceById(1L);
         Couleur noir = couleurRepository.getReferenceById(2L);
 
-        // 3- Création de l'échiquier (cases et cellules) :
-        // 3.1- Initialisation des pièces dans la BDD :
+        // 4- Création de l'échiquier (cases et cellules) :
+        // 4.1- Initialisation des pièces dans la BDD :
         List<Piece> listePiece = new ArrayList<Piece>();
         Piece pionBlanc1 = new Piece(1L,"pion blanc", blanc, 'A');
         listePiece.add(pionBlanc1);
@@ -134,7 +142,7 @@ public class DemarrerUnePartieService {
         listePiece.add(reineNoir);
         pieceRepository.saveAll(listePiece);
 
-        //3.2- Initialisation des Cases :
+        //4.2- Initialisation des Cases :
         List<Case> echiquier = new ArrayList<Case>();
         if(camp.equals("noir")) {
             System.out.println("Le camp est noir");
@@ -278,7 +286,7 @@ public class DemarrerUnePartieService {
             echiquier.add(caseA7);
             echiquier.add(caseA8);
 
-            // 4- Renvoie de l'échiquier vers le Front :
+            // 5- Renvoie de l'échiquier vers le Front :
             return caseRepository.saveAll(echiquier);
         }
         else
@@ -424,7 +432,7 @@ public class DemarrerUnePartieService {
             echiquier.add(caseH2);
             echiquier.add(caseH1);
 
-            // 4- Renvoie de l'échiquier vers le Front :
+            // 6- Renvoie de l'échiquier vers le Front :
             return caseRepository.saveAll(echiquier);
         }
     }

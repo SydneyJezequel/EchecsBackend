@@ -153,18 +153,18 @@ public class DeplacementRoi {
         boolean echecAuRoi = false;
 
         // 1- Récupération du roi du camp adverse :
-        caseDestination = recuperationCaseDuRoiAdverse();
+        caseDestination = recuperationCaseDuRoiAdverse(); // TEST : LE ROI RECUPERE EST LE ROI DE MON CAMP
         piece = caseDestination.getPiece();
 
         // 2- Récupération des cases où se trouvent les pièces du camp adverse :
-        positionsCampAdverse = gestionDesParties.positionsCampsAdverse();
+        positionsCampAdverse = gestionDesParties.positionsCampsAdverse(); // TEST : LES PIECES RECUPEREES SONT LES PIECES DE MON CAMP.
 
         // 3- Contrôle pour savoir si le roi est en echec :
         for(int i = 0; i<positionsCampAdverse.size(); i++)
         {
             // Récupération du type des pièces du camp adverse :
             caseDepart = positionsCampAdverse.get(i);
-            List<String> nomPiece = List.of(positionsCampAdverse.get(i).getPiece().getType().split(" "));
+            List<String> nomPiece = List.of(positionsCampAdverse.get(i).getPiece().getType().split(" ")); // TEST : TOMBE EN ERREUR.
             String typeDePiece = nomPiece.get(0);
 
             // Contrôle du type de pièce :
@@ -298,21 +298,21 @@ public class DeplacementRoi {
         List<Case> casesAutourDuRoi = new ArrayList<>();
 
         // Ajout des cases autour du roi dans le tableau :
-        Case caseAutourDuRoi1 =  caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() + 1L);
+        Case caseAutourDuRoi1 =  caseRepository.recupererCasesParId(caseDepartDuRoi.getNo_case() + 1L);
         casesAutourDuRoi.add(caseAutourDuRoi1);
-        Case caseAutourDuRoi2 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() - 1L);
+        Case caseAutourDuRoi2 = caseRepository.recupererCasesParId(caseDepartDuRoi.getNo_case() - 1L);
         casesAutourDuRoi.add(caseAutourDuRoi2);
-        Case caseAutourDuRoi3 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() + 8L);
+        Case caseAutourDuRoi3 = caseRepository.recupererCasesParId(caseDepartDuRoi.getNo_case() + 8L);
         casesAutourDuRoi.add(caseAutourDuRoi3);
-        Case caseAutourDuRoi4 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() - 8L);
+        Case caseAutourDuRoi4 = caseRepository.recupererCasesParId(caseDepartDuRoi.getNo_case() - 8L);
         casesAutourDuRoi.add(caseAutourDuRoi4);
-        Case caseAutourDuRoi5 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() + 7L);
+        Case caseAutourDuRoi5 = caseRepository.recupererCasesParId(caseDepartDuRoi.getNo_case() + 7L);
         casesAutourDuRoi.add(caseAutourDuRoi5);
-        Case caseAutourDuRoi6 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() - 7L);
+        Case caseAutourDuRoi6 = caseRepository.recupererCasesParId(caseDepartDuRoi.getNo_case() - 7L);
         casesAutourDuRoi.add(caseAutourDuRoi6);
-        Case caseAutourDuRoi7 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() + 9L);
+        Case caseAutourDuRoi7 = caseRepository.recupererCasesParId(caseDepartDuRoi.getNo_case() + 9L);
         casesAutourDuRoi.add(caseAutourDuRoi7);
-        Case caseAutourDuRoi8 = caseRepository.RecupererCasesAutourDuRoi(caseDepartDuRoi.getNo_case() - 9L);
+        Case caseAutourDuRoi8 = caseRepository.recupererCasesParId(caseDepartDuRoi.getNo_case() - 9L);
         casesAutourDuRoi.add(caseAutourDuRoi8);
 
         // Renvoie du tableau :
@@ -323,6 +323,7 @@ public class DeplacementRoi {
 
     /**
      * Méthode qui renvoie la case sur laquelle se trouve le roi du camp adverse.
+     * Renvoie le roi du tour en cours pour vérifier si il a été mis en échec au tour précédent.
      * @return caseDestination
      */
     public Case recuperationCaseDuRoiAdverse()
@@ -337,7 +338,7 @@ public class DeplacementRoi {
 
         // Récupération du roi du camp adverse :
         if (campQuiJoue.equals("blanc")) {
-            caseDestination = caseRepository.recupererLaCaseDuRoi(roiNoir);
+            caseDestination = caseRepository.recupererLaCaseDuRoi(roiBlanc);
             /*
             for (int i = 0; i <= echiquier.size(); i++) {
                 if (echiquier.get(i).getPiece().getType().equals("roi noir")) {
@@ -347,7 +348,7 @@ public class DeplacementRoi {
             }
             */
         } else {
-            caseDestination = caseRepository.recupererLaCaseDuRoi(roiBlanc);
+            caseDestination = caseRepository.recupererLaCaseDuRoi(roiNoir);
             /*
             for (int i = 0; i <= echiquier.size(); i++) {
                 if (echiquier.get(i).getPiece().getType().equals("roi blanc")) {
