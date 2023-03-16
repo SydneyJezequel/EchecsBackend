@@ -5,6 +5,9 @@ import com.Applications.EchecsBackend.models.echecs.Piece;
 import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -48,16 +51,22 @@ public class DeplacementFou {
      */
     public boolean deplacementFou(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
+        // Attributs :
+        boolean deplacementFouOk;
+
+        // Contrôles :
         if(deplacementFouDeGaucheADroite(caseDepart, caseDestination, echiquier) || deplacementFouDeDroiteAGauche(caseDepart, caseDestination, echiquier))
         {
             if (fou.verificationCampPieceCaseDestination(caseDepart, caseDestination))
             {
                 return true;
-            }else
+            }
+            else
             {
                 return false;
             }
-        } else
+        }
+        else
         {
             return false;
         }
@@ -169,6 +178,9 @@ public class DeplacementFou {
     public boolean deplacementFouDeGaucheADroite(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
         // Attributs :
+        boolean deplacementAutorise;
+        List<Case> echiquierBordure = caseRepository.findAll();
+        echiquier.sort(Comparator.comparing(Case::getNo_case));
         int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
         int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
         String plus = "plus";
@@ -207,12 +219,20 @@ public class DeplacementFou {
                 || caseDestination.getNo_case() == caseDepart.getNo_case() + 49 && caseDepartPlus42.getPiece() == null && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null
                 || caseDestination.getNo_case() == caseDepart.getNo_case() + 56 && caseDepartPlus49.getPiece() == null && caseDepartPlus42.getPiece() == null && caseDepartPlus35.getPiece() == null && caseDepartPlus28.getPiece() == null && caseDepartPlus21.getPiece() == null && caseDepartPlus14.getPiece() == null && caseDepartPlus7.getPiece() == null)
         {
-            return true;
+            if(borduresFou(caseDepart, caseDestination))
+            {
+                deplacementAutorise = false;
+            }
+            else
+            {
+                deplacementAutorise = true;
+            }
         }
         else
         {
-            return false;
+            deplacementAutorise = false;
         }
+        return deplacementAutorise;
     }
 
 
@@ -228,6 +248,9 @@ public class DeplacementFou {
     public boolean deplacementFouDeDroiteAGauche(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
         // Attributs :
+        boolean deplacementAutorise;
+        List<Case> echiquierBordure = caseRepository.findAll();
+        echiquier.sort(Comparator.comparing(Case::getNo_case));
         int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
         int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
         String plus = "plus";
@@ -267,12 +290,20 @@ public class DeplacementFou {
                 || caseDestination.getNo_case() == caseDepart.getNo_case() - 56 && caseDepartMoins49.getPiece() == null && caseDepartMoins42.getPiece() == null && caseDepartMoins35.getPiece() == null && caseDepartMoins28.getPiece() == null && caseDepartMoins21.getPiece() == null && caseDepartMoins14.getPiece() == null && caseDepartMoins7.getPiece() == null
         )
         {
-            return true;
+            if(borduresFou(caseDepart, caseDestination))
+            {
+                deplacementAutorise = false;
+            }
+            else
+            {
+                deplacementAutorise = true;
+            }
         }
         else
         {
-            return false;
+            deplacementAutorise = false;
         }
+        return deplacementAutorise;
     }
 
 
@@ -282,7 +313,22 @@ public class DeplacementFou {
      * Méthode qui définit les limites de l'échiquier pour un Fou.
      * @return boolean
      */
-    public boolean borduresFou(Case caseDepart, Case caseDestination)
+    public boolean borduresFou(Case caseDepart, Case caseDestination) {
+        // Attributs :
+        boolean bordureDepasse;
+        List<Case> echiquier = caseRepository.findAll();
+        echiquier.sort(Comparator.comparing(Case::getNo_case));
+        // Diagonale GaucheDroite :
+        if (borduresFouDiagonaleGaucheDroiteDeHautEnBas(caseDepart, caseDestination, echiquier) || borduresFouDiagonaleGaucheADroiteDeBasEnHaut(caseDepart, caseDestination, echiquier)) {
+            bordureDepasse = true;
+        } else {
+            bordureDepasse = false;
+        }
+        return bordureDepasse;
+    }
+    // ANCIENNE VERSION DE LA METHODE :
+    /*
+        public boolean borduresFou(Case caseDepart, Case caseDestination)
     {
         Piece piece = caseDepart.getPiece();
         List<String> nomPiece = List.of(piece.getType().split(" "));
@@ -326,6 +372,330 @@ public class DeplacementFou {
             return true;
         }
     }
+    */
+
+
+
+
+    /**
+     * Méthode qui contrôle les bordures des diagonales qui vont de gauche à droite.
+     * @param caseDepart
+     * @param caseDestination
+     * @return
+     */
+    public boolean borduresFouDiagonaleGaucheDroiteDeHautEnBas(Case caseDepart, Case caseDestination, List<Case> echiquier)
+    {
+        // Attributs Diagonale GaucheDroite Noir :
+        boolean bordureDepasse = true;
+        List<Case>diagonaleGaucheDroiteDeHautEnBasNoir1 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasNoir2 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasNoir3 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasNoir4 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasNoir5 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasNoir6 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasNoir7 = new ArrayList<Case>();
+        diagonaleGaucheDroiteDeHautEnBasNoir1.add(echiquier.get(6));
+        diagonaleGaucheDroiteDeHautEnBasNoir1.add(echiquier.get(15));
+        diagonaleGaucheDroiteDeHautEnBasNoir2.add(echiquier.get(4));
+        diagonaleGaucheDroiteDeHautEnBasNoir2.add(echiquier.get(13));
+        diagonaleGaucheDroiteDeHautEnBasNoir2.add(echiquier.get(22));
+        diagonaleGaucheDroiteDeHautEnBasNoir2.add(echiquier.get(31));
+        diagonaleGaucheDroiteDeHautEnBasNoir3.add(echiquier.get(2));
+        diagonaleGaucheDroiteDeHautEnBasNoir3.add(echiquier.get(11));
+        diagonaleGaucheDroiteDeHautEnBasNoir3.add(echiquier.get(20));
+        diagonaleGaucheDroiteDeHautEnBasNoir3.add(echiquier.get(29));
+        diagonaleGaucheDroiteDeHautEnBasNoir3.add(echiquier.get(38));
+        diagonaleGaucheDroiteDeHautEnBasNoir3.add(echiquier.get(47));
+        diagonaleGaucheDroiteDeHautEnBasNoir4.add(echiquier.get(0));
+        diagonaleGaucheDroiteDeHautEnBasNoir4.add(echiquier.get(9));
+        diagonaleGaucheDroiteDeHautEnBasNoir4.add(echiquier.get(18));
+        diagonaleGaucheDroiteDeHautEnBasNoir4.add(echiquier.get(27));
+        diagonaleGaucheDroiteDeHautEnBasNoir4.add(echiquier.get(36));
+        diagonaleGaucheDroiteDeHautEnBasNoir4.add(echiquier.get(45));
+        diagonaleGaucheDroiteDeHautEnBasNoir4.add(echiquier.get(54));
+        diagonaleGaucheDroiteDeHautEnBasNoir4.add(echiquier.get(63));
+        diagonaleGaucheDroiteDeHautEnBasNoir5.add(echiquier.get(16));
+        diagonaleGaucheDroiteDeHautEnBasNoir5.add(echiquier.get(25));
+        diagonaleGaucheDroiteDeHautEnBasNoir5.add(echiquier.get(34));
+        diagonaleGaucheDroiteDeHautEnBasNoir5.add(echiquier.get(43));
+        diagonaleGaucheDroiteDeHautEnBasNoir5.add(echiquier.get(52));
+        diagonaleGaucheDroiteDeHautEnBasNoir5.add(echiquier.get(61));
+        diagonaleGaucheDroiteDeHautEnBasNoir6.add(echiquier.get(32));
+        diagonaleGaucheDroiteDeHautEnBasNoir6.add(echiquier.get(41));
+        diagonaleGaucheDroiteDeHautEnBasNoir6.add(echiquier.get(50));
+        diagonaleGaucheDroiteDeHautEnBasNoir6.add(echiquier.get(59));
+        diagonaleGaucheDroiteDeHautEnBasNoir7.add(echiquier.get(48));
+        diagonaleGaucheDroiteDeHautEnBasNoir7.add(echiquier.get(57));
+
+        // Attributs Diagonale GaucheDroite Blanc :
+        List<Case>diagonaleGaucheDroiteDeHautEnBasBlanc1 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasBlanc2 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasBlanc3 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasBlanc4 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasBlanc5 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasBlanc6 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasBlanc7 = new ArrayList<Case>();
+        List<Case>diagonaleGaucheDroiteDeHautEnBasBlanc8 = new ArrayList<Case>();
+        diagonaleGaucheDroiteDeHautEnBasBlanc1.add(echiquier.get(7));
+        diagonaleGaucheDroiteDeHautEnBasBlanc2.add(echiquier.get(5));
+        diagonaleGaucheDroiteDeHautEnBasBlanc2.add(echiquier.get(14));
+        diagonaleGaucheDroiteDeHautEnBasBlanc2.add(echiquier.get(23));
+        diagonaleGaucheDroiteDeHautEnBasBlanc3.add(echiquier.get(3));
+        diagonaleGaucheDroiteDeHautEnBasBlanc3.add(echiquier.get(12));
+        diagonaleGaucheDroiteDeHautEnBasBlanc3.add(echiquier.get(21));
+        diagonaleGaucheDroiteDeHautEnBasBlanc3.add(echiquier.get(30));
+        diagonaleGaucheDroiteDeHautEnBasBlanc3.add(echiquier.get(39));
+        diagonaleGaucheDroiteDeHautEnBasBlanc4.add(echiquier.get(1));
+        diagonaleGaucheDroiteDeHautEnBasBlanc4.add(echiquier.get(10));
+        diagonaleGaucheDroiteDeHautEnBasBlanc4.add(echiquier.get(19));
+        diagonaleGaucheDroiteDeHautEnBasBlanc4.add(echiquier.get(28));
+        diagonaleGaucheDroiteDeHautEnBasBlanc4.add(echiquier.get(37));
+        diagonaleGaucheDroiteDeHautEnBasBlanc4.add(echiquier.get(46));
+        diagonaleGaucheDroiteDeHautEnBasBlanc4.add(echiquier.get(55));
+        diagonaleGaucheDroiteDeHautEnBasBlanc5.add(echiquier.get(8));
+        diagonaleGaucheDroiteDeHautEnBasBlanc5.add(echiquier.get(17));
+        diagonaleGaucheDroiteDeHautEnBasBlanc5.add(echiquier.get(26));
+        diagonaleGaucheDroiteDeHautEnBasBlanc5.add(echiquier.get(35));
+        diagonaleGaucheDroiteDeHautEnBasBlanc5.add(echiquier.get(44));
+        diagonaleGaucheDroiteDeHautEnBasBlanc5.add(echiquier.get(53));
+        diagonaleGaucheDroiteDeHautEnBasBlanc5.add(echiquier.get(62));
+        diagonaleGaucheDroiteDeHautEnBasBlanc6.add(echiquier.get(24));
+        diagonaleGaucheDroiteDeHautEnBasBlanc6.add(echiquier.get(33));
+        diagonaleGaucheDroiteDeHautEnBasBlanc6.add(echiquier.get(42));
+        diagonaleGaucheDroiteDeHautEnBasBlanc6.add(echiquier.get(51));
+        diagonaleGaucheDroiteDeHautEnBasBlanc6.add(echiquier.get(60));
+        diagonaleGaucheDroiteDeHautEnBasBlanc7.add(echiquier.get(40));
+        diagonaleGaucheDroiteDeHautEnBasBlanc7.add(echiquier.get(49));
+        diagonaleGaucheDroiteDeHautEnBasBlanc7.add(echiquier.get(58));
+        diagonaleGaucheDroiteDeHautEnBasBlanc8.add(echiquier.get(56));
+
+        // Contrôles des bordures sur les diagonales de Gauche à Droite :
+        // Contrôles sur les cases noires :
+        if(diagonaleGaucheDroiteDeHautEnBasBlanc1.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasBlanc1.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleGaucheDroiteDeHautEnBasNoir2.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasNoir2.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleGaucheDroiteDeHautEnBasNoir3.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasNoir3.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleGaucheDroiteDeHautEnBasNoir4.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasNoir4.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleGaucheDroiteDeHautEnBasNoir5.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasNoir5.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleGaucheDroiteDeHautEnBasNoir6.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasNoir6.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleGaucheDroiteDeHautEnBasNoir7.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasNoir7.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+
+        // Contrôles sur les cases blanches:
+        else if(diagonaleGaucheDroiteDeHautEnBasBlanc1.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasBlanc1.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleGaucheDroiteDeHautEnBasBlanc2.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasBlanc2.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleGaucheDroiteDeHautEnBasBlanc3.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasBlanc3.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleGaucheDroiteDeHautEnBasBlanc4.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasBlanc4.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleGaucheDroiteDeHautEnBasBlanc5.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasBlanc5.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleGaucheDroiteDeHautEnBasBlanc6.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasBlanc6.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleGaucheDroiteDeHautEnBasBlanc7.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasBlanc7.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        return bordureDepasse;
+    }
+
+
+
+
+    /**
+     * Méthode qui contrôle les bordures des diagonales qui vont de droite à gauche.
+     * @param caseDepart
+     * @param caseDestination
+     * @return
+     */
+    public boolean borduresFouDiagonaleGaucheADroiteDeBasEnHaut(Case caseDepart, Case caseDestination, List<Case> echiquier)
+    {
+        // Attributs :
+        boolean bordureDepasse = true;
+        List<Case>diagonaleDroiteGaucheDeBasEnHautNoir1 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautNoir2 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautNoir3 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautNoir4 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautNoir5 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautNoir6 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautNoir7 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautNoir8 = new ArrayList<Case>();
+        diagonaleDroiteGaucheDeBasEnHautNoir1.add(echiquier.get(0));
+        diagonaleDroiteGaucheDeBasEnHautNoir2.add(echiquier.get(2));
+        diagonaleDroiteGaucheDeBasEnHautNoir2.add(echiquier.get(9));
+        diagonaleDroiteGaucheDeBasEnHautNoir2.add(echiquier.get(16));
+        diagonaleDroiteGaucheDeBasEnHautNoir3.add(echiquier.get(4));
+        diagonaleDroiteGaucheDeBasEnHautNoir3.add(echiquier.get(11));
+        diagonaleDroiteGaucheDeBasEnHautNoir3.add(echiquier.get(18));
+        diagonaleDroiteGaucheDeBasEnHautNoir3.add(echiquier.get(25));
+        diagonaleDroiteGaucheDeBasEnHautNoir3.add(echiquier.get(32));
+        diagonaleDroiteGaucheDeBasEnHautNoir4.add(echiquier.get(6));
+        diagonaleDroiteGaucheDeBasEnHautNoir4.add(echiquier.get(13));
+        diagonaleDroiteGaucheDeBasEnHautNoir4.add(echiquier.get(20));
+        diagonaleDroiteGaucheDeBasEnHautNoir4.add(echiquier.get(27));
+        diagonaleDroiteGaucheDeBasEnHautNoir4.add(echiquier.get(34));
+        diagonaleDroiteGaucheDeBasEnHautNoir4.add(echiquier.get(41));
+        diagonaleDroiteGaucheDeBasEnHautNoir4.add(echiquier.get(48));
+        diagonaleDroiteGaucheDeBasEnHautNoir5.add(echiquier.get(15));
+        diagonaleDroiteGaucheDeBasEnHautNoir5.add(echiquier.get(22));
+        diagonaleDroiteGaucheDeBasEnHautNoir5.add(echiquier.get(29));
+        diagonaleDroiteGaucheDeBasEnHautNoir5.add(echiquier.get(36));
+        diagonaleDroiteGaucheDeBasEnHautNoir5.add(echiquier.get(43));
+        diagonaleDroiteGaucheDeBasEnHautNoir5.add(echiquier.get(50));
+        diagonaleDroiteGaucheDeBasEnHautNoir5.add(echiquier.get(57));
+        diagonaleDroiteGaucheDeBasEnHautNoir6.add(echiquier.get(31));
+        diagonaleDroiteGaucheDeBasEnHautNoir6.add(echiquier.get(38));
+        diagonaleDroiteGaucheDeBasEnHautNoir6.add(echiquier.get(45));
+        diagonaleDroiteGaucheDeBasEnHautNoir6.add(echiquier.get(52));
+        diagonaleDroiteGaucheDeBasEnHautNoir6.add(echiquier.get(59));
+        diagonaleDroiteGaucheDeBasEnHautNoir7.add(echiquier.get(47));
+        diagonaleDroiteGaucheDeBasEnHautNoir7.add(echiquier.get(54));
+        diagonaleDroiteGaucheDeBasEnHautNoir7.add(echiquier.get(61));
+        diagonaleDroiteGaucheDeBasEnHautNoir8.add(echiquier.get(63));
+
+        List<Case>diagonaleDroiteGaucheDeBasEnHautBlanc1 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautBlanc2 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautBlanc3 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautBlanc4 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautBlanc5 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautBlanc6 = new ArrayList<Case>();
+        List<Case>diagonaleDroiteGaucheDeBasEnHautBlanc7 = new ArrayList<Case>();
+        diagonaleDroiteGaucheDeBasEnHautBlanc1.add(echiquier.get(1));
+        diagonaleDroiteGaucheDeBasEnHautBlanc1.add(echiquier.get(8));
+        diagonaleDroiteGaucheDeBasEnHautBlanc2.add(echiquier.get(3));
+        diagonaleDroiteGaucheDeBasEnHautBlanc2.add(echiquier.get(10));
+        diagonaleDroiteGaucheDeBasEnHautBlanc2.add(echiquier.get(17));
+        diagonaleDroiteGaucheDeBasEnHautBlanc2.add(echiquier.get(24));
+        diagonaleDroiteGaucheDeBasEnHautBlanc3.add(echiquier.get(5));
+        diagonaleDroiteGaucheDeBasEnHautBlanc3.add(echiquier.get(12));
+        diagonaleDroiteGaucheDeBasEnHautBlanc3.add(echiquier.get(19));
+        diagonaleDroiteGaucheDeBasEnHautBlanc3.add(echiquier.get(26));
+        diagonaleDroiteGaucheDeBasEnHautBlanc3.add(echiquier.get(33));
+        diagonaleDroiteGaucheDeBasEnHautBlanc3.add(echiquier.get(40));
+        diagonaleDroiteGaucheDeBasEnHautBlanc4.add(echiquier.get(7));
+        diagonaleDroiteGaucheDeBasEnHautBlanc4.add(echiquier.get(14));
+        diagonaleDroiteGaucheDeBasEnHautBlanc4.add(echiquier.get(21));
+        diagonaleDroiteGaucheDeBasEnHautBlanc4.add(echiquier.get(28));
+        diagonaleDroiteGaucheDeBasEnHautBlanc4.add(echiquier.get(35));
+        diagonaleDroiteGaucheDeBasEnHautBlanc4.add(echiquier.get(42));
+        diagonaleDroiteGaucheDeBasEnHautBlanc4.add(echiquier.get(49));
+        diagonaleDroiteGaucheDeBasEnHautBlanc4.add(echiquier.get(56));
+        diagonaleDroiteGaucheDeBasEnHautBlanc5.add(echiquier.get(23));
+        diagonaleDroiteGaucheDeBasEnHautBlanc5.add(echiquier.get(30));
+        diagonaleDroiteGaucheDeBasEnHautBlanc5.add(echiquier.get(37));
+        diagonaleDroiteGaucheDeBasEnHautBlanc5.add(echiquier.get(44));
+        diagonaleDroiteGaucheDeBasEnHautBlanc5.add(echiquier.get(51));
+        diagonaleDroiteGaucheDeBasEnHautBlanc5.add(echiquier.get(58));
+        diagonaleDroiteGaucheDeBasEnHautBlanc6.add(echiquier.get(39));
+        diagonaleDroiteGaucheDeBasEnHautBlanc6.add(echiquier.get(46));
+        diagonaleDroiteGaucheDeBasEnHautBlanc6.add(echiquier.get(53));
+        diagonaleDroiteGaucheDeBasEnHautBlanc6.add(echiquier.get(60));
+        diagonaleDroiteGaucheDeBasEnHautBlanc7.add(echiquier.get(55));
+        diagonaleDroiteGaucheDeBasEnHautBlanc7.add(echiquier.get(62));
+
+        // Contrôles des bordures sur les diagonales de Droite à Gauche :
+        // Contrôles sur les cases noires :
+        if(diagonaleDroiteGaucheDeBasEnHautNoir1.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautNoir1.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautNoir2.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautNoir2.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautNoir3.contains(caseDepart.getNo_case()) && !diagonaleDroiteGaucheDeBasEnHautNoir3.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautNoir4.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautNoir4.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautNoir5.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautNoir5.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautNoir6.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautNoir6.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautNoir7.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautNoir7.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautNoir8.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautNoir8.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+
+        // Contrôles sur les cases blanches:
+        else if(diagonaleDroiteGaucheDeBasEnHautBlanc1.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautBlanc1.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautBlanc2.contains(caseDepart.getNo_case()) && !diagonaleDroiteGaucheDeBasEnHautBlanc2.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautBlanc3.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautBlanc3.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautBlanc4.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautBlanc4.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautBlanc5.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautBlanc5.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautBlanc6.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautBlanc6.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+        else if(diagonaleDroiteGaucheDeBasEnHautBlanc7.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautBlanc7.contains(caseDestination.getNo_case()))
+        {
+            bordureDepasse = false;
+        }
+
+
+
+        return bordureDepasse;
+    }
+
 
 
 

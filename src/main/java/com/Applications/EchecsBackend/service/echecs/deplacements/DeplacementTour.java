@@ -239,7 +239,13 @@ public class DeplacementTour {
                 || caseDestination.getNo_case() == caseDepart.getNo_case() - 7 && caseDepartMoins6.getPiece() == null && caseDepartMoins5.getPiece() == null && caseDepartMoins4.getPiece() == null && caseDepartMoins3.getPiece()== null && caseDepartMoins2.getPiece() == null && caseDepartMoins1.getPiece() == null
         )
         {
-            return true;
+            if(borduresTour(caseDepart, caseDestination)){
+                return true;
+            }else
+            {
+                return false;
+            }
+
         } else
         {
             return false;
@@ -254,6 +260,63 @@ public class DeplacementTour {
      * Méthode qui définit les limites de l'échiquier pour une Tour.
      * @return boolean
      */
+    public boolean borduresTour(Case caseDepart, Case caseDestination)
+    {
+        boolean bordureDepassee = true;
+        switch(caseDepart.getColonne()){
+            case "A":
+                if(caseDestination.getNo_case()>=9L)
+                {
+                    bordureDepassee = false;
+                }
+                break;
+            case "B":
+                if(caseDestination.getNo_case()>=17L || caseDestination.getNo_case()<9)
+                {
+                    bordureDepassee = false;
+                }
+                break;
+            case "C":
+                if(caseDestination.getNo_case()>=25L || caseDestination.getNo_case()<17)
+                {
+                    bordureDepassee = false;
+                }
+                break;
+            case "D":
+                if(caseDestination.getNo_case()>=33L || caseDestination.getNo_case()<25)
+                {
+                    bordureDepassee = false;
+                }
+                break;
+            case "E":
+                if(caseDestination.getNo_case()>=41L ||caseDestination.getNo_case()<33)
+                {
+                    bordureDepassee = false;
+                }
+                break;
+            case "F":
+                if(caseDestination.getNo_case()>=49L || caseDestination.getNo_case()<41)
+                {
+                    bordureDepassee = false;
+                }
+                break;
+            case "G":
+                if(caseDestination.getNo_case()>=57L || caseDestination.getNo_case()<49)
+                {
+                    bordureDepassee = false;
+                }
+                break;
+            case "H":
+                if(caseDestination.getNo_case()<57L)
+                {
+                    bordureDepassee = false;
+                }
+                break;
+        }
+            return bordureDepassee;
+    }
+    // ANCIENNE VERSION DE LA METHODE :
+    /*
     public boolean borduresTour(Case caseDepart, Case caseDestination)
     {
         Piece piece = caseDepart.getPiece();
@@ -278,6 +341,7 @@ public class DeplacementTour {
             return true;
         }
     }
+     */
 
 
 
