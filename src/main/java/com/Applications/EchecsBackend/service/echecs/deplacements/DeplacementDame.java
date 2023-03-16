@@ -69,6 +69,17 @@ public class DeplacementDame {
      */
     public boolean borduresDame(Case caseDepart, Case caseDestination)
     {
+        if(deplacementFou.borduresFou(caseDepart, caseDestination) || deplacementTour.borduresTour(caseDepart, caseDestination))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    // ANCIEN ALGORITHME :
+            /*
         Piece piece = caseDepart.getPiece();
         List<String> nomPiece = List.of(piece.getType().split(" "));
         String typeDePiece = nomPiece.get(0);
@@ -89,14 +100,7 @@ public class DeplacementDame {
                 || caseDestination.getNo_case() == 23L
                 || caseDestination.getNo_case() == 39L
         )
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
+        */
 
 
 

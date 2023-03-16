@@ -8,6 +8,7 @@ import com.Applications.EchecsBackend.repository.echecs.PartieRepository;
 import com.Applications.EchecsBackend.repository.echecs.PieceRepository;
 import com.Applications.EchecsBackend.service.echecs.deplacements.*;
 import com.Applications.EchecsBackend.service.echecs.gestionPartie.GestionDesParties;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -191,7 +192,7 @@ public class JouerService {
                 break;
             case "reine":
                 // Déplacement de la pièce :
-                if(deplacementDame.deplacementDame(caseDepart, caseDestination, echiquier) /*&& borduresDame(caseDepart, caseDestination)*/)
+                if(deplacementDame.deplacementDame(caseDepart, caseDestination, echiquier) /* && deplacementDame.borduresDame(caseDepart, caseDestination)*/)
                 {
                     // Contrôles à executer sur la Reine :
                     echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
