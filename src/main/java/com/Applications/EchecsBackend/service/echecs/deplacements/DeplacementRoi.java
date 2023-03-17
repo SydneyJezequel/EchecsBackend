@@ -1,7 +1,6 @@
 package com.Applications.EchecsBackend.service.echecs.deplacements;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
-import com.Applications.EchecsBackend.models.echecs.Couleur;
 import com.Applications.EchecsBackend.models.echecs.Piece;
 import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
 import com.Applications.EchecsBackend.repository.echecs.CouleurRepository;
@@ -9,10 +8,9 @@ import com.Applications.EchecsBackend.repository.echecs.PieceRepository;
 import com.Applications.EchecsBackend.service.echecs.gestionPartie.GestionDesParties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 
 /**
@@ -78,6 +76,7 @@ public class DeplacementRoi {
     {
         // VERSION TEMPORAIRE : AJOUTER UN BLOCAGE DE DEPLACEMENT SUR LES PIECES DU MEME CAMP.
         // Récupération des numéros des cases :
+        boolean deplacementRoiAutorise;
         int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
         int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
         // Déplacements possibles :
@@ -91,18 +90,34 @@ public class DeplacementRoi {
                 || noCaseDestination == noCaseDepart-9
         )
         {
-            if (roi.verificationCampPieceCaseDestination(caseDepart, caseDestination))
+            // Si le roi dépasse les bordures de l'échiquier :
+            if(borduresRoi(caseDepart, caseDestination))
             {
-                return true;
-            }else
-            {
-                return false;
+                deplacementRoiAutorise = false;
             }
-        } else
-        {
-            return false;
+            // Si le roi ne dépasse les bordures de l'échiquier :
+            else
+            {
+                // Si la pièce sur la case de destination n'est pas du même camp que le roi :
+                if (roi.verificationCampPieceCaseDestination(caseDepart, caseDestination))
+                {
+                    deplacementRoiAutorise = true;
+                }
+                // Si la pièce sur la case de destination est du même camp que le roi :
+                else
+                {
+                    deplacementRoiAutorise = false;
+                }
+            }
         }
+        // Si la façon dont se déplace le roi est incorrect :
+        else
+        {
+            deplacementRoiAutorise = false;
+        }
+        return deplacementRoiAutorise;
     }
+
 
 
 
@@ -112,27 +127,35 @@ public class DeplacementRoi {
      */
     public boolean borduresRoi(Case caseDepart, Case caseDestination)
     {
-        Piece piece = caseDepart.getPiece();
-        List<String> nomPiece = List.of(piece.getType().split(" "));
-        String typeDePiece = nomPiece.get(0);
-        if(typeDePiece.equals("roi")
-                && caseDepart.getNo_case() == 40L
-                || caseDepart.getNo_case() == 33L
-                && caseDestination.getNo_case() == 33L
-                || caseDestination.getNo_case() == 41L
-                || caseDestination.getNo_case() == 49L
-                || caseDestination.getNo_case() == 24L
-                || caseDestination.getNo_case() == 32L
-                || caseDestination.getNo_case() == 40L
-        )
+        // Attributs :
+        boolean bordureDepasse = false;
+        int ligneCaseDepart = caseDepart.getLigne();
+
+        // Contrôles :
+        switch (ligneCaseDepart)
         {
-            return false;
+            case 8:
+                if(caseDestination.getNo_case()==caseDepart.getNo_case()+7L
+                || caseDestination.getNo_case()==caseDepart.getNo_case()-1L
+                || caseDestination.getNo_case()==caseDepart.getNo_case()-9L)
+                {
+                    bordureDepasse = true;
+                }
+                break;
+            case 1:
+                if(caseDestination.getNo_case()==caseDepart.getNo_case()-7L
+                || caseDestination.getNo_case()==caseDepart.getNo_case()+1L
+                || caseDestination.getNo_case()==caseDepart.getNo_case()+9L)
+                {
+                    bordureDepasse = true;
+                }
+                break;
+            default:
+                bordureDepasse = false;
         }
-        else
-        {
-            return true;
-        }
+        return  bordureDepasse;
     }
+
 
 
 

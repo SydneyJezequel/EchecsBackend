@@ -70,13 +70,13 @@ public class DeplacementCavalier {
         )
         {
             // Si le cavalier dépasse les bordures de l'échiquier :
-           // if(borduresCavalier(caseDepart, caseDestination))
-            //{
+           if(borduresCavalier(caseDepart, caseDestination))
+            {
                 deplacementCavalierAutorise = false;
-            //}
+            }
             // Si le cavalier ne dépasse les bordures de l'échiquier :
-            //else
-            //{
+            else
+            {
                 // Si la pièce sur la case de destination n'est pas du même camp que le cavalier :
                 if (cavalier.verificationCampPieceCaseDestination(caseDepart, caseDestination))
                 {
@@ -87,7 +87,7 @@ public class DeplacementCavalier {
                 {
                     deplacementCavalierAutorise = false;
                 }
-            //}
+            }
         }
         // Si la façon dont se déplace le cavalier est incorrect :
         else
@@ -99,44 +99,12 @@ public class DeplacementCavalier {
 
 
 
+
     /**
      * Méthode qui définit les limites de l'échiquier pour un Cavalier.
      * @return boolean
      */
     public boolean borduresCavalier(Case caseDepart, Case caseDestination)
-    {
-        Piece piece = caseDepart.getPiece();
-        List<String> nomPiece = List.of(piece.getType().split(" "));
-        String typeDePiece = nomPiece.get(0);
-        if(typeDePiece.equals("cavalier")
-                && caseDepart.getNo_case() == 16L
-                || caseDepart.getNo_case() == 49L
-                || caseDepart.getNo_case() == 9L
-                && caseDestination.getNo_case() == 1L
-                || caseDestination.getNo_case() == 10L
-                || caseDestination.getNo_case() == 26L
-                || caseDestination.getNo_case() == 33L
-                || caseDestination.getNo_case() == 41L
-                || caseDestination.getNo_case() == 50L
-                || caseDestination.getNo_case() == 15L
-                || caseDestination.getNo_case() == 24L
-                || caseDestination.getNo_case() == 64L
-                || caseDestination.getNo_case() == 55L
-                || caseDestination.getNo_case() == 39L
-                || caseDestination.getNo_case() == 32L
-        )
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-
-
-    // NOUVELLE VERSION BORDURES CAVALIER :
-    public boolean borduresCavalierV2(Case caseDepart, Case caseDestination)
     {
         // Attributs :
         int ligneCaseDeDepart = caseDepart.getLigne();
@@ -145,39 +113,46 @@ public class DeplacementCavalier {
         switch(ligneCaseDeDepart)
         {
             case 8:
-                if(caseDestination.getNo_case()==1L)
+                if(caseDestination.getNo_case() == caseDepart.getNo_case()+6L
+                || caseDestination.getNo_case() == caseDepart.getNo_case()-10L
+                || caseDestination.getNo_case() == caseDepart.getNo_case()+15L
+                || caseDestination.getNo_case() == caseDepart.getNo_case()-17L)
                 {
                     bordureDepasse = true;
                 }
                 break;
             case 7:
-                if(caseDestination.getNo_case()==1L)
+                if(caseDestination.getNo_case() == caseDepart.getNo_case()+6L
+                || caseDestination.getNo_case() == caseDepart.getNo_case()-10L)
                 {
                     bordureDepasse = true;
                 }
                 break;
             case 2:
-                if(caseDestination.getNo_case()==1L)
+                if(caseDestination.getNo_case() == caseDepart.getNo_case()-6L
+                || caseDestination.getNo_case() == caseDepart.getNo_case()+10L)
                 {
                     bordureDepasse = true;
                 }
                 break;
             case 1:
-                if(caseDestination.getNo_case()==1L)
+                if(caseDestination.getNo_case() == caseDepart.getNo_case()-6L
+                || caseDestination.getNo_case() == caseDepart.getNo_case()+10L
+                || caseDestination.getNo_case() == caseDepart.getNo_case()-15L
+                || caseDestination.getNo_case() == caseDepart.getNo_case()+17L)
+
                 {
                     bordureDepasse = true;
                 }
                 break;
             default:
-
+                bordureDepasse = false;
         }
         return bordureDepasse;
     }
 
 // ALGORITHME TEMPORAIRE :
 /*
-
-
 ——————————————————
 SI COLONNE 3 :
 Empêcher les -6.

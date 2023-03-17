@@ -51,11 +51,13 @@ public class DeplacementPion {
      */
     public boolean deplacementPion(Case caseDepart, Case caseDestination, Piece piece, List<Case> echiquier) throws Exception
     {
-        // VERSION TEMPORAIRE :COMPLETER LES CONDITIONS AVEC LA CASE ORIGINE.
-        // Récupération des numéros des cases :
+        // Attributs :
+        boolean deplacementPionAutorise;
         int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
         int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
         Case caseIntermediaire;
+
+        // Contrôles :
         if (piece.getCouleur().getCouleur().equals("blanc"))
         {
             caseIntermediaire = echiquier.get(Math.toIntExact(caseDepart.getNo_case()-2L));
@@ -75,17 +77,32 @@ public class DeplacementPion {
                 || (noCaseDestination == noCaseDepart -7 && caseDestination.getPiece() != null)
         )
         {
-            if (pion.verificationCampPieceCaseDestination(caseDepart, caseDestination))
+            // Si le pion dépasse les bordures de l'échiquier :
+            if(borduresPion(caseDepart, caseDestination))
             {
-                return true;
-            }else
-            {
-                return false;
+                deplacementPionAutorise = false;
             }
-        } else
-        {
-            return false;
+            // Si le pion ne dépasse les bordures de l'échiquier :
+            else
+            {
+                // Si la pièce sur la case de destination n'est pas du même camp que le pion :
+                if (pion.verificationCampPieceCaseDestination(caseDepart, caseDestination))
+                {
+                    deplacementPionAutorise = true;
+                }
+                // Si la pièce sur la case de destination est du même camp que le pion :
+                else
+                {
+                    deplacementPionAutorise = false;
+                }
+            }
         }
+        // Si la façon dont se déplace le pion est incorrect :
+        else
+        {
+            deplacementPionAutorise = false;
+        }
+        return deplacementPionAutorise;
     }
 
 
@@ -96,62 +113,31 @@ public class DeplacementPion {
      */
     public boolean borduresPion(Case caseDepart, Case caseDestination)
     {
-        boolean deplacementAutorise = true;
-        Piece piece = caseDepart.getPiece();
-        List<String> nomPiece = List.of(piece.getType().split(" "));
-        String typeDePiece = nomPiece.get(0);
-        if(typeDePiece.equals("pion")) {
-            // Pion Blanc :
-            if (caseDepart.getNo_case() == 1L && caseDestination.getNo_case() == 16 || caseDestination.getNo_case() == 24) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 9L && caseDestination.getNo_case() == 8 || caseDestination.getNo_case() == 16 || caseDestination.getNo_case() == 24) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 17L && caseDestination.getNo_case() == 16 || caseDestination.getNo_case() == 24 || caseDestination.getNo_case() == 32) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 25L && caseDestination.getNo_case() == 24 || caseDestination.getNo_case() == 32 || caseDestination.getNo_case() == 340) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 33L && caseDestination.getNo_case() == 32 || caseDestination.getNo_case() == 40 || caseDestination.getNo_case() == 48) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 41L && caseDestination.getNo_case() == 40 || caseDestination.getNo_case() == 48 || caseDestination.getNo_case() == 46) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 49L && caseDestination.getNo_case() == 48 || caseDestination.getNo_case() == 56 || caseDestination.getNo_case() == 64) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 57L && caseDestination.getNo_case() == 56 || caseDestination.getNo_case() == 64) {
-                deplacementAutorise = false;
-            }
+        // Attributs :
+        boolean bordureDepasse = false;
+        int ligneCaseDepart = caseDepart.getLigne();
 
-            // Pion Noir :
-            if (caseDepart.getNo_case() == 8L && caseDestination.getNo_case() == 9 || caseDestination.getNo_case() == 17 || caseDestination.getNo_case() == 32) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 16L && caseDestination.getNo_case() == 1 || caseDestination.getNo_case() == 9 || caseDestination.getNo_case() == 17) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 24L && caseDestination.getNo_case() == 9 || caseDestination.getNo_case() == 17 || caseDestination.getNo_case() == 25) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 32L && caseDestination.getNo_case() == 17 || caseDestination.getNo_case() == 25 || caseDestination.getNo_case() == 33) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 40L && caseDestination.getNo_case() == 25 || caseDestination.getNo_case() == 33 || caseDestination.getNo_case() == 41) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 48L && caseDestination.getNo_case() == 33 || caseDestination.getNo_case() == 41 || caseDestination.getNo_case() == 49) {
-                deplacementAutorise = false;
-            }
-            if (caseDepart.getNo_case() == 56L && caseDestination.getNo_case() == 41 || caseDestination.getNo_case() == 49 || caseDestination.getNo_case() == 57) {
-                deplacementAutorise = false;
-            }
+        // Contrôles :
+        switch (ligneCaseDepart)
+        {
+            case 8:
+                if(caseDestination.getNo_case()==caseDepart.getNo_case()-1L)
+                {
+                    bordureDepasse = true;
+                }
+                break;
+            case 1:
+                if(caseDestination.getNo_case()==caseDepart.getNo_case()+1L)
+                {
+                    bordureDepasse = true;
+                }
+                break;
+            default:
+                bordureDepasse = false;
         }
-        return deplacementAutorise;
+        return  bordureDepasse;
     }
+
 
 
 
