@@ -176,13 +176,12 @@ public class DeplacementCavalier {
 
 // ALGORITHME TEMPORAIRE :
 /*
+
+
 ——————————————————
 SI COLONNE 3 :
 Empêcher les -6.
 Empêcher les +10.
--15 ?
-Empêcher les +17.
-
 
 Tests :
 -6 —> PB
@@ -192,9 +191,8 @@ Tests :
 +15 —> PAS PB
 -15 —> PAS PB
 -17 —> PAS PB
-+17—> PB
++17—> PAS PB
 ——————————————————
-
 
 
 
@@ -215,8 +213,6 @@ Tests :
 -17 —> PAS PB
 +17—> PB
 ——————————————————
-
-
 
 
 
@@ -244,8 +240,6 @@ Empêcher les +6
 Empêcher les -10
 Empêcher les +15
 Empêcher les -17
-
-
 
 Tests :
 -6 —> PAS PB
