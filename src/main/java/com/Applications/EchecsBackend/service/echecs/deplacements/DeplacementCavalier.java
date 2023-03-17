@@ -70,13 +70,13 @@ public class DeplacementCavalier {
         )
         {
             // Si le cavalier dépasse les bordures de l'échiquier :
-            if(borduresCavalier(caseDepart, caseDestination))
-            {
+           // if(borduresCavalier(caseDepart, caseDestination))
+            //{
                 deplacementCavalierAutorise = false;
-            }
+            //}
             // Si le cavalier ne dépasse les bordures de l'échiquier :
-            else
-            {
+            //else
+            //{
                 // Si la pièce sur la case de destination n'est pas du même camp que le cavalier :
                 if (cavalier.verificationCampPieceCaseDestination(caseDepart, caseDestination))
                 {
@@ -87,7 +87,7 @@ public class DeplacementCavalier {
                 {
                     deplacementCavalierAutorise = false;
                 }
-            }
+            //}
         }
         // Si la façon dont se déplace le cavalier est incorrect :
         else
@@ -134,6 +134,133 @@ public class DeplacementCavalier {
         }
     }
 
+
+    // NOUVELLE VERSION BORDURES CAVALIER :
+    public boolean borduresCavalierV2(Case caseDepart, Case caseDestination)
+    {
+        // Attributs :
+        int ligneCaseDeDepart = caseDepart.getLigne();
+        boolean bordureDepasse = false;
+        // Contrôle :
+        switch(ligneCaseDeDepart)
+        {
+            case 8:
+                if(caseDestination.getNo_case()==1L)
+                {
+                    bordureDepasse = true;
+                }
+                break;
+            case 7:
+                if(caseDestination.getNo_case()==1L)
+                {
+                    bordureDepasse = true;
+                }
+                break;
+            case 2:
+                if(caseDestination.getNo_case()==1L)
+                {
+                    bordureDepasse = true;
+                }
+                break;
+            case 1:
+                if(caseDestination.getNo_case()==1L)
+                {
+                    bordureDepasse = true;
+                }
+                break;
+            default:
+
+        }
+        return bordureDepasse;
+    }
+
+// ALGORITHME TEMPORAIRE :
+/*
+——————————————————
+SI COLONNE 3 :
+Empêcher les -6.
+Empêcher les +10.
+-15 ?
+Empêcher les +17.
+
+
+Tests :
+-6 —> PB
++6 —> PAS PB
++10 —> PB
+-10 —> PAS PB
++15 —> PAS PB
+-15 —> PAS PB
+-17 —> PAS PB
++17—> PB
+——————————————————
+
+
+
+
+——————————————————
+SI COLONNE 1 :
+Empêcher les -6
+Empêcher les +10
+Empêcher les -15
+Empêcher les +17
+
+Tests :
+-6 —> PB
++6 —> PAS PB
++10 —> PB
+-10 —> PAS PB
++15 —> PAS PB
+-15 —> PB
+-17 —> PAS PB
++17—> PB
+——————————————————
+
+
+
+
+
+——————————————————
+SI COLONNE 7 :
+Empêcher les +6.
+Empêcher les -10.
+
+Tests :
+-6 —> PAS PB
++6 —> PB
++10 —> PAS PB
+-10 —> PB
++15 —> PAS PB
+-15 —> PAS PB
+-17 —> PAS PB
++17—> PAS PB
+——————————————————
+
+
+
+——————————————————
+SI COLONNE 8 :
+Empêcher les +6
+Empêcher les -10
+Empêcher les +15
+Empêcher les -17
+
+
+
+Tests :
+-6 —> PAS PB
++6 —> PB
++10 —> PAS PB
+-10 —> PB
++15 —> PB
+-15 —> PAS PB
+-17 —> PB
++17—> PAS PB
+——————————————————
+
+
+
+*/
 
 
 
