@@ -51,10 +51,13 @@ public class DeplacementCavalier {
     public boolean deplacementCavalier(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
         // VERSION TEMPORAIRE : AJOUTER UN BLOCAGE DE DEPLACEMENT SUR LES PIECES DU MEME CAMP.
+        // Attributs :
+        boolean deplacementCavalierAutorise;
         // Récupération des numéros des cases :
         int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
         int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
         // Contrôle des déplacements possibles :
+        // Si la façon dont se déplace le cavalier est correct :
         if(
                 noCaseDestination == noCaseDepart + 6
                         || noCaseDestination == noCaseDepart + 10
@@ -66,17 +69,32 @@ public class DeplacementCavalier {
                         || noCaseDestination == noCaseDepart - 17
         )
         {
-            if (cavalier.verificationCampPieceCaseDestination(caseDepart, caseDestination))
+            // Si le cavalier dépasse les bordures de l'échiquier :
+            if(borduresCavalier(caseDepart, caseDestination))
             {
-                return true;
-            }else
-            {
-                return false;
+                deplacementCavalierAutorise = false;
             }
-        } else
-        {
-            return false;
+            // Si le cavalier ne dépasse les bordures de l'échiquier :
+            else
+            {
+                // Si la pièce sur la case de destination n'est pas du même camp que le cavalier :
+                if (cavalier.verificationCampPieceCaseDestination(caseDepart, caseDestination))
+                {
+                    deplacementCavalierAutorise = true;
+                }
+                // Si la pièce sur la case de destination est du même camp que le cavalier :
+                else
+                {
+                    deplacementCavalierAutorise = false;
+                }
+            }
         }
+        // Si la façon dont se déplace le cavalier est incorrect :
+        else
+        {
+            deplacementCavalierAutorise = false;
+        }
+        return deplacementCavalierAutorise;
     }
 
 
