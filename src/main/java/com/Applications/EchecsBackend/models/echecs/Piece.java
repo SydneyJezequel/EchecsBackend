@@ -1,5 +1,6 @@
 package com.Applications.EchecsBackend.models.echecs;
 
+import com.Applications.EchecsBackend.service.gestionException.DeplacementCavalierException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 import java.util.List;
@@ -125,7 +126,7 @@ public class Piece {
      * @return boolean
      * @throws Exception
      */
-    public boolean verificationCampPieceCaseDestination(Case caseDepart, Case caseDestination) throws Exception {
+    public boolean verificationCampPieceCaseDestination(Case caseDepart, Case caseDestination) throws DeplacementCavalierException {
         if (caseDestination.getPiece() == null || caseDestination.getPiece() != null && !caseDestination.getPiece().getCouleur().getCouleur().equals(caseDepart.getPiece().getCouleur().getCouleur())) {
             return true;
         } else {

@@ -21,6 +21,9 @@ import java.util.Optional;
 public class GestionDesParties {
 
 
+
+
+
     // ********************* Dépendances *********************
 
     Piece tour = new Piece();
@@ -30,6 +33,9 @@ public class GestionDesParties {
     private final CaseRepository caseRepository;
 
 
+
+
+
     // ********************* Constructeur ******************** :
     @Autowired
     public GestionDesParties(PieceRepository pieceRepository, PartieRepository partieRepository, CaseRepository caseRepository) {
@@ -37,6 +43,9 @@ public class GestionDesParties {
         this.partieRepository = partieRepository;
         this.caseRepository = caseRepository;
     }
+
+
+
 
 
     // ********************* Méthodes ******************** :
@@ -60,6 +69,59 @@ public class GestionDesParties {
      *
      * @return positionsCampAdverse
      */
+    public List<Case> positionsCampsAdverse(String camp) {
+
+        // Attributs :
+        List<Case> positionsCampAdverse = new ArrayList<Case>();
+
+        // 1- Récupérer toutes les cases du camp adverse :
+        if (camp.equals("blanc")) {
+            positionsCampAdverse = caseRepository.RecupererCasesCampAdverse("noir");
+
+            // ************ CORRECTIONS ************
+            /*
+            System.out.println("Positions du camp Blanc");
+            for(int i=0; i<positionsCampAdverse.size(); i++)
+            {
+                System.out.println(
+                        "Case : " +
+                                positionsCampAdverse.get(i).getNo_case() +
+                                "Pièce :" +
+                                positionsCampAdverse.get(i).getPiece().getType()
+                );
+            }
+            */
+            // ************ CORRECTIONS ************
+        }
+        else
+        {
+            positionsCampAdverse = caseRepository.RecupererCasesCampAdverse("blanc");
+
+            // ************ CORRECTIONS ************
+            /*
+            System.out.println("Positions du camp Blanc");
+            for(int i=0; i<positionsCampAdverse.size(); i++)
+            {
+                System.out.println(
+                        "Case : " +
+                                positionsCampAdverse.get(i).getNo_case() +
+                                "Pièce :" +
+                                positionsCampAdverse.get(i).getPiece().getType()
+                );
+            }
+            */
+            // ************ CORRECTIONS ************
+
+        }
+
+        //2- Gestion des cases qui tombent en NULL :
+        positionsCampAdverse = gestionCasesNull(positionsCampAdverse);
+
+        // 3- Renvoie des positions du camp adverse :
+        return positionsCampAdverse;
+    }
+    // FUTUR ANCIENNE VERSION DE LA METHODE :
+    /*
     public List<Case> positionsCampsAdverse() {
 
         // Attributs :
@@ -75,13 +137,15 @@ public class GestionDesParties {
         } else {
             positionsCampAdverse = caseRepository.RecupererCasesCampAdverse("blanc");
         }
+    //3- Gestion des cases qui tombent en NULL :
+    positionsCampAdverse = gestionCasesNull(positionsCampAdverse);
 
-        //3- Gestion des cases qui tombent en NULL :
-        positionsCampAdverse = gestionCasesNull(positionsCampAdverse);
-
-        // 4- Renvoie des positions du camp adverse :
+    // 4- Renvoie des positions du camp adverse :
         return positionsCampAdverse;
-    }
+}
+*/
+
+
 
 
     /**
@@ -155,6 +219,77 @@ public class GestionDesParties {
         }
         return positionsCampAdverse;
     }
+    // FUTUR ANCIENNE VERSION DE LA METHODE :
+    /*
+        public List<Case> gestionCasesNull(List<Case> positionsCampAdverse)
+    {
+        String campQuiJoue = campQuiJoue();
+        List<Long> listTypeBlanc = new ArrayList<Long>();
+        listTypeBlanc.add(1L);
+        listTypeBlanc.add(2L);
+        listTypeBlanc.add(3L);
+        listTypeBlanc.add(4L);
+        listTypeBlanc.add(5L);
+        listTypeBlanc.add(6L);
+        listTypeBlanc.add(7L);
+        listTypeBlanc.add(8L);
+        listTypeBlanc.add(17L);
+        listTypeBlanc.add(18L);
+        listTypeBlanc.add(21L);
+        listTypeBlanc.add(22L);
+        listTypeBlanc.add(25L);
+        listTypeBlanc.add(26L);
+        listTypeBlanc.add(29L);
+        listTypeBlanc.add(31L);
+        List<Long> listTypeNoir = new ArrayList<Long>();
+        listTypeNoir.add(9L);
+        listTypeNoir.add(10L);
+        listTypeNoir.add(11L);
+        listTypeNoir.add(12L);
+        listTypeNoir.add(13L);
+        listTypeNoir.add(14L);
+        listTypeNoir.add(15L);
+        listTypeNoir.add(16L);
+        listTypeNoir.add(19L);
+        listTypeNoir.add(20L);
+        listTypeNoir.add(23L);
+        listTypeNoir.add(24L);
+        listTypeNoir.add(27L);
+        listTypeNoir.add(28L);
+        listTypeNoir.add(30L);
+        listTypeNoir.add(32L);
+        List<Long> listIdPieceAControler = new ArrayList<Long>();
+        for(int i = 0; i<positionsCampAdverse.size();i++)
+        {
+            if(positionsCampAdverse.get(i).getPiece()!=null) {
+                listIdPieceAControler.add(positionsCampAdverse.get(i).getPiece().getNo_piece());
+            }
+        }
+        Long idMissingPiece;
+        Piece missingPiece;
+
+        // Correction des cases NULL :
+        for(int i = 0; i<positionsCampAdverse.size();i++)
+        {
+            if (positionsCampAdverse.get(i).getPiece() == null) {
+                if (campQuiJoue.equals("blanc")) {
+                    listTypeNoir.removeAll(listIdPieceAControler);
+                    idMissingPiece = listTypeNoir.get(0);
+                    missingPiece = pieceRepository.getReferenceById(idMissingPiece);
+                    positionsCampAdverse.get(i).setPiece(missingPiece);
+                } else {
+                    listTypeBlanc.removeAll(listIdPieceAControler);
+                    idMissingPiece = listTypeBlanc.get(0);
+                    missingPiece = pieceRepository.getReferenceById(idMissingPiece);
+                    positionsCampAdverse.get(i).setPiece(missingPiece);
+                }
+            }
+        }
+        return positionsCampAdverse;
+    }
+    */
+
+
 
 
     /**
@@ -185,6 +320,7 @@ public class GestionDesParties {
         }
         return campQuiJoue;
     }
+
 
 
 

@@ -6,6 +6,8 @@ import com.Applications.EchecsBackend.models.echecs.Piece;
 import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
 import com.Applications.EchecsBackend.repository.echecs.PartieRepository;
 import com.Applications.EchecsBackend.repository.echecs.PieceRepository;
+import com.Applications.EchecsBackend.service.echecs.coupSpeciaux.Echec;
+import com.Applications.EchecsBackend.service.echecs.coupSpeciaux.Roque;
 import com.Applications.EchecsBackend.service.echecs.deplacements.*;
 import com.Applications.EchecsBackend.service.echecs.gestionPartie.GestionDesParties;
 
@@ -32,16 +34,16 @@ public class JouerService {
     // ********************* Dépendances *********************
 
     private final CaseRepository caseRepository;
-    private final DemarrerUnePartieService demarrerUnePartieService;
     private final GestionDesParties gestionDesParties;
     private final PieceRepository pieceRepository;
-    private final PartieRepository partieRepository;
     private final DeplacementRoi deplacementRoi;
     private final DeplacementDame deplacementDame;
     private final DeplacementTour deplacementTour;
     private final DeplacementFou deplacementFou;
     private final DeplacementCavalier deplacementCavalier;
     private final DeplacementPion deplacementPion;
+    private final Echec echec;
+    private final Roque roque;
 
 
 
@@ -50,27 +52,28 @@ public class JouerService {
     // ********************* Constructeur *********************
     @Autowired
     public JouerService(CaseRepository caseRepository,
-                        DemarrerUnePartieService demarrerUnePartieService,
                         GestionDesParties gestionDesParties,
                         PieceRepository pieceRepository,
-                        PartieRepository partieRepository,
                         DeplacementRoi deplacementRoi,
                         DeplacementDame deplacementDame,
                         DeplacementTour deplacementTour,
                         DeplacementFou deplacementFou,
-                        DeplacementCavalier deplacementCavalier, DeplacementPion deplacementPion)
+                        DeplacementCavalier deplacementCavalier,
+                        DeplacementPion deplacementPion,
+                        Echec echec,
+                        Roque roque)
     {
         this.caseRepository = caseRepository;
-        this.demarrerUnePartieService = demarrerUnePartieService;
         this.gestionDesParties = gestionDesParties;
         this.pieceRepository = pieceRepository;
-        this.partieRepository = partieRepository;
         this.deplacementRoi = deplacementRoi;
         this.deplacementDame = deplacementDame;
         this.deplacementTour = deplacementTour;
         this.deplacementFou = deplacementFou;
         this.deplacementCavalier = deplacementCavalier;
         this.deplacementPion = deplacementPion;
+        this.echec = echec;
+        this.roque = roque;
     }
 
 
@@ -79,15 +82,13 @@ public class JouerService {
 
     // ****************************************** Méthodes ******************************************
 
-
-
     /**
      * Méthode qui renvoie toutes les cases
      * @return caseRepository.findAll()
      */
     public List<Case> findAllCases()
     {
-        return caseRepository.findAll();
+            return caseRepository.findAll();
     }
 
 
@@ -108,29 +109,17 @@ public class JouerService {
      * Méthode qui exécute le déplacement des pièces et contrôle si le roi
      * est en échec
      */
-    public int echecAuRoi() throws Exception {
+    public boolean echecAuRoiPopUp(List<Case> casesDeplacement) throws Exception {
 
         // Attributs :
-        int pasEchecAuRoi = 0;
-        int echecAuRoi = 1;
-        int echecEtMat = 2;
+        boolean echecAuRoi = false;
 
         // Exécution des méthodes :
-        if(deplacementRoi.echecAuRoi())
+        if(echec.echecAuRoi(casesDeplacement))
         {
-            if(deplacementRoi.echecEtMat())
-            {
-                return echecEtMat;
-            }
-            else
-            {
-                return echecAuRoi;
-            }
+            echecAuRoi = true;
         }
-        else
-        {
-            return pasEchecAuRoi;
-        }
+        return echecAuRoi;
     }
 
 
@@ -162,26 +151,27 @@ public class JouerService {
         String typeDePiece = nomPiece.get(0);
         switch (typeDePiece) {
             case "roi":
-                // Déplacement de la pièce :
+                // Si la pièce est un Roi, on vérifie si son déplacement est correct :
                 if (deplacementRoi.deplacementRoi(caseDepart, caseDestination) /*&& borduresRoi(caseDepart, caseDestination)*/) {
-                    // Contrôles à exécuter sur le Roi :
-                        //echecAuRoi();
-                        // echecEtPat();
-                    echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    // Si le déplacement est correct, on contrôle si le roi est en échec :
+                    // if(!deplacementRoi.echecAuRoi(casesDeplacement))
+                    // {
+                        echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    // }
                 }
-                else if (deplacementRoi.Roque(caseDepart, caseDestination, echiquier)) {
+                else if (roque.Roque(caseDepart, caseDestination, echiquier)) {
                     if (caseDestination.getNo_case() == 56L) {
-                        deplacementRoi.petitRoqueBlanc(caseDepart, caseDestination, piece, echiquier);
+                        roque.petitRoqueBlanc(caseDepart, caseDestination, piece, echiquier);
                     }else if(caseDestination.getNo_case()==49L)
                     {
-                        deplacementRoi.petitRoqueNoir(caseDepart, caseDestination, piece, echiquier);
+                        roque.petitRoqueNoir(caseDepart, caseDestination, piece, echiquier);
                     }else if(caseDestination.getNo_case()==24L)
                     {
-                        deplacementRoi.grandRoqueBlanc(caseDepart, caseDestination, piece, echiquier);
+                        roque.grandRoqueBlanc(caseDepart, caseDestination, piece, echiquier);
 
                     }else if(caseDestination.getNo_case()==17L)
                     {
-                        deplacementRoi.grandRoqueNoir(caseDepart, caseDestination, piece, echiquier);
+                        roque.grandRoqueNoir(caseDepart, caseDestination, piece, echiquier);
                     }
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -191,49 +181,64 @@ public class JouerService {
                 }
                 break;
             case "reine":
-                // Déplacement de la pièce :
+                // Si la pièce est un Reine, on vérifie si son déplacement est correct :
                 if(deplacementDame.deplacementDame(caseDepart, caseDestination, echiquier) /* && deplacementDame.borduresDame(caseDepart, caseDestination)*/)
                 {
-                    // Contrôles à executer sur la Reine :
-                    echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    // Si le déplacement est correct, on contrôle si le roi est en échec :
+                    // if(!deplacementRoi.echecAuRoi(casesDeplacement))
+                    // {
+                        echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    //  }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
                 break;
             case "tour":
-                // Déplacement de la pièce :
+                // Si la pièce est un Tour, on vérifie si son déplacement est correct :
                 if(deplacementTour.deplacementTour(caseDepart, caseDestination, echiquier) /*&& borduresTour(caseDepart, caseDestination)*/)
                 {
-                    // Contrôles à exécuter sur la tour :
-                    echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    // Si le déplacement est correct, on contrôle si le roi est en échec :
+                    //  if(!deplacementRoi.echecAuRoi(casesDeplacement))
+                    //  {
+                        echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    //  }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
                 break;
             case "fou":
-                // Déplacement de la pièce :
+                // Si la pièce est un Fou, on vérifie si son déplacement est correct :
                 if(deplacementFou.deplacementFou(caseDepart, caseDestination, echiquier) /*&& borduresFou(caseDepart, caseDestination)*/)
                 {
-                    // Contrôles à exécuter sur le Fou :
-                    echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    // Si le déplacement est correct, on contrôle si le roi est en échec :
+                    // if(!deplacementRoi.echecAuRoi(casesDeplacement))
+                    // {
+                        echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    // }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
                 break;
             case "cavalier":
-                // Déplacement de la pièce :
+                // Si la pièce est un Cavalier, on vérifie si son déplacement est correct :
                 if(deplacementCavalier.deplacementCavalier(caseDepart, caseDestination, echiquier) /*&& borduresCavalier(caseDepart, caseDestination)*/) {
-                    // Contrôles à exécuter sur le Cavalier :
-                    echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    // Si le déplacement est correct, on contrôle si le roi est en échec :
+                    // if(!deplacementRoi.echecAuRoi(casesDeplacement))
+                    // {
+                        echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    //  }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
                 break;
             case "pion":
-                // Déplacement de la pièce :
+                // Si la pièce est un Pion, on vérifie si son déplacement est correct :
                 if(deplacementPion.deplacementPion(caseDepart, caseDestination, piece, echiquier) /*&& borduresPion(caseDepart, caseDestination)*/) {
-                    // Contrôles à exécuter sur le Pion :
-                    echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    // Si le déplacement est correct, on contrôle si le roi est en échec :
+                    // if(!deplacementRoi.echecAuRoi(casesDeplacement))
+                    // {
+                        echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    // }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -289,48 +294,9 @@ public class JouerService {
 
 
 
-    /********************* Méthodes qui contrôlent les déplacements spécifiques et les mises en échec *********************/
 
-    // CETTE METHODE SERA PEUT ETRE A SUPPRIMER :
-    /**
-     * Méthode qui identifie si un pion a atteint le bout de l'échiquier :
-     * @return
-     * @throws Exception
-     */
-    /*
-    public boolean pionBoutEchiquier(Piece piece, Case caseDestination) throws Exception
-    {
-        // Règles de contrôle pour transformer un pion
-		if(piece.getCouleur().getCouleur().equals("noir")
-            && caseDestination.getNo_case() == 8L
-            || caseDestination.getNo_case() == 16L
-            || caseDestination.getNo_case() == 24L
-            || caseDestination.getNo_case() == 32L
-            || caseDestination.getNo_case() == 40L
-            || caseDestination.getNo_case() == 48L
-            || caseDestination.getNo_case() == 56L
-            || caseDestination.getNo_case() == 64L
-           )
-           {
-               return true;
-           }else if (piece.getCouleur().getCouleur().equals("blanc")
-             && caseDestination.getNo_case() == 1L
-             || caseDestination.getNo_case() == 9L
-             || caseDestination.getNo_case() == 17L
-             || caseDestination.getNo_case() == 25L
-             || caseDestination.getNo_case() == 33L
-             || caseDestination.getNo_case() == 41L
-             || caseDestination.getNo_case() == 49L
-             || caseDestination.getNo_case() == 57L
-           )
-           {
-              return true;
-           } else
-           {
-              return false;
-                }
-    }
-    */
+
+
 
 
 
