@@ -309,7 +309,6 @@ public class GestionDesParties {
         Long id = 1L;
         Partie partie = partieRepository.findById(id).orElse(null);
         int nombreDeTour = partie.getNombreDeTour();
-
         if(nombreDeTour % 2 == 0)
         {
             campQuiJoue = noir;

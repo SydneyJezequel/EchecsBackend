@@ -185,10 +185,10 @@ public class JouerService {
                 if(deplacementDame.deplacementDame(caseDepart, caseDestination, echiquier) /* && deplacementDame.borduresDame(caseDepart, caseDestination)*/)
                 {
                     // Si le déplacement est correct, on contrôle si le roi est en échec :
-                    // if(!deplacementRoi.echecAuRoi(casesDeplacement))
-                    // {
+                    if(!echec.roiToujoursEnEchec(casesDeplacement))
+                    {
                         echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
-                    //  }
+                    }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -198,10 +198,10 @@ public class JouerService {
                 if(deplacementTour.deplacementTour(caseDepart, caseDestination, echiquier) /*&& borduresTour(caseDepart, caseDestination)*/)
                 {
                     // Si le déplacement est correct, on contrôle si le roi est en échec :
-                    //  if(!deplacementRoi.echecAuRoi(casesDeplacement))
-                    //  {
+                    if(!echec.roiToujoursEnEchec(casesDeplacement))
+                    {
                         echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
-                    //  }
+                    }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -211,10 +211,10 @@ public class JouerService {
                 if(deplacementFou.deplacementFou(caseDepart, caseDestination, echiquier) /*&& borduresFou(caseDepart, caseDestination)*/)
                 {
                     // Si le déplacement est correct, on contrôle si le roi est en échec :
-                    // if(!deplacementRoi.echecAuRoi(casesDeplacement))
-                    // {
+                    if(!echec.roiToujoursEnEchec(casesDeplacement))
+                    {
                         echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
-                    // }
+                    }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -223,10 +223,10 @@ public class JouerService {
                 // Si la pièce est un Cavalier, on vérifie si son déplacement est correct :
                 if(deplacementCavalier.deplacementCavalier(caseDepart, caseDestination, echiquier) /*&& borduresCavalier(caseDepart, caseDestination)*/) {
                     // Si le déplacement est correct, on contrôle si le roi est en échec :
-                    // if(!deplacementRoi.echecAuRoi(casesDeplacement))
-                    // {
+                    if(!echec.roiToujoursEnEchec(casesDeplacement))
+                    {
                         echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
-                    //  }
+                    }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -235,10 +235,10 @@ public class JouerService {
                 // Si la pièce est un Pion, on vérifie si son déplacement est correct :
                 if(deplacementPion.deplacementPion(caseDepart, caseDestination, piece, echiquier) /*&& borduresPion(caseDepart, caseDestination)*/) {
                     // Si le déplacement est correct, on contrôle si le roi est en échec :
-                    // if(!deplacementRoi.echecAuRoi(casesDeplacement))
-                    // {
+                    if(!echec.roiToujoursEnEchec(casesDeplacement))
+                    {
                         echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
-                    // }
+                    }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
