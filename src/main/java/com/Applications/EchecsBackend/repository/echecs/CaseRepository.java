@@ -42,7 +42,7 @@ public interface CaseRepository extends JpaRepository<Case, Long>{
 
     // Récupéer les cases des pièces de la couleur adverse :
     @Query("SELECT c FROM Case c WHERE c.piece.couleur.couleur = :couleur")
-    List<Case>RecupererCasesCampAdverse(@Param("couleur") String couleur);
+    List<Case>RecupererCasesCamp(@Param("couleur") String couleur);
 
 
 }

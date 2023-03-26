@@ -154,10 +154,10 @@ public class JouerService {
                 // Si la pièce est un Roi, on vérifie si son déplacement est correct :
                 if (deplacementRoi.deplacementRoi(caseDepart, caseDestination) /*&& borduresRoi(caseDepart, caseDestination)*/) {
                     // Si le déplacement est correct, on contrôle si le roi est en échec :
-                    // if(!deplacementRoi.echecAuRoi(casesDeplacement))
-                    // {
+                    if(!echec.roiToujoursEnEchec(casesDeplacement))
+                    {
                         echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
-                    // }
+                    }
                 }
                 else if (roque.Roque(caseDepart, caseDestination, echiquier)) {
                     if (caseDestination.getNo_case() == 56L) {
@@ -187,7 +187,15 @@ public class JouerService {
                     // Si le déplacement est correct, on contrôle si le roi est en échec :
                     if(!echec.roiToujoursEnEchec(casesDeplacement))
                     {
+                        System.out.println("mise à jour échiquier.");
+
                         echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    }
+                    else
+                    {
+                        System.out.println("echiquierMaj = caseRepository.findAll() déclenché.");
+
+                        echiquierMaj = caseRepository.findAll();
                     }
                 } else {
                     echiquierMaj = caseRepository.findAll();
@@ -202,6 +210,10 @@ public class JouerService {
                     {
                         echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
                     }
+                    else
+                    {
+                        echiquierMaj = caseRepository.findAll();
+                    }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -215,6 +227,10 @@ public class JouerService {
                     {
                         echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
                     }
+                    else
+                    {
+                        echiquierMaj = caseRepository.findAll();
+                    }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -227,6 +243,10 @@ public class JouerService {
                     {
                         echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
                     }
+                    else
+                    {
+                        echiquierMaj = caseRepository.findAll();
+                    }
                 } else {
                     echiquierMaj = caseRepository.findAll();
                 }
@@ -238,6 +258,10 @@ public class JouerService {
                     if(!echec.roiToujoursEnEchec(casesDeplacement))
                     {
                         echiquierMaj = miseAJourEchiquier(caseDepart, caseDestination, piece);
+                    }
+                    else
+                    {
+                        echiquierMaj = caseRepository.findAll();
                     }
                 } else {
                     echiquierMaj = caseRepository.findAll();
