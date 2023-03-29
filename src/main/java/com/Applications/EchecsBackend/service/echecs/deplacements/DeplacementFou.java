@@ -58,7 +58,7 @@ public class DeplacementFou {
             // Si le Fou ne dépasse pas les frontières de l'échiquier affiché :
             if (borduresFou(caseDepart, caseDestination)) {
                 // Si la pièce sur la case de Destination est de la même couleur que la pièce déplacée :
-                if (fou.verificationCampPieceCaseDestination(caseDepart, caseDestination))
+                if(fou.verificationCampPieceCaseDestination(caseDepart, caseDestination))
                 {
                     deplacementFouOk = true;
                 }
