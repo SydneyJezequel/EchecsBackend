@@ -9,11 +9,13 @@ import java.util.List;
 
 
 
+
 /**
- * Service qui contient les fonctionnalités qui gère les rôles des users.
+ * Service qui contient les fonctionnalités qui gèrent les rôles des users.
  */
 @Service
 public class RoleServiceImpl implements RoleService {
+
 
 
 
@@ -22,6 +24,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Autowired
     RoleRepository roleRepository;
+
 
 
 
@@ -36,6 +39,7 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> loadAllRoles() throws Exception {
         return roleRepository.findAll();
     }
+
 
 
 

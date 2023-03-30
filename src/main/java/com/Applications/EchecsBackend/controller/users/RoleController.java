@@ -12,12 +12,14 @@ import java.util.List;
 
 
 
+
 /**
  * Controller qui contient les fonctionnalités qui gèrent les rôles des users.
  */
 @RestController
 @RequestMapping("/api")
 public class RoleController {
+
 
 
 
@@ -30,15 +32,21 @@ public class RoleController {
 
 
 
+
     /****************************** Méthodes ******************************/
 
+    /**
+     * Controller pour renvoyer tous les rôles disponibles.
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/role/all")
-    // @Secured("ROLE_ADMIN")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Role>> getAllRoles() throws Exception {
         List<Role> listeRoles = roleServiceImpl.loadAllRoles();
         return new ResponseEntity<>(listeRoles, HttpStatus.OK);
     }
+
 
 
 

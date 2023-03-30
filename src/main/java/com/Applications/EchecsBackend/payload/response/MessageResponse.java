@@ -3,6 +3,7 @@ package com.Applications.EchecsBackend.payload.response;
 
 
 
+
 /**
  * Classe qui renvoie un message de retour pour une action donnée.
  */
@@ -11,9 +12,11 @@ public class MessageResponse {
 
 
 
-    /****************************** Atributs ******************************/
+
+    /****************************** Attributs ******************************/
 
     private String message;
+
 
 
 
@@ -27,6 +30,7 @@ public class MessageResponse {
 
 
 
+
     /****************************** Getters et Setters ******************************/
 
     public String getMessage() {
@@ -36,6 +40,7 @@ public class MessageResponse {
     public void setMessage(String message) {
         this.message = message;
     }
+
 
 
 

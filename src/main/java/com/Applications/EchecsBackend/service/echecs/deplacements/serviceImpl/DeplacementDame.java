@@ -1,7 +1,6 @@
-package com.Applications.EchecsBackend.service.echecs.deplacements;
+package com.Applications.EchecsBackend.service.echecs.deplacements.serviceImpl;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
-import com.Applications.EchecsBackend.models.echecs.Piece;
 import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +43,7 @@ public class DeplacementDame {
 
 
     // ********************* Méthodes ******************** :
+
     /**
      * Méthode qui contrôle que le déplacement correspond aux règles de déplacement
      * d'une pièce de type Reine.
@@ -60,47 +60,6 @@ public class DeplacementDame {
             return false;
         }
     }
-
-
-
-    /**
-     * Méthode qui définit les limites de l'échiquier pour une Dame.
-     * @return boolean
-     */
-    public boolean borduresDame(Case caseDepart, Case caseDestination)
-    {
-        if(deplacementFou.borduresFou(caseDepart, caseDestination) || deplacementTour.borduresTour(caseDepart, caseDestination))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-    // ANCIEN ALGORITHME :
-            /*
-        Piece piece = caseDepart.getPiece();
-        List<String> nomPiece = List.of(piece.getType().split(" "));
-        String typeDePiece = nomPiece.get(0);
-        if(typeDePiece.equals("reine")
-                && caseDepart.getNo_case() == 32L
-                || caseDepart.getNo_case() == 25L
-                && caseDestination.getNo_case() == 25L
-                || caseDestination.getNo_case() == 33L
-                || caseDestination.getNo_case() == 41L
-                || caseDestination.getNo_case() == 18L
-                || caseDestination.getNo_case() == 50L
-                || caseDestination.getNo_case() == 11L
-                || caseDestination.getNo_case() == 4L
-                || caseDestination.getNo_case() == 16L
-                || caseDestination.getNo_case() == 24L
-                || caseDestination.getNo_case() == 32L
-                || caseDestination.getNo_case() == 7L
-                || caseDestination.getNo_case() == 23L
-                || caseDestination.getNo_case() == 39L
-        )
-        */
 
 
 

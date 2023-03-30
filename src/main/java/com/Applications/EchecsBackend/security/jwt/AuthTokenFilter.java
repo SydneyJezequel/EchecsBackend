@@ -18,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 
 
+
 /**
  * This class define a filter that executes once per request.
  * OncePerRequestFilter makes a single execution for each request to our API.
@@ -26,6 +27,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * checking Authorization (using UsernamePasswordAuthenticationToken).
  */
 public class AuthTokenFilter extends OncePerRequestFilter {
+
 
 
 
@@ -43,15 +45,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 
 
+
     /****************************** Méthodes ******************************/
 
     /**
      * Méthode qui authentifie le user.
      *
-     *
      * This method is used for create an Authentification object from a JWT from HTTP Cookies.
      * It used filter to create the Authentification object.
-     *
      * What we do inside doFilterInternal():
      * – get JWT from the HTTP Cookies
      * – if the request has JWT, validate it, parse username from it
@@ -87,9 +88,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 
 
+
     /**
      * Requête qui traduit le token d'un Cookie en String.
-     *
      * This request parse Jwt from Cookie to String.
      * @param request
      * @return
@@ -98,6 +99,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         String jwt = jwtUtils.getJwtFromCookies(request);
         return jwt;
     }
+
 
 
 

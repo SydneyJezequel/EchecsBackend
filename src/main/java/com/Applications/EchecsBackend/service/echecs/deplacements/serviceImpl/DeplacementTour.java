@@ -1,4 +1,4 @@
-package com.Applications.EchecsBackend.service.echecs.deplacements;
+package com.Applications.EchecsBackend.service.echecs.deplacements.serviceImpl;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
 import com.Applications.EchecsBackend.models.echecs.Piece;
@@ -40,6 +40,7 @@ public class DeplacementTour {
 
 
     // ********************* Méthodes ******************** :
+
     /**
      * Méthode qui contrôle que le déplacement correspond aux règles de déplacement
      * d'une pièce de type Tour.
@@ -48,7 +49,7 @@ public class DeplacementTour {
      */
     public boolean deplacementTour(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
-        // Contrôle ligne droite verticale :
+        // Contrôle en colonne et en ligne du déplacement d'une tour :
         if (deplacementTourEnColonne(caseDepart, caseDestination, echiquier) || deplacementTourEnLigne(caseDepart, caseDestination, echiquier))
         {
             if (tour.verificationCampPieceCaseDestination(caseDepart, caseDestination))
@@ -68,7 +69,7 @@ public class DeplacementTour {
 
 
     /**
-     * Méthode qui contrôle les déplacements en ligne :
+     * Méthode qui contrôle les déplacements en ligne d'une Tour.
      */
     public boolean deplacementTourEnLigne(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
@@ -91,7 +92,7 @@ public class DeplacementTour {
         Case caseDepartMoins40 = tour.calculCaseIntermediaire(caseDepart, 41L, echiquier, moins);
         Case caseDepartMoins48 = tour.calculCaseIntermediaire(caseDepart, 49L, echiquier, moins);
 
-        // Controles :
+        // Contrôles du déplacement :
         if( caseDestination.getNo_case() == caseDepart.getNo_case() + 8
             || caseDestination.getNo_case() == caseDepart.getNo_case() + 16 && caseDepartPlus8.getPiece() == null
             || caseDestination.getNo_case() == caseDepart.getNo_case() + 24 && caseDepartPlus16.getPiece() == null && caseDepartPlus8.getPiece() == null
@@ -117,12 +118,13 @@ public class DeplacementTour {
 
 
 
+
     /**
-     * Méthode qui contrôle les déplacements en colonne :
+     * Méthode qui contrôle les déplacements en colonne d'une Tour.
      */
     public boolean deplacementTourEnColonne(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
-        // Attributs (Récupération des numéros des cases) :
+        // 1- Attributs (Récupération des numéros des cases) :
         int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
         int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
         String plus = "plus";
@@ -141,7 +143,8 @@ public class DeplacementTour {
         Case caseDepartMoins5 = tour.calculCaseIntermediaire(caseDepart, 6L, echiquier, moins);
         Case caseDepartMoins6 = tour.calculCaseIntermediaire(caseDepart, 7L, echiquier, moins);
 
-        // Controles :
+        // 2- Contrôles du déplacement :
+        // Si déplacement de la Tour Ok :
         if (caseDestination.getNo_case() == caseDepart.getNo_case()+ 1
                 || caseDestination.getNo_case() == caseDepart.getNo_case() + 2 && caseDepartPlus1.getPiece() == null
                 || caseDestination.getNo_case() == caseDepart.getNo_case() + 3 && caseDepartPlus2.getPiece() == null && caseDepartPlus1.getPiece() == null
@@ -164,13 +167,12 @@ public class DeplacementTour {
             {
                 return false;
             }
-
+        // Si déplacement de la Tour Nok :
         } else
         {
             return false;
         }
     }
-
 
 
 
@@ -181,7 +183,9 @@ public class DeplacementTour {
      */
     public boolean borduresTour(Case caseDepart, Case caseDestination)
     {
+        // Attributs :
         boolean bordureDepassee = true;
+        // Contrôles du déplacement :
         switch(caseDepart.getColonne()){
             case "A":
                 if(caseDestination.getNo_case()>=9L)
@@ -234,33 +238,6 @@ public class DeplacementTour {
         }
             return bordureDepassee;
     }
-    // ANCIENNE VERSION DE LA METHODE :
-    /*
-    public boolean borduresTour(Case caseDepart, Case caseDestination)
-    {
-        Piece piece = caseDepart.getPiece();
-        List<String> nomPiece = List.of(piece.getType().split(" "));
-        String typeDePiece = nomPiece.get(0);
-        if(typeDePiece.equals("tour")
-                && caseDepart.getNo_case() == 8L
-                || caseDepart.getNo_case() == 57L
-                && caseDestination.getNo_case() == 9L
-                || caseDestination.getNo_case() == 56L
-                || caseDestination.getNo_case() == 50L
-                || caseDestination.getNo_case() == 51L
-                || caseDestination.getNo_case() == 52L
-                || caseDestination.getNo_case() == 54L
-                || caseDestination.getNo_case() == 55L
-        )
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-     */
 
 
 

@@ -28,7 +28,6 @@ public class Case {
     @Column(nullable = false, updatable = false, name="ligne")
     private int ligne;
     @ManyToOne
-    //@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name="couleur_id", nullable = false, referencedColumnName = "id_couleur")
     private Couleur couleur;

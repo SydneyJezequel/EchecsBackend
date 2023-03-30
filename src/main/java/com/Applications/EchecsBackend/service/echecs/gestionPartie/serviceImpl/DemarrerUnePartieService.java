@@ -1,4 +1,4 @@
-package com.Applications.EchecsBackend.service.echecs;
+package com.Applications.EchecsBackend.service.echecs.gestionPartie.serviceImpl;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
 import com.Applications.EchecsBackend.models.echecs.Couleur;
@@ -6,7 +6,7 @@ import com.Applications.EchecsBackend.models.echecs.Piece;
 import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
 import com.Applications.EchecsBackend.repository.echecs.CouleurRepository;
 import com.Applications.EchecsBackend.repository.echecs.PieceRepository;
-import com.Applications.EchecsBackend.service.echecs.gestionPartie.GestionDesParties;
+import com.Applications.EchecsBackend.service.echecs.gestionPartie.serviceImpl.GestionDesParties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -56,16 +56,18 @@ public class DemarrerUnePartieService {
 
 
     /*************************************** Méthodes **************************************/
+
+
     /**
      * Méthode qui Ré-initialise l'Echequier :
      * @return caseRepository.saveAll(echiquier)
      */
     public List<Case> ReinitialiserEchequier(String camp) {
 
-        // 1-Ré-initialisation de l'échiquier :
+        // 1-Initialisation du nombre de tour de  la partie :
         gestionDesParties.reinitialisationDuNombreDeTour();
 
-        // 2- Suppression de l'Echiquier en BDD de la partie en cours :
+        // 2- Suppression de l'échiquier en BDD de la partie en cours :
         pieceRepository.deleteAll();
         caseRepository.deleteAll();
 
@@ -142,11 +144,10 @@ public class DemarrerUnePartieService {
         listePiece.add(reineNoir);
         pieceRepository.saveAll(listePiece);
 
-        //4.2- Initialisation des Cases :
+        //4.2- Initialisation des Cases dans l'échiquier :
         List<Case> echiquier = new ArrayList<Case>();
+        // 4.2.1- Initialisation des cases de l'échiquier pour le camp blanc :
         if(camp.equals("noir")) {
-            System.out.println("Le camp est noir");
-
             // Initialisation des cases :
             Case caseH1 = new Case(1L,"H",1,blanc,tourBlanche2);
             Case caseH2 = new Case(2L,"H",2,noir,pionBlanc8);
@@ -289,10 +290,9 @@ public class DemarrerUnePartieService {
             // 5- Renvoie de l'échiquier vers le Front :
             return caseRepository.saveAll(echiquier);
         }
+        // 4.2.2- Initialisation des cases de l'échiquier pour le camp blanc :
         else
         {
-            System.out.println("Le camp est blanc");
-
             // Initialisation des cases :
             Case caseA8 = new Case(1L,"A",8,blanc,tourNoire1);
             Case caseA7 = new Case(2L,"A",7,noir,pionNoir1);
@@ -432,10 +432,11 @@ public class DemarrerUnePartieService {
             echiquier.add(caseH2);
             echiquier.add(caseH1);
 
-            // 6- Renvoie de l'échiquier vers le Front :
+            // 5- Renvoie de l'échiquier vers le Front :
             return caseRepository.saveAll(echiquier);
         }
     }
+
 
 
 
@@ -479,19 +480,16 @@ public class DemarrerUnePartieService {
         echiquierInitialise.get(33).setPiece(echiquierInitialise.get(33).getPiece());
         echiquierInitialise.get(38).setPiece(echiquierInitialise.get(38).getPiece());
         echiquierInitialise.get(39).setPiece(echiquierInitialise.get(39).getPiece());
-
         // Colonne F :
         echiquierInitialise.get(40).setPiece(echiquierInitialise.get(40).getPiece());
         echiquierInitialise.get(41).setPiece(echiquierInitialise.get(41).getPiece());
         echiquierInitialise.get(46).setPiece(echiquierInitialise.get(46).getPiece());
         echiquierInitialise.get(47).setPiece(echiquierInitialise.get(47).getPiece());
-
         // Colonne G :
         echiquierInitialise.get(48).setPiece(echiquierInitialise.get(48).getPiece());
         echiquierInitialise.get(49).setPiece(echiquierInitialise.get(49).getPiece());
         echiquierInitialise.get(54).setPiece(echiquierInitialise.get(54).getPiece());
         echiquierInitialise.get(55).setPiece(echiquierInitialise.get(55).getPiece());
-
         // Colonne H :
         echiquierInitialise.get(56).setPiece(echiquierInitialise.get(56).getPiece());
         echiquierInitialise.get(57).setPiece(echiquierInitialise.get(57).getPiece());

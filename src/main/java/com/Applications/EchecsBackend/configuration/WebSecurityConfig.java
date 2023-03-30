@@ -1,4 +1,5 @@
 package com.Applications.EchecsBackend.configuration;
+
 import com.Applications.EchecsBackend.security.jwt.AuthEntryPointJwt;
 import com.Applications.EchecsBackend.security.jwt.AuthTokenFilter;
 import com.Applications.EchecsBackend.service.connexion.UserDetailsServiceImpl;
@@ -18,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 
+
+
 /**
  * Classe qui configure la sécurité sur l'application.
  */
@@ -26,6 +29,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
         securedEnabled = true,
         jsr250Enabled = true)
 public class WebSecurityConfig {
+
 
 
 
@@ -44,11 +48,12 @@ public class WebSecurityConfig {
 
 
 
+
     /****************************** Méthodes ******************************/
 
+
     /**
-     * Cette méthode filtre chaque requête.
-     * Elle contrôle le Token pour identifier le user.
+     * Méthode qui authentifie les requêtes.
      * @return
      */
     @Bean
@@ -58,7 +63,10 @@ public class WebSecurityConfig {
 
 
 
+
     /**
+     * Méthode qui authentifie le User via ses credentials.
+     *
      * DaoAuthenticationProvider is an AuthenticationProvider implementation
      * that uses a UserDetailsService and PasswordEncoder
      * to authenticate a username and password.
@@ -77,8 +85,10 @@ public class WebSecurityConfig {
 
 
 
+
     /**
      * Cette méthode exécute une requête d'authentification.
+     *
      * AuthenticationManager is the API that defines
      * how Spring Security’s Filters perform authentication.
      * @return
@@ -88,6 +98,7 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
+
 
 
 
@@ -103,8 +114,9 @@ public class WebSecurityConfig {
 
 
 
+
     /**
-     * Cette méthode définit les Filtres de sécurité appliqués sur la connexion.
+     * Cette méthode définit les Filtres de sécurité appliqués sur les requêtes exécutées dans le Backend.
      * @param http
      * @return
      * @throws Exception
@@ -127,6 +139,7 @@ public class WebSecurityConfig {
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 
 
 

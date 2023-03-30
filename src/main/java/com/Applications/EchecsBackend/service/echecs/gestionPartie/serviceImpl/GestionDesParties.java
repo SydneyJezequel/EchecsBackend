@@ -1,4 +1,4 @@
-package com.Applications.EchecsBackend.service.echecs.gestionPartie;
+package com.Applications.EchecsBackend.service.echecs.gestionPartie.serviceImpl;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
 import com.Applications.EchecsBackend.models.echecs.Partie;
@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+
+
+
 
 
 /**
@@ -48,9 +51,11 @@ public class GestionDesParties {
 
     // ********************* Méthodes ******************** :
 
+
     /**
      * Méthode qui récupère les positions de toutes les pièces du camp adverse
      * au camp passé en paramètre
+     * C'est la méthode inverse de positionsPiecesCamp(String camp).
      *
      * @return positionsCampAdverse
      */
@@ -76,8 +81,11 @@ public class GestionDesParties {
     }
 
 
+
+
     /**
-     * Cette méthode renvoie les pièces du camp passé en paramètre :
+     * Cette méthode renvoie les pièces du camp passé en paramètre.
+     * C'est la méthode inverse de positionsPiecesCampAdverse(String camp).
      */
     public List<Case> positionsPiecesCamp(String camp) {
 
@@ -107,10 +115,11 @@ public class GestionDesParties {
      * Cette méthode gère les cases qui peuvent être NULL lors de la récupération
      * des cases sur lesquelles se trouvent les pièces du camp adverse.
      */
-    // Initialisation des listes de contrôle :
     public List<Case> gestionCasesNull(List<Case> positionsCampAdverse)
     {
+        // 1- Initialisation des listes de contrôle :
         String campQuiJoue = campQuiJoue();
+        // Liste des pièces du camp blanc :
         List<Long> listTypeBlanc = new ArrayList<Long>();
         listTypeBlanc.add(1L);
         listTypeBlanc.add(2L);
@@ -128,6 +137,7 @@ public class GestionDesParties {
         listTypeBlanc.add(26L);
         listTypeBlanc.add(29L);
         listTypeBlanc.add(31L);
+        // Liste des pièces du camp noir :
         List<Long> listTypeNoir = new ArrayList<Long>();
         listTypeNoir.add(9L);
         listTypeNoir.add(10L);
@@ -145,6 +155,8 @@ public class GestionDesParties {
         listTypeNoir.add(28L);
         listTypeNoir.add(30L);
         listTypeNoir.add(32L);
+
+        //2- Récupération des cases non NULL :
         List<Long> listIdPieceAControler = new ArrayList<Long>();
         for(int i = 0; i<positionsCampAdverse.size();i++)
         {
@@ -155,7 +167,7 @@ public class GestionDesParties {
         Long idMissingPiece;
         Piece missingPiece;
 
-        // Correction des cases NULL :
+        // 3- Correction des cases NULL :
         for(int i = 0; i<positionsCampAdverse.size();i++)
         {
             if (positionsCampAdverse.get(i).getPiece() == null) {
@@ -172,9 +184,10 @@ public class GestionDesParties {
                 }
             }
         }
+
+        // 4- Renvoie des pièces corrigées :
         return positionsCampAdverse;
     }
-
 
 
 
@@ -193,7 +206,8 @@ public class GestionDesParties {
         Long id = 1L;
         Partie partie = partieRepository.findById(id).orElse(null);
         int nombreDeTour = partie.getNombreDeTour();
-        // Controles :
+
+        // Contrôles :
         if(nombreDeTour % 2 == 0)
         {
             campQuiJoue = noir;
@@ -228,8 +242,14 @@ public class GestionDesParties {
     }
 
 
+
+
+    /**
+     * Cette méthode initialise le nombre de tour en fin de partie.
+     */
     public void reinitialisationDuNombreDeTour()
     {
+        // Attributs :
         Long id = 1L;
         Partie partie = partieRepository.findById(id).orElse(null);
         int nombreDeTour = partie.getNombreDeTour();
@@ -239,7 +259,6 @@ public class GestionDesParties {
         partie.setNombreDeTour(nombreDeTour);
         partieRepository.save(partie);
     }
-
 
 
 
@@ -254,11 +273,6 @@ public class GestionDesParties {
         // IMPLEMENTER DES REGLES QUI APPELLENT LE SERVICE QUI REINITIALISE L'ECHIQUIER.
         // UN MESSAGE D'ABANDON DEVRA ETRE RENVOYE AU USER.
     }
-
-
-
-
-
 
 
 

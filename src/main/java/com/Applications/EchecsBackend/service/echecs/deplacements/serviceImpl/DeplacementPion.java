@@ -1,4 +1,4 @@
-package com.Applications.EchecsBackend.service.echecs.deplacements;
+package com.Applications.EchecsBackend.service.echecs.deplacements.serviceImpl;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
 import com.Applications.EchecsBackend.models.echecs.Piece;
@@ -43,6 +43,7 @@ public class DeplacementPion {
 
 
     // ********************* Méthodes ******************** :
+
     /**
      * Méthode qui contrôle que le déplacement correspond aux règles de déplacement
      * d'une pièce de type Pion.
@@ -51,13 +52,11 @@ public class DeplacementPion {
      */
     public boolean deplacementPion(Case caseDepart, Case caseDestination, Piece piece, List<Case> echiquier) throws Exception
     {
-        // Attributs :
+        // 1- Attributs :
         boolean deplacementPionAutorise;
         int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
         int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
         Case caseIntermediaire;
-
-        // Contrôles :
         if (piece.getCouleur().getCouleur().equals("blanc"))
         {
             caseIntermediaire = echiquier.get(Math.toIntExact(caseDepart.getNo_case()-2L));
@@ -66,7 +65,8 @@ public class DeplacementPion {
             caseIntermediaire = echiquier.get(Math.toIntExact(caseDepart.getNo_case()));
         }
 
-        // Contrôle des déplacements possibles :
+        // 2- Contrôle du déplacement :
+        // Si déplacement du pion Ok :
         if((noCaseDestination == noCaseDepart + 1 && caseDestination.getPiece() == null)
                 || (noCaseDestination == noCaseDepart -1 && caseDestination.getPiece() == null)
                 || (noCaseDestination == noCaseDepart +2 && caseDestination.getPiece()== null && piece.getCouleur().getCouleur().equals("noir") && (caseDepart.getNo_case() == 2L || caseDepart.getNo_case() == 10L || caseDepart.getNo_case() == 18L || caseDepart.getNo_case() == 26L || caseDepart.getNo_case() == 34L || caseDepart.getNo_case() == 42L || caseDepart.getNo_case() == 50L || caseDepart.getNo_case() == 58L) && caseIntermediaire.getPiece() == null)
@@ -97,13 +97,14 @@ public class DeplacementPion {
                 }
             }
         }
-        // Si la façon dont se déplace le pion est incorrect :
+        // Si déplacement du pion Nok :
         else
         {
             deplacementPionAutorise = false;
         }
         return deplacementPionAutorise;
     }
+
 
 
 
@@ -117,7 +118,7 @@ public class DeplacementPion {
         boolean bordureDepasse = false;
         int ligneCaseDepart = caseDepart.getLigne();
 
-        // Contrôles :
+        // Contrôle du déplacement :
         switch (ligneCaseDepart)
         {
             case 8:

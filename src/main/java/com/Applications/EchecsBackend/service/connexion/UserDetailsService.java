@@ -7,6 +7,7 @@ import java.util.List;
 
 
 
+
 /**
  * Interface du Service qui contient les fonctionnalités qui contient les fonctionnalités qui gèrent les UserDetails.
  */

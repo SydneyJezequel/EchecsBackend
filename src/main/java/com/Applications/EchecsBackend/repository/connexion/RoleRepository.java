@@ -11,6 +11,7 @@ import java.util.Optional;
 
 
 
+
 /**
  * Repository qui gère les rôles en Base de données.
  */
@@ -19,14 +20,24 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
 
 
-    // Vérification de l'existence du rôle via son email.
+    /**
+     * Vérification de l'existence du rôle via son name.
+     * @param name
+     * @return
+     */
     Optional<Role> findByName(ERole name);
 
 
 
-    // Récupération de tous les users :
+    /**
+     * Récupération de tous les rôles.
+     * @param example
+     * @return
+     * @param <S>
+     */
     @Override
     <S extends Role> List<S> findAll(Example<S> example);
+
 
 
 

@@ -5,10 +5,12 @@ import java.util.List;
 
 
 
+
 /**
  * Classe qui renvoie les données d'un User
  */
 public class UserInfoResponse {
+
 
 
 
@@ -23,6 +25,7 @@ public class UserInfoResponse {
 
 
 
+
     /****************************** Constructeur ******************************/
 
     public UserInfoResponse(Long id, String username, String email, List<String> roles) {
@@ -31,6 +34,7 @@ public class UserInfoResponse {
         this.email = email;
         this.roles = roles;
     }
+
 
 
 
@@ -64,6 +68,7 @@ public class UserInfoResponse {
     public List<String> getRoles() {
         return roles;
     }
+
 
 
 

@@ -8,10 +8,12 @@ import java.util.Set;
 
 
 
+
 /**
  * Classe qui récupère les données du user pour la requête de déconnexion
  */
 public class SignupRequest {
+
 
 
 
@@ -32,6 +34,7 @@ public class SignupRequest {
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
+
 
 
 
@@ -69,6 +72,7 @@ public class SignupRequest {
     public void setRole(Set<String> role) {
         this.role = role;
     }
+
 
 
 

@@ -1,4 +1,4 @@
-package com.Applications.EchecsBackend.service.echecs.deplacements;
+package com.Applications.EchecsBackend.service.echecs.deplacements.serviceImpl;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
 import com.Applications.EchecsBackend.models.echecs.Piece;
@@ -42,6 +42,7 @@ public class DeplacementFou {
 
 
     // ********************* Méthodes ******************** :
+
     /**
      * Méthode qui contrôle que le déplacement correspond aux règles de déplacement
      * d'une pièce de type Fou.
@@ -50,10 +51,11 @@ public class DeplacementFou {
      */
     public boolean deplacementFou(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
-        // Attributs :
+        // 1- Attributs :
         boolean deplacementFouOk;
 
-        // Si déplacements Ok :
+        // 2- Contrôles du déplacement :
+        // Si déplacements du fou Ok :
         if(deplacementFouDeGaucheADroite(caseDepart, caseDestination, echiquier) || deplacementFouDeDroiteAGauche(caseDepart, caseDestination, echiquier)) {
             // Si le Fou ne dépasse pas les frontières de l'échiquier affiché :
             if (borduresFou(caseDepart, caseDestination)) {
@@ -66,14 +68,14 @@ public class DeplacementFou {
                 {
                     deplacementFouOk = false;
                 }
-            // Si le fou dépasse tières de l'échiquier affiché :
+            // Si le fou dépasse les frontières de l'échiquier affiché :
             }
             else
             {
                 deplacementFouOk = false;
             }
         }
-        // Si déplacement Nok:
+        // Si déplacement du fou Nok :
         else
         {
             deplacementFouOk = false;
@@ -118,7 +120,7 @@ public class DeplacementFou {
         Case caseDepartPlus42 = fou.calculCaseIntermediaire(caseDepart, 41L, echiquier, plus);
         Case caseDepartPlus49 = fou.calculCaseIntermediaire(caseDepart, 48L, echiquier, plus);
 
-        // Contrôles :
+        // Contrôle du déplacement en diagonale de gauche à droite :
         if (caseDestination.getNo_case() == caseDepart.getNo_case() + 9
                 || caseDestination.getNo_case() == caseDepart.getNo_case() + 18 && caseDepartPlus9.getPiece() == null
                 || caseDestination.getNo_case() == caseDepart.getNo_case() + 27 && caseDepartPlus18.getPiece() == null && caseDepartPlus9.getPiece() == null
@@ -144,6 +146,7 @@ public class DeplacementFou {
         }
         return deplacementAutorise;
     }
+
 
 
 
@@ -181,7 +184,7 @@ public class DeplacementFou {
         Case caseDepartMoins42 = fou.calculCaseIntermediaire(caseDepart, 43L, echiquier, moins);
         Case caseDepartMoins49 = fou.calculCaseIntermediaire(caseDepart, 50L, echiquier, moins);
 
-        // Contrôles :
+        // Contrôle du déplacement en diagonale de doite à gauche :
         if (caseDestination.getNo_case() == caseDepart.getNo_case() - 9
                 || caseDestination.getNo_case() == caseDepart.getNo_case() - 18 && caseDepartMoins9.getPiece() == null
                 || caseDestination.getNo_case() == caseDepart.getNo_case() - 27 && caseDepartMoins18.getPiece() == null && caseDepartMoins9.getPiece() == null
@@ -221,7 +224,7 @@ public class DeplacementFou {
         boolean bordurePasDepasse = false;
         List<Case> echiquier = caseRepository.findAll();
         echiquier.sort(Comparator.comparing(Case::getNo_case));
-        // Diagonale GaucheDroite :
+        // Contrôle du déplacement :
         if (ControleBorduresPasDepasseFouDiagonaleGaucheDroiteDeHautEnBas(caseDepart, caseDestination, echiquier) || ControleBorduresPasDepasseFouDiagonaleGaucheADroiteDeBasEnHaut(caseDepart, caseDestination, echiquier))
         {
             bordurePasDepasse= true;
@@ -240,7 +243,7 @@ public class DeplacementFou {
      */
     public boolean ControleBorduresPasDepasseFouDiagonaleGaucheDroiteDeHautEnBas(Case caseDepart, Case caseDestination, List<Case> echiquier)
     {
-        // Attributs Diagonale GaucheDroite Noir :
+        // 1- Attributs Diagonale GaucheDroite Noir :
         boolean bordurePasDepasse = false;
         List<Long>diagonaleGaucheDroiteDeHautEnBasNoir1 = new ArrayList<Long>();
         List<Long>diagonaleGaucheDroiteDeHautEnBasNoir2 = new ArrayList<Long>();
@@ -324,7 +327,7 @@ public class DeplacementFou {
         diagonaleGaucheDroiteDeHautEnBasBlanc7.add(echiquier.get(58).getNo_case());
         diagonaleGaucheDroiteDeHautEnBasBlanc8.add(echiquier.get(56).getNo_case());
 
-        // Contrôles des bordures sur les diagonales de Gauche à Droite :
+        // 2- Contrôles des bordures sur les diagonales de Gauche à Droite :
         // Contrôles sur les cases noires :
         if(diagonaleGaucheDroiteDeHautEnBasBlanc1.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasBlanc1.contains(caseDestination.getNo_case()))
         {
@@ -334,12 +337,10 @@ public class DeplacementFou {
         {
             bordurePasDepasse = true;
         }
-        // TEST QUI DEVRAIT VALIDER :
         else if(diagonaleGaucheDroiteDeHautEnBasNoir3.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasNoir3.contains(caseDestination.getNo_case()))
         {
             bordurePasDepasse = true;
         }
-        // TEST QUI DEVRAIT VALIDER :
         else if(diagonaleGaucheDroiteDeHautEnBasNoir4.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasNoir4.contains(caseDestination.getNo_case()))
         {
             bordurePasDepasse = true;
@@ -356,7 +357,6 @@ public class DeplacementFou {
         {
             bordurePasDepasse = true;
         }
-
         // Contrôles sur les cases blanches:
         else if(diagonaleGaucheDroiteDeHautEnBasBlanc1.contains(caseDepart.getNo_case()) && diagonaleGaucheDroiteDeHautEnBasBlanc1.contains(caseDestination.getNo_case()))
         {
@@ -400,7 +400,7 @@ public class DeplacementFou {
      */
     public boolean ControleBorduresPasDepasseFouDiagonaleGaucheADroiteDeBasEnHaut(Case caseDepart, Case caseDestination, List<Case> echiquier)
     {
-        // Attributs :
+        // 1- Attributs :
         boolean bordurePasDepasse = false;
         List<Long>diagonaleDroiteGaucheDeBasEnHautNoir1 = new ArrayList<Long>();
         List<Long>diagonaleDroiteGaucheDeBasEnHautNoir2 = new ArrayList<Long>();
@@ -483,7 +483,7 @@ public class DeplacementFou {
         diagonaleDroiteGaucheDeBasEnHautBlanc7.add(echiquier.get(55).getNo_case());
         diagonaleDroiteGaucheDeBasEnHautBlanc7.add(echiquier.get(62).getNo_case());
 
-        // Contrôles des bordures sur les diagonales de Droite à Gauche :
+        // 2- Contrôles des bordures sur les diagonales de Droite à Gauche :
         // Contrôles sur les cases noires :
         if(diagonaleDroiteGaucheDeBasEnHautNoir1.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautNoir1.contains(caseDestination.getNo_case()))
         {
@@ -509,17 +509,14 @@ public class DeplacementFou {
         {
             bordurePasDepasse = true;
         }
-        // TEST QUI DEVRAIT MARCHER :
         else if(diagonaleDroiteGaucheDeBasEnHautNoir7.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautNoir7.contains(caseDestination.getNo_case()))
         {
             bordurePasDepasse = true;
         }
-        // TEST QUI DEVRAIT MARCHER :
         else if(diagonaleDroiteGaucheDeBasEnHautNoir8.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautNoir8.contains(caseDestination.getNo_case()))
         {
             bordurePasDepasse = true;
         }
-
         // Contrôles sur les cases blanches:
         else if(diagonaleDroiteGaucheDeBasEnHautBlanc1.contains(caseDepart.getNo_case()) && diagonaleDroiteGaucheDeBasEnHautBlanc1.contains(caseDestination.getNo_case()))
         {
@@ -551,7 +548,6 @@ public class DeplacementFou {
         }
         return bordurePasDepasse;
     }
-
 
 
 

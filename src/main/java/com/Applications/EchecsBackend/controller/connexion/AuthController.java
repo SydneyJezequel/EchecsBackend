@@ -32,13 +32,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+
+
+
 /**
- *  AuthController handles signup/login requests
+ *  AuthController pour gérer les inscriptions et les connexions.
  */
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
 
 
 
@@ -63,10 +67,12 @@ public class AuthController {
 
 
 
+
     /****************************** Méthodes ******************************/
 
+
     /**
-     * Méthode de connexion.
+     * Controller pour la connexion.
      * @param loginRequest
      * @return
      */
@@ -95,8 +101,9 @@ public class AuthController {
 
 
 
+
     /**
-     * Méthode de création de compte.
+     * Controller pour la création de compte.
      * @param signUpRequest
      * @return
      */
@@ -110,7 +117,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        // Create new user's account
+        // Création d'un nouveau User :
         User user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
@@ -153,8 +160,9 @@ public class AuthController {
 
 
 
+
     /**
-     * Méthode de déconnexion.
+     * Controller pour la déconnexion.
      * @return
      */
     @PostMapping("/signout")
@@ -163,6 +171,7 @@ public class AuthController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new MessageResponse("You've been signed out!"));
     }
+
 
 
 

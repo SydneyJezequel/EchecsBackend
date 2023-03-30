@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 
+
 /**
  * TestController has accessing protected resource methods with role based validations.
  */
@@ -20,10 +21,11 @@ public class TestController {
 
 
 
+
     /****************************** Méthodes ******************************/
 
     /**
-     * Méthode de test accessible à tous les internautes.
+     * Controller de test accessible à tous les internautes.
      * @return
      */
         @GetMapping("/all")
@@ -34,8 +36,9 @@ public class TestController {
 
 
 
+
     /**
-     * Méthode de test accessible aux utilisateurs inscrits sur le site.
+     * Controller de test accessible aux utilisateurs inscrits sur le site.
      * @return
      */
         @GetMapping("/user")
@@ -46,8 +49,9 @@ public class TestController {
 
 
 
+
     /**
-     * Méthode de test accessible aux modérateurs de l'application.
+     * Controller de test accessible aux modérateurs de l'application.
      * @return
      */
     @GetMapping("/mod")
@@ -58,8 +62,9 @@ public class TestController {
 
 
 
+
     /**
-     * Méthode de test accessible aux administrateurs de l'application.
+     * Controller de test accessible aux administrateurs de l'application.
      * @return
      */
     @GetMapping("/admin")
@@ -67,6 +72,7 @@ public class TestController {
     public String adminAccess() {
         return "Bienvenue sur l'Admin Board. Dans cette écran, vous pouvez gérer les utilisateurs de ce site.";
     }
+
 
 
 

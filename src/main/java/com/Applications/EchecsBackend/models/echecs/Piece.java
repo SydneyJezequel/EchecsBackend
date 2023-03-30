@@ -1,6 +1,5 @@
 package com.Applications.EchecsBackend.models.echecs;
 
-import com.Applications.EchecsBackend.service.gestionException.DeplacementCavalierException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 import java.util.List;
@@ -29,7 +28,6 @@ public class Piece {
     String type;
 
     @ManyToOne
-    // @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name="couleur_id", nullable = false, referencedColumnName = "id_couleur")
     com.Applications.EchecsBackend.models.echecs.Couleur couleur;
@@ -82,7 +80,7 @@ public class Piece {
     // ********************* Méthodes ******************** :
 
     /**
-     * Cette méthode affecte les cases intermediaire par lesquels va passer une pièce lorsqu'elle se déplace.
+     * Cette méthode affecte les cases intermédiaires par lesquels va passer une pièce lorsqu'elle se déplace.
      * @param caseDepart
      * @param nbCaseSup
      * @param echiquier
@@ -116,6 +114,7 @@ public class Piece {
         }
         return caseIntermediaire;
     }
+
 
 
 

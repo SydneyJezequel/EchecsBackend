@@ -5,10 +5,12 @@ import javax.validation.constraints.NotBlank;
 
 
 
+
 /**
  * Classe qui récupère les données du user pour la requête de connexion
  */
 public class LoginRequest {
+
 
 
 
@@ -20,6 +22,7 @@ public class LoginRequest {
 
     @NotBlank
     private String password;
+
 
 
 
@@ -41,6 +44,7 @@ public class LoginRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+
 
 
 

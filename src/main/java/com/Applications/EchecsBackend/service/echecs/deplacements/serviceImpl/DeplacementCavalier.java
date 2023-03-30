@@ -1,4 +1,4 @@
-package com.Applications.EchecsBackend.service.echecs.deplacements;
+package com.Applications.EchecsBackend.service.echecs.deplacements.serviceImpl;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
 import com.Applications.EchecsBackend.models.echecs.Piece;
@@ -41,23 +41,21 @@ public class DeplacementCavalier {
 
     // ********************* Méthodes ******************** :
 
-
     /**
-     * Méthode qui contrôle que le déplacement correspond aux règles de déplacement
+     * Méthode qui contrôle que le déplacement correspond aux règles de déplacement.
      * d'une pièce de type Cavalier.
      * @return boolean
      * @throws Exception
      */
     public boolean deplacementCavalier(Case caseDepart, Case caseDestination, List<Case> echiquier) throws Exception
     {
-        // VERSION TEMPORAIRE : AJOUTER UN BLOCAGE DE DEPLACEMENT SUR LES PIECES DU MEME CAMP.
-        // Attributs :
+        // 1- Attributs :
         boolean deplacementCavalierAutorise;
-        // Récupération des numéros des cases :
         int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
         int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
-        // Contrôle des déplacements possibles :
-        // Si la façon dont se déplace le cavalier est correct :
+
+        // 2- Contrôle des déplacements possibles :
+        // Si déplacement du cavalier Ok :
         if(
                 noCaseDestination == noCaseDepart + 6
                         || noCaseDestination == noCaseDepart + 10
@@ -89,7 +87,7 @@ public class DeplacementCavalier {
                 }
             }
         }
-        // Si la façon dont se déplace le cavalier est incorrect :
+        // Si déplacement du cavalier Nok :
         else
         {
             deplacementCavalierAutorise = false;
@@ -151,85 +149,7 @@ public class DeplacementCavalier {
         return bordureDepasse;
     }
 
-// ALGORITHME TEMPORAIRE :
-/*
-——————————————————
-SI COLONNE 3 :
-Empêcher les -6.
-Empêcher les +10.
 
-Tests :
--6 —> PB
-+6 —> PAS PB
-+10 —> PB
--10 —> PAS PB
-+15 —> PAS PB
--15 —> PAS PB
--17 —> PAS PB
-+17—> PAS PB
-——————————————————
-
-
-
-——————————————————
-SI COLONNE 1 :
-Empêcher les -6
-Empêcher les +10
-Empêcher les -15
-Empêcher les +17
-
-Tests :
--6 —> PB
-+6 —> PAS PB
-+10 —> PB
--10 —> PAS PB
-+15 —> PAS PB
--15 —> PB
--17 —> PAS PB
-+17—> PB
-——————————————————
-
-
-
-——————————————————
-SI COLONNE 7 :
-Empêcher les +6.
-Empêcher les -10.
-
-Tests :
--6 —> PAS PB
-+6 —> PB
-+10 —> PAS PB
--10 —> PB
-+15 —> PAS PB
--15 —> PAS PB
--17 —> PAS PB
-+17—> PAS PB
-——————————————————
-
-
-
-——————————————————
-SI COLONNE 8 :
-Empêcher les +6
-Empêcher les -10
-Empêcher les +15
-Empêcher les -17
-
-Tests :
--6 —> PAS PB
-+6 —> PB
-+10 —> PAS PB
--10 —> PB
-+15 —> PB
--15 —> PAS PB
--17 —> PB
-+17—> PAS PB
-——————————————————
-
-
-
-*/
 
 
 

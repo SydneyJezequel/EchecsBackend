@@ -13,12 +13,14 @@ import java.util.List;
 
 
 
+
 /**
  * Controller qui contient les fonctionnalités pour gérer les users de l'application.
  */
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
+
 
 
 
@@ -31,10 +33,11 @@ public class UserController {
 
 
 
+
     /****************************** Méthodes ******************************/
 
     /**
-     * Méthodes qui renvoie tous les users.
+     * Controller pour renvoyer tous les users.
      * @return
      * @throws Exception
      */
@@ -47,11 +50,11 @@ public class UserController {
 
 
 
+
     /**
-     * Méthode qui renvoie un user via son Id.
+     * Controller pour renvoyer un user via son Id.
      */
     @GetMapping("/find/{id}")
-    // @Secured("ROLE_ADMIN")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> getUserDetails(@PathVariable("id") Long id) throws Exception {
         User user = userDetailsServiceImpl.loadUserById(id);
@@ -60,11 +63,11 @@ public class UserController {
 
 
 
+
     /**
-     * Méthode qui modifier un user.
+     * Controller pour modifier un user.
      */
     @PutMapping("/update/{id}")
-    // @Secured("ROLE_ADMIN")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User userMaj) throws Exception {
         User updateUser = userDetailsServiceImpl.updateUser(id, userMaj);
@@ -73,8 +76,9 @@ public class UserController {
 
 
 
+
     /**
-     * Méthode qui supprime un user.
+     * Controller pour supprimer un user.
      */
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -85,8 +89,9 @@ public class UserController {
 
 
 
+
     /**
-     * Méthode qui créer un nouveau user.
+     * Controller pour créér un nouveau user.
      */
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
@@ -94,6 +99,7 @@ public class UserController {
         User nouveauUser = userDetailsServiceImpl.addUser(user);
         return new ResponseEntity<>(nouveauUser, HttpStatus.OK);
     }
+
 
 
 

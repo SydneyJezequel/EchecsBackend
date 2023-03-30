@@ -15,9 +15,9 @@ import io.jsonwebtoken.*;
 
 
 
+
 /**
  * Composant qui contient les fonctionnalités qui gèrent les Tokens.
- *
  *
  * JwtUtils provides methods for generating, parsing, validating JWT
  * This class has 3 main funtions:
@@ -29,6 +29,7 @@ import io.jsonwebtoken.*;
  */
 @Component
 public class JwtUtils {
+
 
 
 
@@ -49,11 +50,11 @@ public class JwtUtils {
 
 
 
+
     /****************************** Méthodes ******************************/
 
     /**
      * Méthode qui renvoie un Token à partir d'un cookie.
-     *
      * getJwtFromCookies: get JWT from Cookies by Cookie name
      */
     public String getJwtFromCookies(HttpServletRequest request) {
@@ -67,9 +68,9 @@ public class JwtUtils {
 
 
 
+
     /**
      * Méthode qui génère un cookie qui contient un token.
-     *
      * generateJwtCookie: generate a Cookie containing JWT from username, date, expiration, secret
      * @param userPrincipal
      * @return
@@ -82,9 +83,9 @@ public class JwtUtils {
 
 
 
+
     /**
      * Méthode qui nettoie un cookie.
-     *
      * getCleanJwtCookie: return Cookie with null value (used for clean Cookie)
      * @return
      */
@@ -95,9 +96,9 @@ public class JwtUtils {
 
 
 
+
     /**
      * Méthode qui récupère le username d'un user dans un token.
-     *
      * getUserNameFromJwtToken: get username from JWT
      * @param token
      * @return
@@ -108,9 +109,9 @@ public class JwtUtils {
 
 
 
+
     /**
      * Méthode qui contrôle la validité du token via un secret.
-     *
      * validateJwtToken: validate a JWT with a secret
      * @param authToken
      * @return
@@ -135,9 +136,9 @@ public class JwtUtils {
 
 
 
+
     /**
      * Méthode qui génère un token à partir du username d'un user.
-     *
      * Generate a token from username passed in parameter.
      * @param username
      * @return
@@ -148,9 +149,9 @@ public class JwtUtils {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                //.signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
+
 
 
 

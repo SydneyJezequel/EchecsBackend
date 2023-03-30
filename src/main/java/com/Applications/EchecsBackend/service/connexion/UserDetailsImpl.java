@@ -14,12 +14,14 @@ import java.util.stream.Collectors;
 
 
 
+
 /**
  * Classe qui représente un objet UserDetails.
  * Les UserDetails sont des objets utilisés pour identifier les users
  * lors de leur connexion.
  */
 public class UserDetailsImpl implements UserDetails {
+
 
 
 
@@ -38,6 +40,7 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
+
 
 
 
@@ -63,6 +66,7 @@ public class UserDetailsImpl implements UserDetails {
 
 
 
+
     /**
      * Constructeur utilisé pour créer un user récupéré depuis la BDD
      * @param user
@@ -80,6 +84,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getPassword(),
                 authorities);
     }
+
 
 
 
@@ -137,6 +142,7 @@ public class UserDetailsImpl implements UserDetails {
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
     }
+
 
 
 

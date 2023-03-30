@@ -1,16 +1,14 @@
-package com.Applications.EchecsBackend.service.echecs;
+package com.Applications.EchecsBackend.service.echecs.gestionPartie.serviceImpl;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
 import com.Applications.EchecsBackend.models.echecs.Couleur;
 import com.Applications.EchecsBackend.models.echecs.Piece;
 import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
-import com.Applications.EchecsBackend.repository.echecs.PartieRepository;
 import com.Applications.EchecsBackend.repository.echecs.PieceRepository;
-import com.Applications.EchecsBackend.service.echecs.coupSpeciaux.Echec;
-import com.Applications.EchecsBackend.service.echecs.coupSpeciaux.Roque;
-import com.Applications.EchecsBackend.service.echecs.deplacements.*;
-import com.Applications.EchecsBackend.service.echecs.gestionPartie.GestionDesParties;
-
+import com.Applications.EchecsBackend.service.echecs.coupSpeciaux.serviceImpl.Echec;
+import com.Applications.EchecsBackend.service.echecs.coupSpeciaux.serviceImpl.Roque;
+import com.Applications.EchecsBackend.service.echecs.deplacements.serviceImpl.*;
+import com.Applications.EchecsBackend.service.echecs.gestionPartie.serviceImpl.GestionDesParties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -22,7 +20,7 @@ import java.util.List;
 
 
 /**
- * Service qui gère les fonctionnalités pour jouer une partie d'échecs.
+ * Service qui gère les fonctionnalités pour déplacer les pièces lors d'une partie d'échecs.
  */
 @Service
 public class JouerService {
@@ -31,7 +29,7 @@ public class JouerService {
 
 
 
-    // ********************* Dépendances *********************
+    // ********************************* Dépendances *********************************
 
     private final CaseRepository caseRepository;
     private final GestionDesParties gestionDesParties;
@@ -49,7 +47,7 @@ public class JouerService {
 
 
 
-    // ********************* Constructeur *********************
+    // ********************************* Constructeur *********************************
     @Autowired
     public JouerService(CaseRepository caseRepository,
                         GestionDesParties gestionDesParties,
@@ -82,8 +80,9 @@ public class JouerService {
 
     // ****************************************** Méthodes ******************************************
 
+
     /**
-     * Méthode qui renvoie toutes les cases
+     * Méthode qui renvoie toutes les cases de l'échiquier
      * @return caseRepository.findAll()
      */
     public List<Case> findAllCases()
@@ -93,21 +92,23 @@ public class JouerService {
 
 
 
+
     /**
      * Méthode qui renvoie toutes les cases de l'échiquier suite au déplacement
      * @return echiquierMaj
      */
     public List<Case> getEchiquier() {
         List<Case> echiquierMaj = caseRepository.findAll();
-
         return echiquierMaj;
     }
 
 
 
+
     /**
-     * Méthode qui exécute le déplacement des pièces et contrôle si le roi
-     * est en échec
+     * Méthode qui contrôle si le roi est en échec.
+     * Elle renvoie un booléen qui déclenche la pop-up échec au roi si c'est le cas.
+     *
      */
     public boolean echecAuRoiPopUp(List<Case> casesDeplacement) throws Exception {
 
@@ -124,12 +125,15 @@ public class JouerService {
 
 
 
+
     /**
      * Méthode qui déplace les pièces.
-     * Cette méthode va appeler les méthodes qui réalisent les contrôles
-     * pour les déplacements de chaque pièce (ex : deplacementRoi(), deplacementReine(), etc.) :
+     * Cette méthode vérifie si le roi du camp qui joue est en échec.
+     * S'il l'est, le déplacement doit lever l'échec au roi.
+     * Puis elle appelle les méthodes qui contrôle si le déplacement des pièces est correct (ex : deplacementRoi(), deplacementReine(), etc.) :
      * Si les conditions sont vérifiés, la méthode : "echiquierMaj(List<Case> casesDeplacement)"
      * est appelée pour déplacer la pièce et renvoyer l'échiquier mis à jour.
+     * Sinon le déplacement est refusé.
      * @return echiquierMaj
      */
     public List<Case> deplacerPiece(List<Case> casesDeplacement) throws Exception {
@@ -139,8 +143,7 @@ public class JouerService {
         List<Case> echiquier = caseRepository.findAll();
         echiquier.sort(Comparator.comparing(Case::getNo_case));
 
-        // 2- Contrôle des Règles de gestion :
-        // Si le déplacement est correct, on contrôle si le roi est en échec :
+        // 2- Si le déplacement lève l'échec au roi, on contrôle si le déplacement de la pièce est correct.
         if(!echec.roiToujoursEnEchec(casesDeplacement))
         {
             // Récupération des attributs :
@@ -155,7 +158,7 @@ public class JouerService {
             caseDepart.setPiece(piece);
             caseDestination.setPiece(null);
 
-            // Contrôles du déplacement :
+            // 3- Contrôles du déplacement :
             switch (typeDePiece) {
                 case "roi":
                     // Si la pièce est un Roi, on vérifie si son déplacement est correct :
@@ -245,6 +248,7 @@ public class JouerService {
             // 4- Mise à jour du nombre de tour :
             gestionDesParties.miseAJourDuNombreDeTour();
         }
+        // Si le roi est toujours en échec malgré le déplacement de la pièce, le mouvement est annulé :
         else
         {
             Long numCaseDepart = casesDeplacement.get(0).getNo_case();
@@ -273,12 +277,8 @@ public class JouerService {
 
 
 
-
-
-
-
     /**
-     * Méthode qui met à jour l'échiquier :
+     * Méthode qui enregistre le déplacement réalisé en Base de données.
      * @return echiquierMaj
      */
     public List<Case> miseAJourEchiquier(Case caseDepart, Case caseDestination, Piece piece) throws Exception
@@ -310,14 +310,6 @@ public class JouerService {
 
         return echiquierMaj;
     }
-
-
-
-
-
-
-
-
 
 
 

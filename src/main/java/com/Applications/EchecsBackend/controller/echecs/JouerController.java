@@ -1,17 +1,17 @@
 package com.Applications.EchecsBackend.controller.echecs;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
-import com.Applications.EchecsBackend.service.echecs.JouerService;
-import com.Applications.EchecsBackend.service.echecs.coupSpeciaux.TransformationPion;
-import com.Applications.EchecsBackend.service.echecs.deplacements.DeplacementPion;
-import com.Applications.EchecsBackend.service.echecs.gestionPartie.GestionDesParties;
-import jakarta.servlet.http.HttpServletResponse;
+import com.Applications.EchecsBackend.service.echecs.gestionPartie.serviceImpl.JouerService;
+import com.Applications.EchecsBackend.service.echecs.coupSpeciaux.serviceImpl.TransformationPion;
+import com.Applications.EchecsBackend.service.echecs.gestionPartie.serviceImpl.GestionDesParties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
+
+
 
 
 /**
@@ -50,7 +50,7 @@ public class JouerController {
     /****************************** Méthodes ******************************/
 
     /**
-     * Méthode qui renvoie toutes les cases de l'échiquier.
+     * Controller pour renvoyer toutes les cases de l'échiquier.
      */
     @GetMapping("/case/all")
     @PreAuthorize("hasRole('USER')")
@@ -62,7 +62,7 @@ public class JouerController {
 
 
     /**
-     * Méthode qui déplace les pièces
+     * Controller pour déplacer les pièces
      */
     @PutMapping("/deplacer")
     @PreAuthorize("hasRole('USER')")
@@ -75,7 +75,7 @@ public class JouerController {
 
 
     /**
-     * Méthode qui déplace transforme les pions quand ils arrivent au bout de l'échiquier.
+     * Controller pour déplacer transforme les pions quand ils arrivent au bout de l'échiquier.
      */
     @PutMapping("/transformer")
     @PreAuthorize("hasRole('USER')")
@@ -87,7 +87,7 @@ public class JouerController {
 
 
     /**
-     * Méthode qui vérifie si le roi est en échec (Echec au Roi, Echec et Mat).
+     * Controller pour vérifier si le roi est en échec (Echec au Roi, Echec et Mat).
      * @return boolean echecAuRoi
      * @throws Exception
      */
@@ -102,7 +102,7 @@ public class JouerController {
 
 
     /**
-     * Méthode qui contrôle quel camp est entrain de jouer.
+     * Controller pour contrôler quel camp est en train de jouer.
      * @return String campQuiJoue
      * @throws Exception
      */
@@ -127,7 +127,7 @@ public class JouerController {
 
 
     /**
-     * Méthode qui déclare l'abandon de la partie.
+     * Controller pour déclarer l'abandon de la partie.
      */
     /*
     public void abandon() throws Exception

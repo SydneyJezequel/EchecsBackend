@@ -14,9 +14,9 @@ import java.util.List;
 
 
 
+
 /**
- * Service qui contient les fonctionnalités qui contient les fonctionnalités qui gèrent les UserDetails.
- *
+ * Service qui contient les fonctionnalités qui gèrent les UserDetails.
  * UserDetailsService interface has a method to load User by username and returns
  * a UserDetails object that Spring Security can use for authentication and validation.
  */
@@ -56,8 +56,9 @@ public class UserDetailsServiceImpl implements UserDetailsService, org.springfra
 
 
 
+
     /**
-     * Méthode de récupération de tous les users.
+     * Méthode qui récupère tous les users.
      * @return
      * @throws Exception
      */
@@ -76,6 +77,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, org.springfra
 
 
 
+
     /**
      * Méthode qui récupère un User via son Id.
      * @param id
@@ -84,9 +86,6 @@ public class UserDetailsServiceImpl implements UserDetailsService, org.springfra
      */
     @Override
     @Transactional
-    // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    // @Secured("ROLE_ADMIN")
-   //  @PreAuthorize("hasRole('ROLE_ADMIN')")
     public User loadUserById(Long id) throws Exception {
         return userRepository.findById(id)
         .orElseThrow(() -> new UsernameNotFoundException("User Not Found by id: " + id));
@@ -94,8 +93,9 @@ public class UserDetailsServiceImpl implements UserDetailsService, org.springfra
 
 
 
+
     /**
-     * Méthode de modification du user.
+     * Méthode de modification du User.
      * @param id
      * @param userMaj
      * @return
@@ -116,6 +116,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, org.springfra
 
 
 
+
     /**
      * Méthode qui supprime un user.
      * @param userId
@@ -131,6 +132,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, org.springfra
 
 
 
+
     /**
      * Méthode qui ajoute un user.
      * @param user
@@ -142,6 +144,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, org.springfra
         user.setPassword(encoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
+
 
 
 

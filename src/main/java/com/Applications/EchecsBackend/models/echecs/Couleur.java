@@ -23,7 +23,6 @@ public class Couleur {
     // *********************** Attributs ***********************
     @Id
     @Column(nullable = false, name="id_couleur")
-    // @OneToMany(mappedBy = "couleur_id", cascade = CascadeType.ALL)
     private Long no_couleur;
 
     @Column(nullable = false, updatable = false, name="couleur")

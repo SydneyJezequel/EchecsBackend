@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 
+
 /**
  * AuthenticationEntryPoint will catch authentication error.
  */
@@ -26,9 +27,11 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
 
 
+
     /****************************** Attributs ******************************/
 
     private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
+
 
 
 
@@ -58,6 +61,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);
     }
+
 
 
 

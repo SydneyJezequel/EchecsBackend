@@ -2,8 +2,10 @@ package com.Applications.EchecsBackend.repository.echecs;
 
 import com.Applications.EchecsBackend.models.echecs.Partie;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.Optional;
+
+
+
 
 
 /**
@@ -12,10 +14,25 @@ import java.util.Optional;
 public interface PartieRepository extends JpaRepository<Partie, Long> {
 
 
-    // Enregistrer / Modifier une partie :
+
+    /**
+     * Enregistrer / Modifier une partie :
+     * @param entity
+     * @return
+     * @param <S>
+     */
     @Override
     <S extends Partie> S save(S entity);
 
-    // Enregistrer / Modifier une partie :
+
+
+    /**
+     * Enregistrer / Modifier une partie :
+     */
     void save(Optional<Partie> partie);
+
+
+
+
+
 }

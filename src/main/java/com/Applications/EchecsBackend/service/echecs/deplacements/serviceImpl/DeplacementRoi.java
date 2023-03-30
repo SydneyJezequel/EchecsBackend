@@ -1,17 +1,16 @@
-package com.Applications.EchecsBackend.service.echecs.deplacements;
+package com.Applications.EchecsBackend.service.echecs.deplacements.serviceImpl;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
-import com.Applications.EchecsBackend.models.echecs.Couleur;
 import com.Applications.EchecsBackend.models.echecs.Piece;
 import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
 import com.Applications.EchecsBackend.repository.echecs.CouleurRepository;
 import com.Applications.EchecsBackend.repository.echecs.PieceRepository;
-import com.Applications.EchecsBackend.service.echecs.gestionPartie.GestionDesParties;
+import com.Applications.EchecsBackend.service.echecs.gestionPartie.serviceImpl.GestionDesParties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+
+
 
 
 /**
@@ -35,6 +34,8 @@ public class DeplacementRoi {
     private final DeplacementFou deplacementFou;
     private final DeplacementCavalier deplacementCavalier;
     private final DeplacementPion deplacementPion;
+
+
 
 
 
@@ -74,12 +75,12 @@ public class DeplacementRoi {
      */
     public boolean deplacementRoi(Case caseDepart, Case caseDestination) throws Exception
     {
-        // VERSION TEMPORAIRE : AJOUTER UN BLOCAGE DE DEPLACEMENT SUR LES PIECES DU MEME CAMP.
-        // Récupération des numéros des cases :
+        // 1- Attributs :
         boolean deplacementRoiAutorise;
         int noCaseDepart = Math.toIntExact(caseDepart.getNo_case());
         int noCaseDestination = Math.toIntExact(caseDestination.getNo_case());
-        // Déplacements possibles :
+        // 2- Contrôles du déplacement :
+        // Si déplacement du Roi Ok :
         if(noCaseDestination == noCaseDepart+1
                 || noCaseDestination == noCaseDepart-1
                 || noCaseDestination == noCaseDepart+8
@@ -110,7 +111,7 @@ public class DeplacementRoi {
                 }
             }
         }
-        // Si la façon dont se déplace le roi est incorrect :
+        // Si déplacement du roi Nok :
         else
         {
             deplacementRoiAutorise = false;
@@ -131,7 +132,7 @@ public class DeplacementRoi {
         boolean bordureDepasse = false;
         int ligneCaseDepart = caseDepart.getLigne();
 
-        // Contrôles :
+        // Contrôles du déplacement :
         switch (ligneCaseDepart)
         {
             case 8:
