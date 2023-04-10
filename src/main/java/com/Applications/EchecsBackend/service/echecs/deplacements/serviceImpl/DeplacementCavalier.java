@@ -137,8 +137,9 @@ public class DeplacementCavalier {
                 if(caseDestination.getNo_case() == caseDepart.getNo_case()-6L
                 || caseDestination.getNo_case() == caseDepart.getNo_case()+10L
                 || caseDestination.getNo_case() == caseDepart.getNo_case()-15L
-                || caseDestination.getNo_case() == caseDepart.getNo_case()+17L)
-
+                || caseDestination.getNo_case() == caseDepart.getNo_case()+17L
+                || caseDestination.getNo_case() == caseDepart.getNo_case()-17L
+                )
                 {
                     bordureDepasse = true;
                 }

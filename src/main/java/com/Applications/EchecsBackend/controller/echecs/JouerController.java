@@ -1,6 +1,7 @@
 package com.Applications.EchecsBackend.controller.echecs;
 
 import com.Applications.EchecsBackend.models.echecs.Case;
+import com.Applications.EchecsBackend.service.echecs.coupSpeciaux.serviceImpl.Echec;
 import com.Applications.EchecsBackend.service.echecs.gestionPartie.serviceImpl.JouerService;
 import com.Applications.EchecsBackend.service.echecs.coupSpeciaux.serviceImpl.TransformationPion;
 import com.Applications.EchecsBackend.service.echecs.gestionPartie.serviceImpl.GestionDesParties;
@@ -29,6 +30,8 @@ public class JouerController {
     private final JouerService jouerService;
     private final TransformationPion transformationPion;
     private final GestionDesParties gestionDesParties;
+    private final Echec echec;
+
 
 
 
@@ -37,10 +40,12 @@ public class JouerController {
     @Autowired
     public JouerController (JouerService jouerService,
                             TransformationPion transformationPion,
-                            GestionDesParties gestionDesParties) {
+                            GestionDesParties gestionDesParties,
+                            Echec echec) {
         this.jouerService= jouerService;
         this.transformationPion=transformationPion;
         this.gestionDesParties=gestionDesParties;
+        this.echec=echec;
     }
 
 
@@ -102,6 +107,21 @@ public class JouerController {
 
 
     /**
+     * Controller qui vérifie si le roi est échec et mat.
+     * @return boolean echecEtMat
+     * @throws Exception
+     */
+    @PutMapping("/echec_et_mat")
+    @PreAuthorize("hasRole('USER')")
+    public boolean echecEtMat(@RequestBody List<Case> casesDeplacement) throws Exception
+    {
+        return echec.echecEtMat(casesDeplacement);
+    }
+
+
+
+
+    /**
      * Controller pour contrôler quel camp est en train de jouer.
      * @return String campQuiJoue
      * @throws Exception
@@ -136,8 +156,6 @@ public class JouerController {
         // UN MESSAGE D'ABANDON DEVRA ETRE RENVOYE AU USER.
     }
     */
-
-
 
 
 

@@ -3,6 +3,7 @@ package com.Applications.EchecsBackend.service.echecs.deplacements.serviceImpl;
 import com.Applications.EchecsBackend.models.echecs.Case;
 import com.Applications.EchecsBackend.models.echecs.Piece;
 import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
+import com.Applications.EchecsBackend.service.echecs.gestionPartie.serviceImpl.GestionDesParties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -24,6 +25,7 @@ public class DeplacementTour {
     // ********************* Dépendances *********************
     Piece tour = new Piece();
     private final CaseRepository caseRepository;
+    private final GestionDesParties gestionDesParties;
 
 
 
@@ -31,8 +33,10 @@ public class DeplacementTour {
 
     // ********************* Constructeur ******************** :
     @Autowired
-    public DeplacementTour(CaseRepository caseRepository) {
+    public DeplacementTour(CaseRepository caseRepository, GestionDesParties gestionDesParties)
+    {
         this.caseRepository = caseRepository;
+        this.gestionDesParties = gestionDesParties;
     }
 
 
@@ -162,10 +166,10 @@ public class DeplacementTour {
         )
         {
             if(borduresTour(caseDepart, caseDestination)){
-                return true;
+                return false;
             }else
             {
-                return false;
+                return true;
             }
         // Si déplacement de la Tour Nok :
         } else
@@ -178,9 +182,221 @@ public class DeplacementTour {
 
 
     /**
-     * Méthode qui définit les limites de l'échiquier pour une Tour.
+     * Méthode qui contrôles les limites de l'échiquier pour une Tour en fonction du camp.
      * @return boolean
      */
+    public boolean borduresTour(Case caseDepart, Case caseDestination)
+    {
+        // Attributs :
+        boolean bordureDepassee = false;
+        String camp = gestionDesParties.campQuiJoue();
+        // Contrôles du déplacement :
+        if(camp.equals("blanc"))
+        {
+            bordureDepassee = borduresTourCampBlanc(caseDepart, caseDestination);
+        }
+        else
+        {
+            bordureDepassee = borduresTourCampNoir(caseDepart, caseDestination);
+        }
+            return bordureDepassee;
+    }
+
+
+
+
+    /**
+     * Contrôle des bordures de l'échiquier pour le camp Blanc.
+     * @param caseDepart
+     * @param caseDestination
+     * @return
+     */
+    public boolean borduresTourCampBlanc(Case caseDepart, Case caseDestination)
+    {
+        // Attributs :
+        boolean bordureDepassee = false;
+        // Contrôles du déplacement :
+        switch(caseDepart.getColonne()){
+            case "A":
+                    if(caseDestination.getNo_case() > 8L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "B":
+                    if (caseDestination.getNo_case() > 16L || caseDestination.getNo_case() < 9L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "C":
+                    if (caseDestination.getNo_case() > 24L || caseDestination.getNo_case() < 17L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "D":
+                    if (caseDestination.getNo_case() > 32L || caseDestination.getNo_case() < 25L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "E":
+                    if (caseDestination.getNo_case() > 40L || caseDestination.getNo_case() < 33L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "F":
+                    if(caseDestination.getNo_case() > 48L || caseDestination.getNo_case() < 41L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "G":
+                    if (caseDestination.getNo_case() > 56L || caseDestination.getNo_case() < 49L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "H":
+                    if (caseDestination.getNo_case() < 57L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+        }
+        return bordureDepassee;
+    }
+
+
+
+
+    /**
+     * Contrôle des bordures de l'échiquier pour le camp Noir.Echecs
+     * @param caseDepart
+     * @param caseDestination
+     * @return
+     */
+    public boolean borduresTourCampNoir(Case caseDepart, Case caseDestination)
+    {
+        // Attributs :
+        boolean bordureDepassee = false;
+        // Contrôles du déplacement :
+        switch(caseDepart.getColonne()){
+            case "A":
+                    if(caseDestination.getNo_case() > 8L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "B":
+                    if (caseDestination.getNo_case() > 16L || caseDestination.getNo_case() < 9L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "C":
+                    if (caseDestination.getNo_case() > 24L || caseDestination.getNo_case() < 17L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "D":
+                    if (caseDestination.getNo_case() > 32L || caseDestination.getNo_case() < 25L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "E":
+                    if (caseDestination.getNo_case() > 40L || caseDestination.getNo_case() < 33L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "F":
+                    if(caseDestination.getNo_case() > 48L || caseDestination.getNo_case() < 41L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "G":
+                    if(caseDestination.getNo_case() > 56L || caseDestination.getNo_case() < 49L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+            case "H":
+                    if (caseDestination.getNo_case() < 57L)
+                    {
+                        bordureDepassee = true;
+                    }
+                break;
+        }
+        return bordureDepassee;
+    }
+    // ANCIENNE VERSION V2 :
+    /*
+        public boolean borduresTour(Case caseDepart, Case caseDestination)
+    {
+        // Attributs :
+        boolean bordureDepassee = false;
+        // Contrôles du déplacement :
+        switch(caseDepart.getColonne()){
+            case "A":
+                if(caseDestination.getNo_case()>8L)
+                {
+                    bordureDepassee = true;
+                }
+                break;
+            case "B":
+                if(caseDestination.getNo_case()>16L || caseDestination.getNo_case()<9L)
+                {
+                    bordureDepassee = true;
+                }
+                break;
+            case "C":
+                if(caseDestination.getNo_case()>24L || caseDestination.getNo_case()<17)
+                {
+                    bordureDepassee = true;
+                }
+                break;
+            case "D":
+                if(caseDestination.getNo_case()>32L || caseDestination.getNo_case()<25)
+                {
+                    bordureDepassee = true;
+                }
+                break;
+            case "E":
+                if(caseDestination.getNo_case()>40L ||caseDestination.getNo_case()<33)
+                {
+                    bordureDepassee = true;
+                }
+                break;
+            case "F":
+                if(caseDestination.getNo_case()>48L || caseDestination.getNo_case()<41)
+                {
+                    bordureDepassee = true;
+                }
+                break;
+            case "G":
+                if(caseDestination.getNo_case()>56L || caseDestination.getNo_case()<49)
+                {
+                    bordureDepassee = true;
+                }
+                break;
+            case "H":
+                if(caseDestination.getNo_case()<57L)
+                {
+                    bordureDepassee = true;
+                }
+                break;
+        }
+            return bordureDepassee;
+    }
+    */
+    // ANCIENNE VERSION V1 :
+    /*
     public boolean borduresTour(Case caseDepart, Case caseDestination)
     {
         // Attributs :
@@ -238,7 +454,7 @@ public class DeplacementTour {
         }
             return bordureDepassee;
     }
-
+    */
 
 
 

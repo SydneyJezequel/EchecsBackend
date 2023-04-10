@@ -6,6 +6,7 @@ import com.Applications.EchecsBackend.repository.echecs.CaseRepository;
 import com.Applications.EchecsBackend.repository.echecs.PieceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -59,15 +60,31 @@ public class DeplacementPion {
         Case caseIntermediaire;
         if (piece.getCouleur().getCouleur().equals("blanc"))
         {
-            caseIntermediaire = echiquier.get(Math.toIntExact(caseDepart.getNo_case()-2L));
-        }else
+            int index = new BigDecimal(caseDepart.getNo_case()).intValueExact();
+            index = index-2;
+            caseIntermediaire = echiquier.get(index);
+        }
+        else
         {
-            caseIntermediaire = echiquier.get(Math.toIntExact(caseDepart.getNo_case()));
+            int index = new BigDecimal(caseDepart.getNo_case()).intValueExact();
+            // index = index+1;
+            caseIntermediaire = echiquier.get(index);
         }
 
         // 2- Contrôle du déplacement :
         // Si déplacement du pion Ok :
         if((noCaseDestination == noCaseDepart + 1 && caseDestination.getPiece() == null)
+                || (noCaseDestination == noCaseDepart -1 && caseDestination.getPiece() == null)
+                || (noCaseDestination == noCaseDepart +2 && caseDestination.getPiece() == null && piece.getCouleur().getCouleur().equals("noir") && caseIntermediaire.getPiece() == null)
+                || (noCaseDestination == noCaseDepart -2 && caseDestination.getPiece() == null && piece.getCouleur().getCouleur().equals("blanc") && caseIntermediaire.getPiece() == null)
+                || (noCaseDestination == noCaseDepart +9 && caseDestination.getPiece() != null)
+                || (noCaseDestination == noCaseDepart -9 && caseDestination.getPiece() != null)
+                || (noCaseDestination == noCaseDepart +7 && caseDestination.getPiece() != null)
+                || (noCaseDestination == noCaseDepart -7 && caseDestination.getPiece() != null)
+        )
+        // ANCIENNE VERSION DE LA CONDITION :
+        /*
+                if((noCaseDestination == noCaseDepart + 1 && caseDestination.getPiece() == null)
                 || (noCaseDestination == noCaseDepart -1 && caseDestination.getPiece() == null)
                 || (noCaseDestination == noCaseDepart +2 && caseDestination.getPiece()== null && piece.getCouleur().getCouleur().equals("noir") && (caseDepart.getNo_case() == 2L || caseDepart.getNo_case() == 10L || caseDepart.getNo_case() == 18L || caseDepart.getNo_case() == 26L || caseDepart.getNo_case() == 34L || caseDepart.getNo_case() == 42L || caseDepart.getNo_case() == 50L || caseDepart.getNo_case() == 58L) && caseIntermediaire.getPiece() == null)
                 || (noCaseDestination == noCaseDepart -2 && caseDestination.getPiece()== null && piece.getCouleur().getCouleur().equals("blanc") && (caseDepart.getNo_case() == 7L || caseDepart.getNo_case() == 15L || caseDepart.getNo_case() == 23L || caseDepart.getNo_case() == 31L || caseDepart.getNo_case() == 39L || caseDepart.getNo_case() == 47L || caseDepart.getNo_case() == 55L|| caseDepart.getNo_case() == 63L) && caseIntermediaire.getPiece() == null)
@@ -76,6 +93,7 @@ public class DeplacementPion {
                 || (noCaseDestination == noCaseDepart +7 && caseDestination.getPiece() != null)
                 || (noCaseDestination == noCaseDepart -7 && caseDestination.getPiece() != null)
         )
+         */
         {
             // Si le pion dépasse les bordures de l'échiquier :
             if(borduresPion(caseDepart, caseDestination))

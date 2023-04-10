@@ -54,6 +54,14 @@ public class DemarrerPartieController {
     @PreAuthorize("hasRole('USER')")
     public List<Case> ReinitialiserEchiquier(@PathVariable("camp") String camp) {
         List<Case> echiquier = demarerPartie.ReinitialiserEchequier(camp);
+        // TEST :
+        System.out.println("le camp est : "+camp);
+        for (int i = 0; i<echiquier.size();i++)
+        {
+            System.out.println("numéro de case : "+echiquier.get(i).getNo_case());
+            System.out.println("case et colonne : "+echiquier.get(i).getColonne() + echiquier.get(i).getLigne());
+        }
+        // TEST :
         return echiquier;
     }
 
@@ -70,6 +78,57 @@ public class DemarrerPartieController {
         List<Case> echiquier = demarerPartie.ReinitialiserEchequier(camp);
         return echiquier;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /******************************* NOUVEAU FLUX D'AFFICHAGE *******************************/
+
+    /**
+     * VERSION 2 : Controller pour ré-initialiser l'échiquier et créé une nouvelle partie.
+     * @return
+     */
+    @GetMapping("/nouvelle_partie")
+    @PreAuthorize("hasRole('USER')")
+    public List<Case> ReinitialiserEchiquier2() {
+        List<Case> echiquier = demarerPartie.ReinitialiserEchequier2();
+        return echiquier;
+    }
+
+
+
+
+    /**
+     * VERSION 2 : Controller pour afficher l'échiquier et créé une nouvelle partie.
+     * @return
+     */
+    @GetMapping("/echiquier")
+    @PreAuthorize("hasRole('USER')")
+    public List<Case> getEchiquier() {
+        List<Case> echiquier = demarerPartie.getEchequier();
+        // TEST :
+        for (int i = 0; i<echiquier.size();i++)
+        {
+            System.out.println("numéro de case : "+echiquier.get(i).getNo_case());
+            System.out.println("case et colonne : "+echiquier.get(i).getColonne() + echiquier.get(i).getLigne());
+        }
+        // TEST :
+        return echiquier;
+    }
+
+
+    /******************************* NOUVEAU FLUX D'AFFICHAGE *******************************/
+
+
 
 
 
